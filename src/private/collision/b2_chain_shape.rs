@@ -11,7 +11,7 @@ pub fn b2_chain_shape_clear(self_: &mut B2chainShape) {
 
 pub fn b2_chain_shape_create_loop(self_: &mut B2chainShape, vertices: &[B2vec2]) {
 	let count = vertices.len();
-	b2_assert(self_.m_vertices.len() == 0);
+	b2_assert(self_.m_vertices.is_empty());
 	b2_assert(count >= 3);
 	if count < 3 {
 		return;
@@ -24,14 +24,14 @@ pub fn b2_chain_shape_create_loop(self_: &mut B2chainShape, vertices: &[B2vec2])
 		b2_assert(b2_distance_vec2_squared(v1, v2) > B2_LINEAR_SLOP * B2_LINEAR_SLOP);
 	}
 
-	self_.m_vertices = Vec::from([vertices, &[vertices[0]]].concat());
+	self_.m_vertices = [vertices, &[vertices[0]]].concat();
 	self_.m_prev_vertex = self_.m_vertices[self_.m_vertices.len() - 2];
 	self_.m_next_vertex = self_.m_vertices[1];
 }
 
 pub fn b2_chain_shape_create_chain(self_: &mut B2chainShape, vertices: &[B2vec2], prev_vertex: B2vec2, next_vertex: B2vec2) {
 	let count = vertices.len();
-	b2_assert(self_.m_vertices.len() == 0);
+	b2_assert(self_.m_vertices.is_empty());
 	b2_assert(count >= 2);
 	for i in 1..count {
 		// If the code crashes here, it means your vertices are too close together.
@@ -48,12 +48,12 @@ pub fn b2_chain_shape_create_chain(self_: &mut B2chainShape, vertices: &[B2vec2]
 }
 
 pub fn b2_shape_dyn_trait_clone(self_: &B2chainShape) -> Box<dyn B2shapeDynTrait> {
-	return Box::new(B2chainShape::clone(&self_));
+	Box::new(B2chainShape::clone(self_))
 }
 
 pub fn b2_shape_dyn_trait_get_child_count(self_: &B2chainShape) -> usize {
 	// edge count = vertex count - 1
-	return self_.m_vertices.len() - 1;
+	self_.m_vertices.len() - 1
 }
 
 pub fn b2_chain_shape_get_child_edge(self_: &B2chainShape, edge: &mut B2edgeShape, index: usize) {
@@ -61,7 +61,7 @@ pub fn b2_chain_shape_get_child_edge(self_: &B2chainShape, edge: &mut B2edgeShap
 	edge.base.m_type = B2ShapeType::EEdge;
 	edge.base.m_radius = self_.base.m_radius;
 
-	edge.m_vertex1 = self_.m_vertices[index + 0];
+	edge.m_vertex1 = self_.m_vertices[index];
 	edge.m_vertex2 = self_.m_vertices[index + 1];
 	edge.m_one_sided = true;
 
@@ -81,7 +81,7 @@ pub fn b2_chain_shape_get_child_edge(self_: &B2chainShape, edge: &mut B2edgeShap
 pub fn b2_shape_dyn_trait_test_point(_self: &B2chainShape, xf: B2Transform, p: B2vec2) -> bool {
 	b2_not_used(xf);
 	b2_not_used(p);
-	return false;
+	false
 }
 pub fn b2_shape_dyn_trait_ray_cast(
 	self_: &B2chainShape,
@@ -103,7 +103,7 @@ pub fn b2_shape_dyn_trait_ray_cast(
 	edge_shape.m_vertex1 = self_.m_vertices[i1];
 	edge_shape.m_vertex2 = self_.m_vertices[i2];
 
-	return edge_shape.ray_cast(output, &input, xf, 0);
+	edge_shape.ray_cast(output, input, xf, 0)
 }
 
 pub fn b2_shape_dyn_trait_compute_aabb(

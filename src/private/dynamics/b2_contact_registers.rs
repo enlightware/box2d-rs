@@ -36,7 +36,7 @@ impl<D: UserDataType> Default for ContactRegisters<D> {
 			s_registers: [def_value(),def_value(),def_value(),def_value()]
 		};
 		ContactRegisters::initialize_registers(&mut result);
-		return result;
+		result
 	}
 }
 

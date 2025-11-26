@@ -14,21 +14,21 @@ pub struct B2color {
 }
 impl B2color {
     pub fn new(r_in: f32, g_in: f32, b_in: f32) -> B2color {
-        return B2color {
+        B2color {
             r: r_in,
             g: g_in,
             b: b_in,
             a: 1.0,
-        };
+        }
     }
 
     pub fn new_with_alpha(r_in: f32, g_in: f32, b_in: f32, a_in: f32) -> B2color {
-        return B2color {
+        B2color {
             r: r_in,
             g: g_in,
             b: b_in,
             a: a_in,
-        };
+        }
     }
 
     pub fn set(&mut self, r_in: f32, g_in: f32, b_in: f32) {
@@ -74,7 +74,7 @@ impl B2draw {
 
     /// Get the drawing flags.
     pub fn get_flags(self) -> B2drawShapeFlags {
-        return self.m_draw_flags;
+        self.m_draw_flags
     }
 
     /// Append flags to the current flags.

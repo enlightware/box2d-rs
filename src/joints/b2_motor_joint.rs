@@ -8,7 +8,7 @@ use crate::private::dynamics::joints::b2_motor_joint as private;
 
 impl<D: UserDataType> Default for B2motorJointDef<D> {
 	fn default() -> Self {
-		return Self {
+		Self {
 			base: B2jointDef {
 				jtype: B2jointType::EMotorJoint,
 				..Default::default()
@@ -18,7 +18,7 @@ impl<D: UserDataType> Default for B2motorJointDef<D> {
 			max_force: 1.0,
 			max_torque: 1.0,
 			correction_factor: 0.3,
-		};
+		}
 	}
 }
 
@@ -59,20 +59,20 @@ impl<D: UserDataType> B2motorJointDef<D> {
 }
 
 impl<D: UserDataType> ToDerivedJoint<D> for B2motorJoint<D> {
-	fn as_derived(&self) -> JointAsDerived<D> {
-		return JointAsDerived::EMotorJoint(self);
+	fn as_derived(&self) -> JointAsDerived<'_, D> {
+		JointAsDerived::EMotorJoint(self)
 	}
-	fn as_derived_mut(&mut self) -> JointAsDerivedMut<D> {
-		return JointAsDerivedMut::EMotorJoint(self);
+	fn as_derived_mut(&mut self) -> JointAsDerivedMut<'_, D> {
+		JointAsDerivedMut::EMotorJoint(self)
 	}
 }
 
 impl<D: UserDataType> B2jointTraitDyn<D> for B2motorJoint<D> {
 	fn get_base(&self) -> &B2joint<D> {
-		return &self.base;
+		&self.base
 	}
 	fn get_base_mut(&mut self) -> &mut B2joint<D> {
-		return &mut self.base;
+		&mut self.base
 	}
 	fn get_anchor_a(&self) -> B2vec2 {
 		return self.base.m_body_a.borrow().get_position();
@@ -84,11 +84,11 @@ impl<D: UserDataType> B2jointTraitDyn<D> for B2motorJoint<D> {
 	/// Get the reaction force given the inverse time step.
 	/// Unit is n.
 	fn get_reaction_force(&self, inv_dt: f32) -> B2vec2 {
-		return inv_dt * self.m_linear_impulse;
+		inv_dt * self.m_linear_impulse
 	}
 
 	fn get_reaction_torque(&self, inv_dt: f32) -> f32 {
-		return inv_dt * self.m_angular_impulse;
+		inv_dt * self.m_angular_impulse
 	}
 	fn init_velocity_constraints(
 		&mut self,
@@ -110,7 +110,7 @@ impl<D: UserDataType> B2jointTraitDyn<D> for B2motorJoint<D> {
 		data: &B2solverData,
 		positions: &mut [B2position],
 	) -> bool {
-		return private::solve_position_constraints(self, data, positions);
+		private::solve_position_constraints(self, data, positions)
 	}
 }
 
@@ -124,7 +124,7 @@ impl<D: UserDataType> B2motorJoint<D> {
 		}
 	}
 	pub fn get_linear_offset(&self) -> B2vec2 {
-		return self.m_linear_offset;
+		self.m_linear_offset
 	}
 
 	/// Set/get the target angular offset, in radians.
@@ -136,7 +136,7 @@ impl<D: UserDataType> B2motorJoint<D> {
 		}
 	}
 	pub fn get_angular_offset(&self) -> f32 {
-		return self.m_angular_offset;
+		self.m_angular_offset
 	}
 
 	/// Set the maximum friction force in n.
@@ -147,7 +147,7 @@ impl<D: UserDataType> B2motorJoint<D> {
 
 	/// Get the maximum friction force in n.
 	pub fn get_max_force(&self) -> f32 {
-		return self.m_max_force;
+		self.m_max_force
 	}
 
 	/// Set the maximum friction torque in n*m.
@@ -158,22 +158,22 @@ impl<D: UserDataType> B2motorJoint<D> {
 
 	/// Get the maximum friction torque in n*m.
 	pub fn get_max_torque(&self) -> f32 {
-		return self.m_max_torque;
+		self.m_max_torque
 	}
 
 	/// Set the position correction factor in the range [0,1].
 	pub fn set_correction_factor(&mut self, factor: f32) {
-		b2_assert(b2_is_valid(factor) && 0.0 <= factor && factor <= 1.0);
+		b2_assert(b2_is_valid(factor) && (0.0..=1.0).contains(&factor));
 		self.m_correction_factor = factor;
 	}
 
 	/// Get the position correction factor in the range [0,1].
 	pub fn get_correction_factor(&self) -> f32 {
-		return self.m_correction_factor;
+		self.m_correction_factor
 	}
 
 	pub(crate) fn new(def: &B2motorJointDef<D>) -> Self {
-		return Self {
+		Self {
 			base: B2joint::new(&def.base),
 			m_linear_offset: def.linear_offset,
 			m_angular_offset: def.angular_offset,
@@ -199,7 +199,7 @@ impl<D: UserDataType> B2motorJoint<D> {
 			m_inv_ib: 0.0,
 			m_linear_mass: B2Mat22::new(B2vec2::zero(), B2vec2::zero()),
 			m_angular_mass: 0.0,
-		};
+		}
 	}
 }
 

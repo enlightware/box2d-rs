@@ -14,5 +14,5 @@ pub fn should_collide<D:UserDataType>(fixture_a: FixturePtr<D>, fixture_b: Fixtu
 	}
 
 	let collide:bool = (filter_a.mask_bits & filter_b.category_bits) != 0 && (filter_a.category_bits & filter_b.mask_bits) != 0;
-	return collide;
+	collide
 }

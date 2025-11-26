@@ -7,12 +7,12 @@ pub fn solve33(self_: B2Mat33, b: B2Vec3) -> B2Vec3 {
     if det != 0.0 {
         det = 1.0 / det;
     }
-    let x = B2Vec3 {
+
+    B2Vec3 {
         x: det * b2_dot_vec3(b, b2_cross_vec3(self_.ey, self_.ez)),
         y: det * b2_dot_vec3(self_.ex, b2_cross_vec3(b, self_.ez)),
         z: det * b2_dot_vec3(self_.ex, b2_cross_vec3(self_.ey, b)),
-    };
-    return x;
+    }
 }
 /// solve A * x = b, where b is a column vector. This is more efficient
 /// than computing the inverse in one-shot cases.
@@ -22,11 +22,11 @@ pub fn solve22(self_: B2Mat33, b: B2vec2) -> B2vec2 {
     if det != 0.0 {
         det = 1.0 / det;
     }
-    let x = B2vec2 {
+
+    B2vec2 {
         x: det * (a22 * b.x - a12 * b.y),
         y: det * (a11 * b.y - a21 * b.x),
-    };
-    return x;
+    }
 }
 ///
 pub fn get_inverse22(self_: B2Mat33, m: &mut B2Mat33) {

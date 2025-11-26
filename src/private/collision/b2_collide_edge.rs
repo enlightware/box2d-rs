@@ -131,7 +131,7 @@ enum B2ePAxisType {
 
 impl Default for B2ePAxisType {
 	fn default() -> Self {
-		return B2ePAxisType::EUnknown;
+		B2ePAxisType::EUnknown
 	}
 }
 
@@ -198,7 +198,7 @@ fn b2_compute_edge_separation(polygon_b: B2tempPolygon, v1: B2vec2, normal1: B2v
 		}
 	}
 
-	return axis;
+	axis
 }
 
 fn b2_compute_polygon_separation(polygon_b: B2tempPolygon, v1: B2vec2, v2: B2vec2) -> B2epaxis {
@@ -224,7 +224,7 @@ fn b2_compute_polygon_separation(polygon_b: B2tempPolygon, v1: B2vec2, v2: B2vec
 		}
 	}
 
-	return axis;
+	axis
 }
 
 pub fn b2_collide_edge_and_polygon(
@@ -306,6 +306,7 @@ pub fn b2_collide_edge_and_polygon(
 		let side1: bool = b2_dot(primary_axis.normal, edge1) <= 0.0;
 
 		// Check Gauss Map
+		#[allow(clippy::collapsible_else_if)]
 		if side1 {
 			if convex1 {
 				if b2_cross(primary_axis.normal, normal0) > SIN_TOL {
@@ -449,9 +450,9 @@ pub fn b2_collide_edge_and_polygon(
 
 	let mut point_count: usize = 0;
 	for i in 0..B2_MAX_MANIFOLD_POINTS {
-		let separation: f32;
 
-		separation = b2_dot(rf.normal, clip_points2[i].v - rf.v1);
+
+		let separation: f32 = b2_dot(rf.normal, clip_points2[i].v - rf.v1);
 
 		if separation <= radius {
 			let cp: &mut B2manifoldPoint = &mut manifold.points[point_count];

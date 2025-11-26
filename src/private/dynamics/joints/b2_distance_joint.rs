@@ -43,12 +43,12 @@ pub(crate) fn b2_distance_joint_new<D: UserDataType>(
 	def: &B2distanceJointDef<D>,
 ) -> B2distanceJoint<D> {
 	let m_min_length = b2_max(def.min_length, B2_LINEAR_SLOP);
-	return B2distanceJoint {
+	B2distanceJoint {
 		base: B2joint::new(&def.base),
 		m_local_anchor_a: def.local_anchor_a,
 		m_local_anchor_b: def.local_anchor_b,
 		m_length: b2_max(def.length, B2_LINEAR_SLOP),
-		m_min_length: m_min_length,
+		m_min_length,
 		m_max_length: b2_max(def.max_length, m_min_length),
 		m_stiffness: def.stiffness,
 		m_damping: def.damping,
@@ -72,7 +72,7 @@ pub(crate) fn b2_distance_joint_new<D: UserDataType>(
 		m_inv_ib: 0.0,
 		m_mass: 0.0,
 		m_soft_mass: 0.0,
-	};
+	}
 }
 
 pub(crate) fn init_velocity_constraints<D: UserDataType>(
@@ -315,7 +315,7 @@ pub(crate) fn solve_position_constraints<D: UserDataType>(
 	positions[self_.m_index_b].c = c_b;
 	positions[self_.m_index_b].a = a_b;
 
-	return b2_abs(c) < B2_LINEAR_SLOP;
+	b2_abs(c) < B2_LINEAR_SLOP
 }
 
 pub(crate) fn get_anchor_a<D: UserDataType>(self_: &B2distanceJoint<D>) -> B2vec2 {
@@ -340,30 +340,30 @@ pub(crate) fn get_reaction_force<D: UserDataType>(
 ) -> B2vec2 {
 	let f: B2vec2 =
 		inv_dt * (self_.m_impulse + self_.m_lower_impulse - self_.m_upper_impulse) * self_.m_u;
-	return f;
+	f
 }
 
 pub(crate) fn get_reaction_torque<D: UserDataType>(_self: &B2distanceJoint<D>, inv_dt: f32) -> f32 {
 	b2_not_used(inv_dt);
-	return 0.0;
+	0.0
 }
 
 pub(crate) fn set_length<D: UserDataType>(self_: &mut B2distanceJoint<D>, length: f32) -> f32 {
 	self_.m_impulse = 0.0;
 	self_.m_length = b2_max(B2_LINEAR_SLOP, length);
-	return self_.m_length;
+	self_.m_length
 }
 
 pub(crate) fn set_min_length<D: UserDataType>(self_: &mut B2distanceJoint<D>, min_length: f32) -> f32 {
 	self_.m_lower_impulse = 0.0;
 	self_.m_min_length = b2_clamp(min_length, B2_LINEAR_SLOP, self_.m_max_length);
-	return self_.m_min_length;
+	self_.m_min_length
 }
 
 pub(crate) fn set_max_length<D: UserDataType>(self_: &mut B2distanceJoint<D>, max_length: f32) -> f32 {
 	self_.m_upper_impulse = 0.0;
 	self_.m_max_length = b2_max(max_length, self_.m_min_length);
-	return self_.m_max_length;
+	self_.m_max_length
 }
 
 pub(crate) fn get_current_length<D: UserDataType>(self_: &B2distanceJoint<D>) -> f32 {
@@ -379,7 +379,7 @@ pub(crate) fn get_current_length<D: UserDataType>(self_: &B2distanceJoint<D>) ->
 		.get_world_point(self_.m_local_anchor_b);
 	let d: B2vec2 = p_b - p_a;
 	let length: f32 = d.length();
-	return length;
+	length
 }
 
 pub(crate) fn draw<D: UserDataType>(self_: &B2distanceJoint<D>, draw: &mut dyn B2drawTrait) {

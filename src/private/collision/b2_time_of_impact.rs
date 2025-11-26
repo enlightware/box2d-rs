@@ -62,7 +62,7 @@ impl<'a> B2separationFunction<'a> {
 			result.m_axis = point_b - point_a;
 			let s: f32 = result.m_axis.normalize();
 			*separation = s;
-			return result;
+			result
 		} else if cache.index_a[0] == cache.index_a[1] {
 			// Two points on b and one on A.
 			result.m_type = B2separationFunctionType::EFaceB;
@@ -85,7 +85,7 @@ impl<'a> B2separationFunction<'a> {
 				s = -s;
 			}
 			*separation = s;
-			return result;
+			result
 		} else {
 			// Two points on A and one or two points on b.
 			result.m_type = B2separationFunctionType::EFaceA;
@@ -107,7 +107,7 @@ impl<'a> B2separationFunction<'a> {
 				s = -s;
 			}
 			*separation = s;
-			return result;
+			result
 		}
 	}
 
@@ -133,7 +133,7 @@ impl<'a> B2separationFunction<'a> {
 				let point_b: B2vec2 = b2_mul_transform_by_vec2(xf_b, local_point_b);
 
 				let separation: f32 = b2_dot(point_b - point_a, self.m_axis);
-				return separation;
+				separation
 			}
 
 			B2separationFunctionType::EFaceA => {
@@ -148,7 +148,7 @@ impl<'a> B2separationFunction<'a> {
 				let point_b: B2vec2 = b2_mul_transform_by_vec2(xf_b, local_point_b);
 
 				let separation: f32 = b2_dot(point_b - point_a, normal);
-				return separation;
+				separation
 			}
 
 			B2separationFunctionType::EFaceB => {
@@ -164,7 +164,7 @@ impl<'a> B2separationFunction<'a> {
 				let point_a: B2vec2 = b2_mul_transform_by_vec2(xf_a, local_point_a);
 
 				let separation: f32 = b2_dot(point_a - point_b, normal);
-				return separation;
+				separation
 			}
 
 			//unreachable
@@ -193,7 +193,7 @@ impl<'a> B2separationFunction<'a> {
 				let point_b: B2vec2 = b2_mul_transform_by_vec2(xf_b, local_point_b);
 				let separation: f32 = b2_dot(point_b - point_a, self.m_axis);
 
-				return separation;
+				separation
 			}
 
 			B2separationFunctionType::EFaceA => {
@@ -204,7 +204,7 @@ impl<'a> B2separationFunction<'a> {
 				let point_b: B2vec2 = b2_mul_transform_by_vec2(xf_b, local_point_b);
 
 				let separation: f32 = b2_dot(point_b - point_a, normal);
-				return separation;
+				separation
 			}
 
 			B2separationFunctionType::EFaceB => {
@@ -215,7 +215,7 @@ impl<'a> B2separationFunction<'a> {
 				let point_a: B2vec2 = b2_mul_transform_by_vec2(xf_a, local_point_a);
 
 				let separation: f32 = b2_dot(point_a - point_b, normal);
-				return separation;
+				separation
 			}
 
 			//unreachable

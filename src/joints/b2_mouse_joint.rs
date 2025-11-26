@@ -7,7 +7,7 @@ use crate::private::dynamics::joints::b2_mouse_joint as private;
 
 impl<D: UserDataType> Default for B2mouseJointDef<D> {
 	fn default() -> Self {
-		return Self {
+		Self {
 			base: B2jointDef {
 				jtype: B2jointType::EMouseJoint,
 				..Default::default()
@@ -16,16 +16,16 @@ impl<D: UserDataType> Default for B2mouseJointDef<D> {
 			max_force: 0.0,
 			stiffness: 0.0,
 			damping: 0.0,
-		};
+		}
 	}
 }
 
 impl<D: UserDataType> ToDerivedJoint<D> for B2mouseJoint<D> {
-	fn as_derived(&self) -> JointAsDerived<D> {
-		return JointAsDerived::EMouseJoint(self);
+	fn as_derived(&self) -> JointAsDerived<'_, D> {
+		JointAsDerived::EMouseJoint(self)
 	}
-	fn as_derived_mut(&mut self) -> JointAsDerivedMut<D> {
-		return JointAsDerivedMut::EMouseJoint(self);
+	fn as_derived_mut(&mut self) -> JointAsDerivedMut<'_, D> {
+		JointAsDerivedMut::EMouseJoint(self)
 	}
 }
 
@@ -53,13 +53,13 @@ pub struct B2mouseJointDef<D: UserDataType> {
 
 impl<D: UserDataType> B2jointTraitDyn<D> for B2mouseJoint<D> {
 	fn get_base(&self) -> &B2joint<D> {
-		return &self.base;
+		&self.base
 	}
 	fn get_base_mut(&mut self) -> &mut B2joint<D> {
-		return &mut self.base;
+		&mut self.base
 	}
 	fn get_anchor_a(&self) -> B2vec2 {
-		return self.m_target_a;
+		self.m_target_a
 	}
 	fn get_anchor_b(&self) -> B2vec2 {
 		return self
@@ -72,13 +72,13 @@ impl<D: UserDataType> B2jointTraitDyn<D> for B2mouseJoint<D> {
 	/// Get the reaction force given the inverse time step.
 	/// Unit is n.
 	fn get_reaction_force(&self, inv_dt: f32) -> B2vec2 {
-		return inv_dt * self.m_impulse;
+		inv_dt * self.m_impulse
 	}
 
 	/// Get the reaction torque given the inverse time step.
 	/// Unit is n*m. This is always zero for a distance joint.
 	fn get_reaction_torque(&self, inv_dt: f32) -> f32 {
-		return inv_dt * 0.0;
+		inv_dt * 0.0
 	}
 
 	fn init_velocity_constraints(
@@ -101,7 +101,7 @@ impl<D: UserDataType> B2jointTraitDyn<D> for B2mouseJoint<D> {
 		data: &B2solverData,
 		positions: &mut [B2position],
 	) -> bool {
-		return private::solve_position_constraints(self, data, positions);
+		private::solve_position_constraints(self, data, positions)
 	}
 
 	/// Implement B2joint::shift_origin
@@ -118,7 +118,7 @@ impl<D: UserDataType> B2mouseJoint<D> {
 		}
 	}
 	pub fn get_target(&self) -> B2vec2 {
-		return self.m_target_a;
+		self.m_target_a
 	}
 
 	/// Set/get the maximum force in Newtons.
@@ -126,25 +126,25 @@ impl<D: UserDataType> B2mouseJoint<D> {
 		self.m_max_force = force;
 	}
 	pub fn get_max_force(&self) -> f32 {
-		return self.m_max_force;
+		self.m_max_force
 	}
 
 	/// Set/get the linear stiffness in N/m
 	pub fn set_stiffness(&mut self, stiffness: f32) { self.m_stiffness = stiffness; }
-	pub fn get_stiffness(&self) -> f32 { return self.m_stiffness; }
+	pub fn get_stiffness(&self) -> f32 { self.m_stiffness}
 
 	/// Set/get linear damping in N*s/m
 	pub fn set_damping(&mut self, damping: f32) { self.m_damping = damping; }
-	pub fn get_damping(&self) -> f32 { return self.m_damping; }
+	pub fn get_damping(&self) -> f32 { self.m_damping}
 	
 
 	pub fn new(def: &B2mouseJointDef<D>) -> Self {
 		let m_target_a = def.target;
 		let body_b_transform = def.base.body_b.as_ref().unwrap().borrow().get_transform();
-		return B2mouseJoint {
+		B2mouseJoint {
 			base: B2joint::new(&def.base),
 
-			m_target_a: m_target_a,
+			m_target_a,
 			m_local_anchor_b: b2_mul_t_transform_by_vec2(body_b_transform, m_target_a),
 
 			m_max_force: def.max_force,
@@ -163,7 +163,7 @@ impl<D: UserDataType> B2mouseJoint<D> {
 			m_inv_ib: 0.0,
 			m_mass: B2Mat22::default(),
 			m_c: B2vec2::zero(),
-		};
+		}
 	}
 }
 

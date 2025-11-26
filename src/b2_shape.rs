@@ -54,7 +54,7 @@ impl B2Shape {
 	/// 
 	/// @return the shape type.
 	pub fn get_type(self) -> B2ShapeType {
-		return self.m_type;
+		self.m_type
 	}
 }
 

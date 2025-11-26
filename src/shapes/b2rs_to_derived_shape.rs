@@ -5,7 +5,7 @@ use super::b2_polygon_shape::*;
 
 pub trait ToDerivedShape {
 
-    fn as_derived(&self) -> ShapeAsDerived;
+    fn as_derived(&self) -> ShapeAsDerived<'_>;
 
     fn as_circle(&self) -> Option<&B2circleShape>;
     fn as_edge(&self) -> Option<&B2edgeShape>;
@@ -23,8 +23,8 @@ pub enum ShapeAsDerived<'a>
 
 impl ToDerivedShape for B2circleShape {
 
-    fn as_derived(&self) -> ShapeAsDerived{
-        return ShapeAsDerived::AsCircle(&self);
+    fn as_derived(&self) -> ShapeAsDerived<'_>{
+        ShapeAsDerived::AsCircle(self)
     }
 
     fn as_circle(&self) -> Option<&B2circleShape> {
@@ -45,8 +45,8 @@ impl ToDerivedShape for B2circleShape {
 }
 
 impl ToDerivedShape for B2edgeShape {
-    fn as_derived(&self) -> ShapeAsDerived{
-        return ShapeAsDerived::AsEdge(&self);
+    fn as_derived(&self) -> ShapeAsDerived<'_>{
+        ShapeAsDerived::AsEdge(self)
     }
 
     fn as_circle(&self) -> Option<&B2circleShape> {
@@ -67,8 +67,8 @@ impl ToDerivedShape for B2edgeShape {
 }
 
 impl ToDerivedShape for B2polygonShape {
-    fn as_derived(&self) -> ShapeAsDerived{
-        return ShapeAsDerived::AsPolygon(&self);
+    fn as_derived(&self) -> ShapeAsDerived<'_>{
+        ShapeAsDerived::AsPolygon(self)
     }
     fn as_circle(&self) -> Option<&B2circleShape> {
         None
@@ -88,8 +88,8 @@ impl ToDerivedShape for B2polygonShape {
 }
 
 impl ToDerivedShape for B2chainShape {
-    fn as_derived(&self) -> ShapeAsDerived{
-        return ShapeAsDerived::AsChain(&self);
+    fn as_derived(&self) -> ShapeAsDerived<'_>{
+        ShapeAsDerived::AsChain(self)
     }
     fn as_circle(&self) -> Option<&B2circleShape> {
         None

@@ -48,7 +48,7 @@ pub(crate) fn new<D: UserDataType>(def: &B2contactSolverDef, contacts: &Vec<Cont
 		let point_count: usize = manifold.point_count;
 		b2_assert(point_count > 0);
 
-		let mut vc = &mut result.m_velocity_constraints[i];
+		let vc = &mut result.m_velocity_constraints[i];
 		vc.friction = contact.m_friction;
 		vc.restitution = contact.m_restitution;
 		vc.threshold = contact.m_restitution_threshold;
@@ -64,7 +64,7 @@ pub(crate) fn new<D: UserDataType>(def: &B2contactSolverDef, contacts: &Vec<Cont
 		vc.k.set_zero();
 		vc.normal_mass.set_zero();
 
-		let mut pc = &mut result.m_position_constraints[i];
+		let pc = &mut result.m_position_constraints[i];
 		pc.index_a = body_a.m_island_index;
 		pc.index_b = body_b.m_island_index;
 		pc.inv_mass_a = body_a.m_inv_mass;
@@ -83,7 +83,7 @@ pub(crate) fn new<D: UserDataType>(def: &B2contactSolverDef, contacts: &Vec<Cont
 		for j in 0..point_count
 		{
 			let cp = manifold.points[j];
-			let mut vcp = &mut vc.points[j];
+			let vcp = &mut vc.points[j];
 	
 			if result.m_step.warm_starting
 			{
@@ -106,7 +106,7 @@ pub(crate) fn new<D: UserDataType>(def: &B2contactSolverDef, contacts: &Vec<Cont
 		}
 	}
 
-	return result;
+	result
 }
 
 // initialize position dependent portions of the velocity constraints.
@@ -160,7 +160,7 @@ pub(crate) fn initialize_velocity_constraints<D: UserDataType>(self_: &mut B2con
 		let point_count: usize = vc.point_count as usize;
 		for j in 0..point_count
 		{
-			let mut vcp = &mut vc.points[j];
+			let vcp = &mut vc.points[j];
 
 			vcp.r_a = world_manifold.points[j] - c_a;
 			vcp.r_b = world_manifold.points[j] - c_b;
@@ -294,7 +294,7 @@ pub(crate) fn solve_velocity_constraints(self_: &mut B2contactSolver, m_velociti
 		// than friction.
 		for j in 0..point_count
 		{
-			let mut vcp = &mut vc.points[j];
+			let vcp = &mut vc.points[j];
 
 			// Relative velocity at contact
 			let dv: B2vec2 =v_b + b2_cross_scalar_by_vec(w_b, vcp.r_b) - v_a - b2_cross_scalar_by_vec(w_a, vcp.r_a);
@@ -321,11 +321,11 @@ pub(crate) fn solve_velocity_constraints(self_: &mut B2contactSolver, m_velociti
 
 		// solve normal constraints
 		let g_block_solve: bool = G_BLOCK_SOLVE.load(Ordering::SeqCst);
-		if point_count == 1 || g_block_solve == false
+		if point_count == 1 || !g_block_solve
 		{
 			for j in 0..point_count
 			{
-				let mut vcp = &mut vc.points[j];
+				let vcp = &mut vc.points[j];
 
 				// Relative velocity at contact
 				let dv: B2vec2 =v_b + b2_cross_scalar_by_vec(w_b, vcp.r_b) - v_a - b2_cross_scalar_by_vec(w_a, vcp.r_a);
@@ -384,7 +384,7 @@ pub(crate) fn solve_velocity_constraints(self_: &mut B2contactSolver, m_velociti
 			// b' = b - A * a;
 
 			let (cp1, tail) = vc.points.split_first_mut().unwrap();
-			let mut cp2 = &mut tail[0];
+			let cp2 = &mut tail[0];
 
 			let a = B2vec2::new(cp1.normal_impulse, cp2.normal_impulse);
 			b2_assert(a.x >= 0.0 && a.y >= 0.0);
@@ -587,7 +587,7 @@ pub(crate) fn store_impulses<D:UserDataType>(self_: &mut B2contactSolver, m_cont
 	for vc in &self_.m_velocity_constraints
 	{
 		let mut contact = m_contacts[vc.contact_index as usize].borrow_mut();
-		let mut manifold = contact.get_base_mut().get_manifold_mut();
+		let manifold = contact.get_base_mut().get_manifold_mut();
 
 		for j in 0..vc.point_count as usize
 		{
@@ -726,7 +726,7 @@ pub(crate) fn  solve_position_constraints(self_: &mut B2contactSolver, m_positio
 
 	// We can't expect minSpeparation >= -B2_LINEAR_SLOP because we don't
 	// push the separation above -B2_LINEAR_SLOP.
-	return min_separation >= -3.0 * B2_LINEAR_SLOP;
+	min_separation >= -3.0 * B2_LINEAR_SLOP
 }
 
 // Sequential position solver for position constraints.
@@ -819,5 +819,5 @@ pub(crate) fn solve_toiposition_constraints(self_: &mut B2contactSolver, toi_ind
 
 	// We can't expect minSpeparation >= -B2_LINEAR_SLOP because we don't
 	// push the separation above -B2_LINEAR_SLOP.
-	return min_separation >= -1.5 * B2_LINEAR_SLOP;
+	min_separation >= -1.5 * B2_LINEAR_SLOP
 }

@@ -42,7 +42,7 @@ fn b2_find_max_separation(
 	}
 
 	*edge_index = best_index;
-	return max_separation;
+	max_separation
 }
 
 pub fn b2_find_incident_edge(

@@ -5,17 +5,17 @@ use crate::b2_common::*;
 use crate::b2_shape::*;
 
 pub fn clone(self_: &B2circleShape) -> Box<dyn B2shapeDynTrait> {
-	return Box::new(B2circleShape::clone(&self_));
+	Box::new(B2circleShape::clone(self_))
 }
 
 pub fn get_child_count(_self: &B2circleShape) -> usize {
-	return 1;
+	1
 }
 
 pub fn test_point(self_: &B2circleShape, transform: B2Transform, p: B2vec2) -> bool {
 	let center: B2vec2 = transform.p + b2_mul_rot_by_vec2(transform.q, self_.m_p);
 	let d: B2vec2 = p - center;
-	return b2_dot(d, d) <= self_.base.m_radius * self_.base.m_radius;
+	b2_dot(d, d) <= self_.base.m_radius * self_.base.m_radius
 }
 
 // Collision Detection in Interactive 3D Environments by Gino van den Bergen
@@ -59,7 +59,7 @@ pub fn ray_cast(
 		return true;
 	}
 
-	return false;
+	false
 }
 pub fn compute_aabb(
 	self_: &B2circleShape,

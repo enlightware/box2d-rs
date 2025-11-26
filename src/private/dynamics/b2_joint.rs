@@ -91,7 +91,7 @@ pub(crate) fn new<D: UserDataType>(def: &B2jointDef<D>)-> B2joint<D>
 {
 	b2_assert(!Rc::ptr_eq(def.body_a.as_ref().unwrap(), def.body_b.as_ref().unwrap()));
 
-	return B2joint
+	B2joint
 	{
 		m_type : def.jtype,
 		m_prev : None,
@@ -125,17 +125,17 @@ pub(crate) fn  draw<D: UserDataType, T: B2jointTraitDyn<D>+?Sized>(_self: &T, dr
 
 	match _self.as_derived()
 	{
-		JointAsDerived::EDistanceJoint(ref _def)=>{
+		JointAsDerived::EDistanceJoint(_def)=>{
 			draw.draw_segment(p1, p2, color);
 		},
-		JointAsDerived::EPulleyJoint(ref pulley)=>{
+		JointAsDerived::EPulleyJoint(pulley)=>{
 			let s1:B2vec2 = pulley.get_ground_anchor_a();
 			let s2:B2vec2 = pulley.get_ground_anchor_b();
 			draw.draw_segment(s1, p1, color);
 			draw.draw_segment(s2, p2, color);
 			draw.draw_segment(s1, s2, color);
 		},
-		JointAsDerived::EMouseJoint(ref _def)=>{
+		JointAsDerived::EMouseJoint(_def)=>{
 			let c = B2color::new(0.0, 1.0, 0.0);
 			draw.draw_point(p1, 4.0, c);
 			draw.draw_point(p2, 4.0, c);

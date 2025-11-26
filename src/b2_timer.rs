@@ -25,13 +25,11 @@ impl B2timer {
 	pub fn get_milliseconds(&self) -> f32 {
 		let elapsed = self.start.elapsed();
 		let nanos = elapsed.subsec_nanos() as u64;
-		let ms = 1000.0 * elapsed.as_secs() as f32 + nanos as f32/(1000.0 * 1000.0);
-		ms as f32
+		1000.0 * elapsed.as_secs() as f32 + nanos as f32/(1000.0 * 1000.0)
 	}
 	pub fn precise_time_ns(&self) -> u64 {
 		let elapsed = self.start.elapsed();
 		let nanos = elapsed.subsec_nanos() as u64;
-		let ns = 1000*1000*1000 * elapsed.as_secs() + nanos;
-		ns
+		1000*1000*1000 * elapsed.as_secs() + nanos
 	}
 }

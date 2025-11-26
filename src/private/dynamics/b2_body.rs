@@ -40,10 +40,10 @@ pub fn b2_body<D: UserDataType>(bd: &B2bodyDef<D>, world: B2worldPtr<D>) -> B2bo
 
 	let m_xf = B2Transform::new(bd.position, B2Rot::new(bd.angle));
 
-	return B2body::<D> {
+	B2body::<D> {
 		m_world: Rc::downgrade(&world),
 
-		m_xf: m_xf,
+		m_xf,
 
 		m_sweep: B2Sweep {
 			local_center: B2vec2::zero(),
@@ -83,9 +83,9 @@ pub fn b2_body<D: UserDataType>(bd: &B2bodyDef<D>, world: B2worldPtr<D>) -> B2bo
 
 		m_fixture_list: LinkedList::default(),
 		m_fixture_count: 0,
-		m_flags: m_flags,
+		m_flags,
 		m_island_index: -1,
-	};
+	}
 }
 
 pub fn set_type<D: UserDataType>(self_: BodyPtr<D>, body_type: B2bodyType) {
@@ -94,8 +94,8 @@ pub fn set_type<D: UserDataType>(self_: BodyPtr<D>, body_type: B2bodyType) {
 	{
 		let mut self_ = self_.borrow_mut();
 		world = upgrade(&self_.m_world);
-		b2_assert(world.borrow().is_locked() == false);
-		if world.borrow().is_locked() == true {
+		b2_assert(!world.borrow().is_locked());
+		if world.borrow().is_locked() {
 			return;
 		}
 
@@ -155,8 +155,8 @@ pub fn set_type<D: UserDataType>(self_: BodyPtr<D>, body_type: B2bodyType) {
 pub fn create_fixture<D: UserDataType>(self_: BodyPtr<D>, def: &B2fixtureDef<D>) -> FixturePtr<D> {
 	let mut self_mut = self_.borrow_mut();
 	let world = upgrade(&self_mut.m_world);
-	b2_assert(world.borrow().is_locked() == false);
-	if world.borrow().is_locked() == true {
+	b2_assert(!world.borrow().is_locked());
+	if world.borrow().is_locked() {
 		panic!();
 	}
 
@@ -196,7 +196,7 @@ pub fn create_fixture<D: UserDataType>(self_: BodyPtr<D>, def: &B2fixtureDef<D>)
 	// to be created at the beginning of the next time step.
 	world.borrow_mut().m_new_contacts = true;
 
-	return fixture;
+	fixture
 }
 
 pub fn create_fixture_by_shape<D: UserDataType>(
@@ -208,7 +208,7 @@ pub fn create_fixture_by_shape<D: UserDataType>(
 	def.shape = Some(shape);
 	def.density = density;
 
-	return create_fixture(self_, &def);
+	create_fixture(self_, &def)
 }
 
 pub fn destroy_fixture<D: UserDataType>(self_: BodyPtr<D>, fixture: FixturePtr<D>) {
@@ -222,8 +222,8 @@ pub fn destroy_fixture<D: UserDataType>(self_: BodyPtr<D>, fixture: FixturePtr<D
 		m_fixture_count = self_.m_fixture_count;
 	}
 
-	b2_assert(world.borrow().is_locked() == false);
-	if world.borrow().is_locked() == true {
+	b2_assert(!world.borrow().is_locked());
+	if world.borrow().is_locked() {
 		return;
 	}
 
@@ -351,8 +351,8 @@ pub fn reset_mass_data<D: UserDataType>(self_: &mut B2body<D>) {
 
 pub fn set_mass_data<D: UserDataType>(self_: &mut B2body<D>, mass_data: &B2massData) {
 	let world = upgrade(&self_.m_world);
-	b2_assert(world.borrow().is_locked() == false);
-	if world.borrow().is_locked() == true {
+	b2_assert(!world.borrow().is_locked());
+	if world.borrow().is_locked() {
 		return;
 	}
 
@@ -400,25 +400,23 @@ pub fn should_collide<D: UserDataType>(self_: &B2body<D>, other: BodyPtr<D>) -> 
 	for jn_ in self_.m_joint_list.iter() {
 		let jn = jn_.borrow();
 		let jn_other = upgrade(&jn.other);
-		if Rc::ptr_eq(&jn_other, &other) {
-			if upgrade(&jn.joint)
+		if Rc::ptr_eq(&jn_other, &other)
+			&& !upgrade(&jn.joint)
 				.borrow()
 				.get_base()
 				.get_collide_connected()
-				== false
 			{
 				return false;
 			}
-		}
 	}
 
-	return true;
+	true
 }
 
 pub fn set_transform<D: UserDataType>(self_: &mut B2body<D>, position: B2vec2, angle: f32) {
 	let world = upgrade(&self_.m_world);
-	b2_assert(world.borrow().is_locked() == false);
-	if world.borrow().is_locked() == true {
+	b2_assert(!world.borrow().is_locked());
+	if world.borrow().is_locked() {
 		return;
 	}
 
@@ -488,8 +486,8 @@ pub fn set_enabled<D: UserDataType>(self_: BodyPtr<D>, flag: bool) {
 		let contact_manager = world.borrow().m_contact_manager.clone();
 		broad_phase_rc = contact_manager.borrow().m_broad_phase.clone();
 		broad_phase = broad_phase_rc.borrow_mut();
-		b2_assert(world.borrow().is_locked() == false);
-		if world.borrow().is_locked() == true {
+		b2_assert(!world.borrow().is_locked());
+		if world.borrow().is_locked() {
 			return;
 		}
 

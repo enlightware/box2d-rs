@@ -135,7 +135,7 @@ impl B2simplex {
 	fn get_search_direction(&self) -> B2vec2 {
 		match self.m_count {
 			1 => {
-				return -self.m_v[0].w;
+				-self.m_v[0].w
 			}
 
 			2 => {
@@ -143,16 +143,16 @@ impl B2simplex {
 				let sgn: f32 = b2_cross(e12, -self.m_v[0].w);
 				if sgn > 0.0 {
 					// Origin is left of e12.
-					return b2_cross_scalar_by_vec(1.0, e12);
+					b2_cross_scalar_by_vec(1.0, e12)
 				} else {
 					// Origin is right of e12.
-					return b2_cross_vec_by_scalar(e12, 1.0);
+					b2_cross_vec_by_scalar(e12, 1.0)
 				}
 			}
 
 			_ => {
 				b2_assert(false);
-				return B2vec2::zero();
+				B2vec2::zero()
 			}
 		}
 	}
@@ -161,23 +161,23 @@ impl B2simplex {
 		match self.m_count {
 			0 => {
 				b2_assert(false);
-				return B2vec2::zero();
+				B2vec2::zero()
 			}
 
 			1 => {
-				return self.m_v[0].w;
+				self.m_v[0].w
 			}
 
 			2 => {
-				return self.m_v[0].a * self.m_v[0].w + self.m_v[1].a * self.m_v[1].w;
+				self.m_v[0].a * self.m_v[0].w + self.m_v[1].a * self.m_v[1].w
 			}
 			3 => {
-				return B2vec2::zero();
+				B2vec2::zero()
 			}
 
 			_ => {
 				b2_assert(false);
-				return B2vec2::zero();
+				B2vec2::zero()
 			}
 		}
 	}
@@ -215,20 +215,20 @@ impl B2simplex {
 		match self.m_count {
 			0 => {
 				b2_assert(false);
-				return 0.0;
+				0.0
 			}
 			1 => {
-				return 0.0;
+				0.0
 			}
 			2 => {
-				return b2_distance_vec2(self.m_v[0].w, self.m_v[1].w);
+				b2_distance_vec2(self.m_v[0].w, self.m_v[1].w)
 			}
 			3 => {
-				return b2_cross(self.m_v[1].w - self.m_v[0].w, self.m_v[2].w - self.m_v[0].w);
+				b2_cross(self.m_v[1].w - self.m_v[0].w, self.m_v[2].w - self.m_v[0].w)
 			}
 			_ => {
 				b2_assert(false);
-				return 0.0;
+				0.0
 			}
 		}
 	}
@@ -669,5 +669,5 @@ pub fn b2_shape_cast(output: &mut B2shapeCastOutput, input: B2shapeCastInput) ->
 	output.normal = n;
 	output.lambda = lambda;
 	output.iterations = iter;
-	return true;
+	true
 }

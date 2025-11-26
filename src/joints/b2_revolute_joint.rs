@@ -9,7 +9,7 @@ use crate::b2_draw::*;
 
 impl<D: UserDataType> Default for B2revoluteJointDef<D> {
 	fn default() -> Self {
-		return Self {
+		Self {
 			base: B2jointDef {
 				jtype: B2jointType::ERevoluteJoint,
 				..Default::default()
@@ -23,7 +23,7 @@ impl<D: UserDataType> Default for B2revoluteJointDef<D> {
 			motor_speed: 0.0,
 			enable_limit: false,
 			enable_motor: false,
-		};
+		}
 	}
 }
 
@@ -83,11 +83,11 @@ impl<D: UserDataType> B2revoluteJointDef<D> {
 }
 
 impl<D: UserDataType> ToDerivedJoint<D> for B2revoluteJoint<D> {
-	fn as_derived(&self) -> JointAsDerived<D> {
-		return JointAsDerived::ERevoluteJoint(self);
+	fn as_derived(&self) -> JointAsDerived<'_, D> {
+		JointAsDerived::ERevoluteJoint(self)
 	}
-	fn as_derived_mut(&mut self) -> JointAsDerivedMut<D> {
-		return JointAsDerivedMut::ERevoluteJoint(self);
+	fn as_derived_mut(&mut self) -> JointAsDerivedMut<'_, D> {
+		JointAsDerivedMut::ERevoluteJoint(self)
 	}
 }
 
@@ -136,36 +136,36 @@ pub struct B2revoluteJoint<D: UserDataType> {
 impl<D: UserDataType> B2revoluteJoint<D> {
 	/// The local anchor point relative to body_a's origin.
 	pub fn get_local_anchor_a(&self) -> B2vec2 {
-		return self.m_local_anchor_a;
+		self.m_local_anchor_a
 	}
 
 	/// The local anchor point relative to body_b's origin.
 	pub fn get_local_anchor_b(&self) -> B2vec2 {
-		return self.m_local_anchor_b;
+		self.m_local_anchor_b
 	}
 
 	/// Get the reference angle.
 	pub fn get_reference_angle(&self) -> f32 {
-		return self.m_reference_angle;
+		self.m_reference_angle
 	}
 
 	/// Get the current joint angle in radians.
 	pub fn get_joint_angle(&self) -> f32 {
 		let b_a = self.base.m_body_a.borrow();
 		let b_b = self.base.m_body_b.borrow();
-		return b_b.m_sweep.a - b_a.m_sweep.a - self.m_reference_angle;
+		b_b.m_sweep.a - b_a.m_sweep.a - self.m_reference_angle
 	}
 
 	/// Get the current joint angle speed in radians per second.
 	pub fn get_joint_speed(&self) -> f32 {
 		let b_a = self.base.m_body_a.borrow();
 		let b_b = self.base.m_body_b.borrow();
-		return b_b.m_angular_velocity - b_a.m_angular_velocity;
+		b_b.m_angular_velocity - b_a.m_angular_velocity
 	}
 
 	/// Is the joint limit enabled?
 	pub fn is_limit_enabled(&self) -> bool {
-		return self.m_enable_limit;
+		self.m_enable_limit
 	}
 
 	/// Enable/disable the joint limit.
@@ -182,12 +182,12 @@ impl<D: UserDataType> B2revoluteJoint<D> {
 
 	/// Get the lower joint limit in radians.
 	pub fn get_lower_limit(&self) -> f32 {
-		return self.m_lower_angle;
+		self.m_lower_angle
 	}
 
 	/// Get the upper joint limit in radians.
 	pub fn get_upper_limit(&self) -> f32 {
-		return self.m_upper_angle;
+		self.m_upper_angle
 	}
 
 	/// Set the joint limits in radians.
@@ -206,7 +206,7 @@ impl<D: UserDataType> B2revoluteJoint<D> {
 
 	/// Is the joint motor enabled?
 	pub fn is_motor_enabled(&self) -> bool {
-		return self.m_enable_motor;
+		self.m_enable_motor
 	}
 
 	/// Enable/disable the joint motor.
@@ -229,7 +229,7 @@ impl<D: UserDataType> B2revoluteJoint<D> {
 
 	/// Get the motor speed in radians per second.
 	pub fn get_motor_speed(&self) -> f32 {
-		return self.m_motor_speed;
+		self.m_motor_speed
 	}
 
 	/// Set the maximum motor torque, usually in n-m.
@@ -241,17 +241,17 @@ impl<D: UserDataType> B2revoluteJoint<D> {
 		}
 	}
 	pub fn get_max_motor_torque(&self) -> f32 {
-		return self.m_max_motor_torque;
+		self.m_max_motor_torque
 	}
 
 	/// Get the current motor torque given the inverse time step.
 	/// Unit is n*m.
 	pub fn get_motor_torque(&self, inv_dt: f32) -> f32 {
-		return inv_dt * self.m_motor_impulse;
+		inv_dt * self.m_motor_impulse
 	}
 
 	pub(crate) fn new(def: &B2revoluteJointDef<D>) -> Self {
-		return Self {
+		Self {
 			base: B2joint::new(&def.base),
 
 			m_local_anchor_a: def.local_anchor_a,
@@ -294,10 +294,10 @@ impl<D: UserDataType> B2revoluteJoint<D> {
 
 impl<D: UserDataType> B2jointTraitDyn<D> for B2revoluteJoint<D> {
 	fn get_base(&self) -> &B2joint<D> {
-		return &self.base;
+		&self.base
 	}
 	fn get_base_mut(&mut self) -> &mut B2joint<D> {
-		return &mut self.base;
+		&mut self.base
 	}
 	fn get_anchor_a(&self) -> B2vec2 {
 		return self
@@ -318,12 +318,12 @@ impl<D: UserDataType> B2jointTraitDyn<D> for B2revoluteJoint<D> {
 	/// Unit is n.
 	fn get_reaction_force(&self, inv_dt: f32) -> B2vec2 {
 		let p = B2vec2::new(self.m_impulse.x, self.m_impulse.y);
-		return inv_dt * p;
+		inv_dt * p
 	}
 	/// Get the reaction torque due to the joint limit given the inverse time step.
 	/// Unit is n*m.
 	fn get_reaction_torque(&self, inv_dt: f32) -> f32 {
-		return inv_dt * (self.m_motor_impulse + self.m_lower_impulse - self.m_upper_impulse);
+		inv_dt * (self.m_motor_impulse + self.m_lower_impulse - self.m_upper_impulse)
 	}
 	fn init_velocity_constraints(
 		&mut self,
@@ -345,7 +345,7 @@ impl<D: UserDataType> B2jointTraitDyn<D> for B2revoluteJoint<D> {
 		data: &B2solverData,
 		positions: &mut [B2position],
 	) -> bool {
-		return private::solve_position_constraints(self, data, positions);
+		private::solve_position_constraints(self, data, positions)
 	}
 
 	fn draw(&self, draw: &mut dyn B2drawTrait) {

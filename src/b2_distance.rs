@@ -35,22 +35,22 @@ impl B2distanceProxy {
 
     /// Get the supporting vertex index in the given direction.
     pub fn get_support(&self, d: B2vec2) -> usize {
-        return inline::get_support(self, d);
+        inline::get_support(self, d)
     }
 
     /// Get the supporting vertex in the given direction.
     pub fn get_support_vertex(&self, d: B2vec2) -> B2vec2 {
-        return inline::get_support_vertex(self, d);
+        inline::get_support_vertex(self, d)
     }
 
     /// Get the vertex count.
     pub fn get_vertex_count(&self) -> usize {
-        return inline::get_vertex_count(self);
+        inline::get_vertex_count(self)
     }
 
     /// Get a vertex by index. Used by b2Distance.
     pub fn get_vertex(&self, index: usize) -> B2vec2 {
-        return inline::get_vertex(self, index);
+        inline::get_vertex(self, index)
     }
 }
 
@@ -125,19 +125,19 @@ pub struct B2shapeCastOutput {
 /// 
 /// @returns true if hit, false if there is no hit or an initial overlap
 pub fn b2_shape_cast(output: &mut B2shapeCastOutput, input: B2shapeCastInput) -> bool {
-    return private::b2_shape_cast(output, input);
+    private::b2_shape_cast(output, input)
 }
 
 mod inline {
     use super::*;
 
     pub fn get_vertex_count(self_: &B2distanceProxy) -> usize {
-        return self_.m_vertices.len();
+        self_.m_vertices.len()
     }
 
     pub fn get_vertex(self_: &B2distanceProxy, index: usize) -> B2vec2 {
         b2_assert(index < self_.m_vertices.len());
-        return self_.m_vertices[index];
+        self_.m_vertices[index]
     }
 
     pub fn get_support(self_: &B2distanceProxy, d: B2vec2) -> usize {
@@ -151,7 +151,7 @@ mod inline {
             }
         }
 
-        return best_index;
+        best_index
     }
 
     pub fn get_support_vertex(self_: &B2distanceProxy, d: B2vec2) -> B2vec2 {
@@ -165,6 +165,6 @@ mod inline {
             }
         }
 
-        return self_.m_vertices[best_index];
+        self_.m_vertices[best_index]
     }
 }

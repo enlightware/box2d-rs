@@ -16,7 +16,7 @@ pub fn b2_broad_phase_b2_broad_phase<UserDataType: Default + Clone>() -> B2broad
 	let mut m_move_buffer = Vec::<i32>::new();
 	m_move_buffer.resize_with(m_move_capacity as usize, Default::default);
 
-	return B2broadPhase::<UserDataType> {
+	B2broadPhase::<UserDataType> {
 		m_tree: B2dynamicTree::<UserDataType>::new(),
 		m_proxy_count,
 		m_move_buffer,
@@ -27,7 +27,7 @@ pub fn b2_broad_phase_b2_broad_phase<UserDataType: Default + Clone>() -> B2broad
 			m_pair_capacity,
 			m_pair_count,
 		},
-	};
+	}
 }
 
 pub fn b2_broad_phase_create_proxy<T: Default + Clone>(
@@ -38,7 +38,7 @@ pub fn b2_broad_phase_create_proxy<T: Default + Clone>(
 	let proxy_id: i32 = self_.m_tree.create_proxy(aabb, user_data);
 	self_.m_proxy_count += 1;
 	self_.buffer_move(proxy_id);
-	return proxy_id;
+	proxy_id
 }
 
 pub fn b2_broad_phase_destroy_proxy<T: Default + Clone>(self_: &mut B2broadPhase<T>, proxy_id: i32) {
@@ -107,5 +107,5 @@ pub fn b2_broad_phase_query_callback(self_: &mut B2broadPhasePairs, m_query_prox
 	self_.m_pair_buffer[self_.m_pair_count as usize].proxy_id_b = b2_max(proxy_id, m_query_proxy_id);
 	self_.m_pair_count += 1;
 
-	return true;
+	true
 }

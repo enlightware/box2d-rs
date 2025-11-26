@@ -21,7 +21,7 @@ impl<D: UserDataType> B2island<D> {
 		let mut m_velocities = Vec::<B2velocity>::new();
 		m_positions.resize(body_capacity, Default::default());
 		m_velocities.resize(body_capacity, Default::default());
-		return Self
+		Self
 		{
 			m_listener: listener,
 			m_bodies: Vec::with_capacity(body_capacity),

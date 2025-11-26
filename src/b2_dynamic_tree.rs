@@ -33,7 +33,7 @@ pub struct B2treeNode<UserDataType> {
 
 impl<UserDataType> B2treeNode<UserDataType> {
 	pub fn is_leaf(&self) -> bool {
-		return self.child1 == B2_NULL_NODE;
+		self.child1 == B2_NULL_NODE
 	}
 }
 
@@ -61,7 +61,7 @@ pub struct B2dynamicTree<UserDataType> {
 impl<UserDataType: Clone + Default> B2dynamicTree<UserDataType> {
 	/// Constructing the tree initializes the node pool.
 	pub fn new() -> Self {
-		return private::b2_dynamic_tree();
+		private::b2_dynamic_tree()
 	}
 
 	/// destroy the tree, freeing the node pool.
@@ -69,7 +69,7 @@ impl<UserDataType: Clone + Default> B2dynamicTree<UserDataType> {
 
 	/// create a proxy. Provide a tight fitting AABB and a user_data pointer.
 	pub fn create_proxy(&mut self, aabb: B2AABB, user_data: &UserDataType) -> i32 {
-		return private::create_proxy(self, aabb, user_data);
+		private::create_proxy(self, aabb, user_data)
 	}
 
 	/// destroy a proxy. This asserts if the id is invalid.
@@ -83,18 +83,18 @@ impl<UserDataType: Clone + Default> B2dynamicTree<UserDataType> {
 	/// 
 	/// @return true if the proxy was re-inserted.
 	pub fn move_proxy(&mut self, proxy_id: i32, aabb1: B2AABB, displacement: B2vec2) -> bool {
-		return private::move_proxy(self, proxy_id, aabb1, displacement);
+		private::move_proxy(self, proxy_id, aabb1, displacement)
 	}
 
 	/// Get proxy user data.
 	/// 
 	/// @return the proxy user data or 0 if the id is invalid.
 	pub fn get_user_data(&self, proxy_id: i32) -> Option<UserDataType> {
-		return inline::get_user_data(self, proxy_id);
+		inline::get_user_data(self, proxy_id)
 	}
 
 	pub fn was_moved(&self, proxy_id: i32) -> bool {
-		return inline::was_moved(self, proxy_id);
+		inline::was_moved(self, proxy_id)
 	}
 	pub fn clear_moved(&mut self, proxy_id: i32) {
 		inline::clear_moved(self, proxy_id);
@@ -102,7 +102,7 @@ impl<UserDataType: Clone + Default> B2dynamicTree<UserDataType> {
 
 	/// Get the fat AABB for a proxy.
 	pub fn get_fat_aabb(&self, proxy_id: i32) -> B2AABB {
-		return inline::get_fat_aabb(self, proxy_id);
+		inline::get_fat_aabb(self, proxy_id)
 	}
 
 	/// query an AABB for overlapping proxies. The callback class
@@ -130,18 +130,18 @@ impl<UserDataType: Clone + Default> B2dynamicTree<UserDataType> {
 	/// Compute the height of the binary tree in O(n) time. Should not be
 	/// called often.
 	pub fn get_height(&self) -> i32 {
-		return private::get_height(self);
+		private::get_height(self)
 	}
 
 	/// Get the maximum balance of an node in the tree. The balance is the difference
 	/// in height of the two children of a node.
 	pub fn get_max_balance(&self) -> i32 {
-		return private::get_max_balance(self);
+		private::get_max_balance(self)
 	}
 
 	/// Get the ratio of the sum of the node areas to the root area.
 	pub fn get_area_ration(&self) -> f32 {
-		return private::get_area_ratio(self);
+		private::get_area_ratio(self)
 	}
 
 	/// Build an optimal tree. Very expensive. For testing.
@@ -157,7 +157,7 @@ impl<UserDataType: Clone + Default> B2dynamicTree<UserDataType> {
 	}
 
 	pub(crate) fn allocate_node(&mut self) -> i32 {
-		return private::allocate_node(self);
+		private::allocate_node(self)
 	}
 	pub(crate) fn free_node(&mut self, node: i32) {
 		private::free_node(self, node);
@@ -171,14 +171,14 @@ impl<UserDataType: Clone + Default> B2dynamicTree<UserDataType> {
 	}
 
 	pub(crate) fn balance(&mut self, index: i32) -> i32 {
-		return private::balance(self, index);
+		private::balance(self, index)
 	}
 
 	pub(crate) fn compute_height(&self) -> i32 {
-		return private::compute_height(self);
+		private::compute_height(self)
 	}
 	pub(crate) fn compute_height_by_node(&self, node_id: i32) -> i32 {
-		return private::compute_height_by_node(self, node_id);
+		private::compute_height_by_node(self, node_id)
 	}
 
 	pub(crate) fn validate_structure(&self, index: i32) {
@@ -209,7 +209,7 @@ mod inline {
 		proxy_id: i32,
 	) -> Option<UserDataType> {
 		//b2_assert(0 <= proxy_id && proxy_id < self_.m_nodeCapacity);
-		return self_.m_nodes[proxy_id as usize].user_data.clone();
+		self_.m_nodes[proxy_id as usize].user_data.clone()
 	}
 
 	pub fn was_moved<UserDataType: Clone + Default>(
@@ -217,7 +217,7 @@ mod inline {
 		proxy_id: i32,
 	) -> bool {
 		//b2_assert(0 <= proxy_id && proxy_id < self_.m_nodeCapacity);
-		return self_.m_nodes[proxy_id as usize].moved;
+		self_.m_nodes[proxy_id as usize].moved
 	}
 
 	pub fn clear_moved<UserDataType: Clone + Default>(
@@ -233,7 +233,7 @@ mod inline {
 		proxy_id: i32,
 	) -> B2AABB {
 		//b2_assert(0 <= proxy_id && proxy_id < self_.m_nodeCapacity);
-		return self_.m_nodes[proxy_id as usize].aabb;
+		self_.m_nodes[proxy_id as usize].aabb
 	}
 
 	pub fn query<UserDataType, F:  QueryCallback>(
@@ -255,7 +255,7 @@ mod inline {
 			if b2_test_overlap(node.aabb, aabb) {
 				if node.is_leaf() {
 					let proceed: bool = callback(node_id);
-					if proceed == false {
+					if !proceed {
 						return;
 					}
 				} else {
@@ -305,7 +305,7 @@ mod inline {
 
 			let node = &self_.m_nodes[node_id as usize];
 
-			if b2_test_overlap(node.aabb, segment_aabb) == false {
+			if !b2_test_overlap(node.aabb, segment_aabb) {
 				continue;
 			}
 
@@ -322,7 +322,7 @@ mod inline {
 				let sub_input = B2rayCastInput {
 					p1: input.p1,
 					p2: input.p2,
-					max_fraction: max_fraction,
+					max_fraction,
 				};
 
 				let value: f32 = callback(&sub_input, node_id);

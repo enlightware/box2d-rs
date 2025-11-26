@@ -24,7 +24,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 
 pub(crate) fn b2_world_new<D: UserDataType>(gravity: B2vec2) -> B2worldPtr<D> {
-	return Rc::new(RefCell::new(B2world {
+	Rc::new(RefCell::new(B2world {
 		m_destruction_listener: None,
 		m_debug_draw: None,
 
@@ -52,7 +52,7 @@ pub(crate) fn b2_world_new<D: UserDataType>(gravity: B2vec2) -> B2worldPtr<D> {
 		m_contact_manager: Rc::new(RefCell::new(B2contactManager::new())),
 
 		m_profile: Default::default(),
-	}));
+	}))
 }
 
 pub(crate) fn set_destruction_listener<D: UserDataType>(
@@ -81,7 +81,7 @@ pub(crate) fn set_debug_draw<D: UserDataType>(self_: &mut B2world<D>, debug_draw
 }
 
 pub(crate) fn create_body<D: UserDataType>(self_: B2worldPtr<D>, def: &B2bodyDef<D>) -> BodyPtr<D> {
-	b2_assert(self_.borrow().is_locked() == false);
+	b2_assert(!self_.borrow().is_locked());
 	if self_.borrow().is_locked() {
 		panic!();
 	}
@@ -94,12 +94,12 @@ pub(crate) fn create_body<D: UserDataType>(self_: B2worldPtr<D>, def: &B2bodyDef
 		self_.m_body_count += 1;
 	}
 
-	return b;
+	b
 }
 
 pub(crate) fn destroy_body<D: UserDataType>(self_: &mut B2world<D>, b: BodyPtr<D>) {
 	b2_assert(self_.m_body_count > 0);
-	b2_assert(self_.is_locked() == false);
+	b2_assert(!self_.is_locked());
 	if self_.is_locked() {
 		panic!();
 	}
@@ -157,7 +157,7 @@ pub(crate) fn create_joint<D: UserDataType>(
 	self_: &mut B2world<D>,
 	def: &B2JointDefEnum<D>,
 ) -> B2jointPtr<D> {
-	b2_assert(self_.is_locked() == false);
+	b2_assert(!self_.is_locked());
 	if self_.is_locked() {
 		panic!();
 	}
@@ -256,7 +256,7 @@ pub(crate) fn create_joint<D: UserDataType>(
 	};
 
 	// If the joint prevents collisions, then flag any contacts for filtering.
-	if collide_connected == false {
+	if !collide_connected {
 		for edge_ in body_b.borrow().get_contact_list().iter() {
 			let edge = edge_.borrow_mut();
 			if Rc::ptr_eq(&edge.other.upgrade().unwrap(), &body_a) {
@@ -272,11 +272,11 @@ pub(crate) fn create_joint<D: UserDataType>(
 
 	// Note: creating a joint doesn't wake the bodies.
 
-	return j;
+	j
 }
 
 pub(crate) fn destroy_joint<D: UserDataType>(self_: &mut B2world<D>, j: B2jointPtr<D>) {
-	b2_assert(self_.is_locked() == false);
+	b2_assert(!self_.is_locked());
 	if self_.is_locked() {
 		panic!();
 	}
@@ -323,7 +323,7 @@ pub(crate) fn destroy_joint<D: UserDataType>(self_: &mut B2world<D>, j: B2jointP
 	self_.m_joint_count -= 1;
 
 	// If the joint prevents collisions, then flag any contacts for filtering.
-	if collide_connected == false {
+	if !collide_connected {
 		for edge in body_b.borrow().get_contact_list().iter() {
 			let edge = edge.borrow();
 			if Rc::ptr_eq(&edge.other.upgrade().unwrap(), &body_a) {
@@ -345,7 +345,7 @@ pub(crate) fn set_allow_sleeping<D: UserDataType>(self_: &mut B2world<D>, flag: 
 	}
 
 	self_.m_allow_sleep = flag;
-	if self_.m_allow_sleep == false {
+	if !self_.m_allow_sleep {
 		for b in self_.m_body_list.iter() {
 			b.borrow_mut().set_awake(true);
 		}
@@ -364,7 +364,7 @@ pub(crate) fn solve<D: UserDataType>(self_: &mut B2world<D>, step: B2timeStep) {
 		// Size the island for the worst case.
 		island = B2island::new(
 			self_.m_body_count,
-			contact_manager.m_contact_count as usize,
+			contact_manager.m_contact_count,
 			self_.m_joint_count,
 			contact_manager
 				.m_contact_listener
@@ -387,7 +387,7 @@ pub(crate) fn solve<D: UserDataType>(self_: &mut B2world<D>, step: B2timeStep) {
 	}
 
 	// Build and simulate all awake islands.
-	let mut stack = Vec::<BodyPtr<D>>::with_capacity(self_.m_body_count as usize);
+	let mut stack = Vec::<BodyPtr<D>>::with_capacity(self_.m_body_count);
 	for seed in self_.m_body_list.iter() {
 		{
 			let seed = seed.borrow();
@@ -395,7 +395,7 @@ pub(crate) fn solve<D: UserDataType>(self_: &mut B2world<D>, step: B2timeStep) {
 				continue;
 			}
 
-			if seed.is_awake() == false || seed.is_enabled() == false {
+			if !seed.is_awake() || !seed.is_enabled() {
 				continue;
 			}
 
@@ -414,7 +414,7 @@ pub(crate) fn solve<D: UserDataType>(self_: &mut B2world<D>, step: B2timeStep) {
 		// Perform a depth first search (DFS) on the constraint graph.
 		while let Some(b) = stack.pop() {
 			// Grab the next body off the stack and add it to the island.
-			b2_assert(b.borrow().is_enabled() == true);
+			b2_assert(b.borrow().is_enabled());
 			island.add_body(b.clone());
 
 			// To keep islands as small as possible, we don't
@@ -437,7 +437,7 @@ pub(crate) fn solve<D: UserDataType>(self_: &mut B2world<D>, step: B2timeStep) {
 				}
 
 				// Is this contact solid and touching?
-				if contact_base.is_enabled() == false || contact_base.is_touching() == false {
+				if !contact_base.is_enabled() || !contact_base.is_touching() {
 					continue;
 				}
 
@@ -467,14 +467,14 @@ pub(crate) fn solve<D: UserDataType>(self_: &mut B2world<D>, step: B2timeStep) {
 			for je in b.borrow().m_joint_list.iter() {
 				let je = je.borrow();
 				let joint = upgrade(&je.joint);
-				if joint.borrow().get_base().m_island_flag == true {
+				if joint.borrow().get_base().m_island_flag {
 					continue;
 				}
 
 				let other = upgrade(&je.other);
 
 				// Don't simulate joints connected to disabled bodies.
-				if other.borrow().is_enabled() == false {
+				if !other.borrow().is_enabled() {
 					continue;
 				}
 
@@ -568,9 +568,9 @@ pub(crate) fn solve_toi<D: UserDataType>(self_: &mut B2world<D>, step: B2timeSte
 
 		for c_ptr in self_.m_contact_manager.borrow().m_contact_list.iter() {
 			let mut c = c_ptr.borrow_mut();
-			let mut c_base = c.get_base_mut();
+			let c_base = c.get_base_mut();
 			// Is this contact disabled?
-			if c_base.is_enabled() == false {
+			if !c_base.is_enabled() {
 				continue;
 			}
 
@@ -609,7 +609,7 @@ pub(crate) fn solve_toi<D: UserDataType>(self_: &mut B2world<D>, step: B2timeSte
 					let active_b: bool = b_b.is_awake() && type_b != B2bodyType::B2StaticBody;
 
 					// Is at least one body active (awake and dynamic or kinematic)?
-					if active_a == false && active_b == false {
+					if !active_a && !active_b {
 						continue;
 					}
 
@@ -617,7 +617,7 @@ pub(crate) fn solve_toi<D: UserDataType>(self_: &mut B2world<D>, step: B2timeSte
 					let collide_b: bool = b_b.is_bullet() || type_b != B2bodyType::B2DynamicBody;
 
 					// Are these two non-bullet dynamic bodies?
-					if collide_a == false && collide_b == false {
+					if !collide_a && !collide_b {
 						continue;
 					}
 
@@ -709,8 +709,8 @@ pub(crate) fn solve_toi<D: UserDataType>(self_: &mut B2world<D>, step: B2timeSte
 		min_contact.borrow_mut().get_base_mut().m_toi_count += 1;
 
 		// Is the contact solid?
-		if min_contact.borrow().get_base().is_enabled() == false
-			|| min_contact.borrow().get_base().is_touching() == false
+		if !min_contact.borrow().get_base().is_enabled()
+			|| !min_contact.borrow().get_base().is_touching()
 		{
 			// Restore the sweeps.
 			min_contact.borrow_mut().get_base_mut().set_enabled(false);
@@ -773,8 +773,8 @@ pub(crate) fn solve_toi<D: UserDataType>(self_: &mut B2world<D>, step: B2timeSte
 					{
 						let mut other = other_ptr.borrow_mut();
 						if other.m_type == B2bodyType::B2DynamicBody
-							&& body.borrow().is_bullet() == false
-							&& other.is_bullet() == false
+							&& !body.borrow().is_bullet()
+							&& !other.is_bullet()
 						{
 							continue;
 						}
@@ -813,14 +813,14 @@ pub(crate) fn solve_toi<D: UserDataType>(self_: &mut B2world<D>, step: B2timeSte
 						let mut other = other_ptr.borrow_mut();
 
 						// Was the contact disabled by the user?
-						if contact_base.is_enabled() == false {
+						if !contact_base.is_enabled() {
 							other.m_sweep = backup;
 							other.synchronize_transform();
 							continue;
 						}
 
 						// Are there contact points?
-						if contact_base.is_touching() == false {
+						if !contact_base.is_touching() {
 							other.m_sweep = backup;
 							other.synchronize_transform();
 							continue;
@@ -849,7 +849,7 @@ pub(crate) fn solve_toi<D: UserDataType>(self_: &mut B2world<D>, step: B2timeSte
 
 		let dt = (1.0 - min_alpha) * step.dt;
 		let sub_step = B2timeStep {
-			dt: dt,
+			dt,
 			inv_dt: 1.0 / dt,
 			dt_ratio: 1.0,
 			position_iterations: 20,
@@ -917,9 +917,9 @@ pub(crate) fn step<D: UserDataType>(
 	self_.m_locked = true;
 
 	let step = B2timeStep {
-		dt: dt,
-		velocity_iterations: velocity_iterations,
-		position_iterations: position_iterations,
+		dt,
+		velocity_iterations,
+		position_iterations,
 		inv_dt: if dt > 0.0 { 1.0 / dt } else { 0.0 },
 		dt_ratio: self_.m_inv_dt0 * dt,
 		warm_starting: self_.m_warm_starting,
@@ -1051,7 +1051,7 @@ pub(crate) fn ray_cast<D: UserDataType, F: B2rayCastCallback<D>>(
 			return callback(fixture, point, output.normal, fraction);
 		}
 
-		return input.max_fraction;
+		input.max_fraction
 	}, &input);
 }
 
@@ -1078,7 +1078,7 @@ pub(crate) fn draw_shape<D: UserDataType>(
 			let v2: B2vec2 = b2_mul_transform_by_vec2(*xf, edge.m_vertex2);
 			m_debug_draw.draw_segment(v1, v2, *color);
 
-			if edge.m_one_sided == false
+			if !edge.m_one_sided
 			{
 				m_debug_draw.draw_point(v1, 4.0, *color);
 				m_debug_draw.draw_point(v2, 4.0, *color);
@@ -1141,7 +1141,7 @@ pub(crate) fn debug_draw<D: UserDataType>(self_: &B2world<D>) {
 					// Bad body
 					self_.draw_shape(f, &xf, &B2color::new(1.0, 0.0, 0.0));
 				}
-				else if b.is_enabled() == false
+				else if !b.is_enabled()
 				{
 					self_.draw_shape(f, &xf, &B2color::new(0.5, 0.5, 0.3));
 				}
@@ -1153,7 +1153,7 @@ pub(crate) fn debug_draw<D: UserDataType>(self_: &B2world<D>) {
 				{
 					self_.draw_shape(f, &xf, &B2color::new(0.5, 0.5, 0.9));
 				}
-				else if b.is_awake() == false
+				else if !b.is_awake()
 				{
 					self_.draw_shape(f, &xf, &B2color::new(0.6, 0.6, 0.6));
 				}
@@ -1204,7 +1204,7 @@ pub(crate) fn debug_draw<D: UserDataType>(self_: &B2world<D>) {
 		for b in self_.m_body_list.iter()
 		{
 			let b = b.borrow();
-			if b.is_enabled() == false
+			if !b.is_enabled()
 			{
 				continue;
 			}
@@ -1276,7 +1276,7 @@ pub(crate) fn get_tree_quality<D: UserDataType>(self_: &B2world<D>) -> f32 {
 }
 
 pub(crate) fn shift_origin<D: UserDataType>(self_: &B2world<D>, new_origin: B2vec2) {
-	b2_assert(self_.is_locked() == false);
+	b2_assert(!self_.is_locked());
 	if self_.is_locked() {
 		panic!();
 	}

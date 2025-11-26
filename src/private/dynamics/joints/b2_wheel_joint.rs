@@ -371,7 +371,7 @@ pub(crate) fn solve_position_constraints<D: UserDataType>(
 	positions[self_.m_index_a as usize] = B2position { c: c_a, a: a_a };
 	positions[self_.m_index_b as usize] = B2position { c: c_b, a: a_b };
 
-	return linear_error <= B2_LINEAR_SLOP;
+	linear_error <= B2_LINEAR_SLOP
 }
 
 // void B2wheelJoint::dump()

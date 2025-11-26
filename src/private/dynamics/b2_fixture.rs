@@ -9,7 +9,7 @@ use crate::b2_common::*;
 use crate::b2rs_common::*;
 
 pub fn b2_fixture_default<T:UserDataType>() -> B2fixture<T> {
-	return B2fixture::<T> {
+	B2fixture::<T> {
 		m_user_data: None,
 		m_body: None,
 		m_next: None,
@@ -22,7 +22,7 @@ pub fn b2_fixture_default<T:UserDataType>() -> B2fixture<T> {
 		m_is_sensor: false,
 		m_restitution: 0.0,
 		m_restitution_threshold: 0.0
-	};
+	}
 }
 
 pub fn b2_fixture_create<T:UserDataType>(

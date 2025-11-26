@@ -6,7 +6,7 @@ use crate::b2_settings::*;
 use crate::b2_shape::*;
 
 pub fn b2_shape_dyn_trait_clone(self_: &B2polygonShape) -> Box<dyn B2shapeDynTrait> {
-	return Box::new(B2polygonShape::clone(&self_));
+	Box::new(B2polygonShape::clone(self_))
 }
 
 pub fn b2_polygon_shape_set_as_box(self_: &mut B2polygonShape, hx: f32, hy: f32) {
@@ -53,7 +53,7 @@ pub fn b2_polygon_shape_set_as_box_angle(
 }
 
 pub fn b2_shape_dyn_trait_get_child_count(_self: &B2polygonShape) -> usize {
-	return 1;
+	1
 }
 
 fn compute_centroid(vs: &[B2vec2]) -> B2vec2 {
@@ -90,12 +90,12 @@ fn compute_centroid(vs: &[B2vec2]) -> B2vec2 {
 	// Centroid
 	b2_assert(area > B2_EPSILON);
 	c = (1.0 / area)*c+s;
-	return c;
+	c
 }
 
 pub fn b2_polygon_shape_set(self_: &mut B2polygonShape, vertices: &[B2vec2]) {
 	let count = vertices.len();
-	b2_assert(3 <= count && count <= B2_MAX_POLYGON_VERTICES);
+	b2_assert((3..=B2_MAX_POLYGON_VERTICES).contains(&count));
 	if count < 3 {
 		b2_polygon_shape_set_as_box(self_, 1.0, 1.0);
 		return;
@@ -110,7 +110,7 @@ pub fn b2_polygon_shape_set(self_: &mut B2polygonShape, vertices: &[B2vec2]) {
 
 		let mut unique: bool = true;
 		for j in 0..temp_count {
-			if b2_distance_vec2_squared(v, ps[j as usize])
+			if b2_distance_vec2_squared(v, ps[j])
 				< ((0.5 * B2_LINEAR_SLOP) * (0.5 * B2_LINEAR_SLOP))
 			{
 				unique = false;
@@ -220,7 +220,7 @@ pub fn b2_shape_dyn_trait_test_point(self_: &B2polygonShape, xf: B2Transform, p:
 		}
 	}
 
-	return true;
+	true
 }
 
 pub fn b2_shape_dyn_trait_ray_cast(
@@ -286,7 +286,7 @@ pub fn b2_shape_dyn_trait_ray_cast(
 		return true;
 	}
 
-	return false;
+	false
 }
 
 pub fn b2_shape_dyn_trait_compute_aabb(
@@ -409,5 +409,5 @@ pub fn b2_polygon_shape_validate(self_: B2polygonShape) -> bool {
 		}
 	}
 
-	return true;
+	true
 }

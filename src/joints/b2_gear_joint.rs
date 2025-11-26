@@ -8,7 +8,7 @@ use crate::private::dynamics::joints::b2_gear_joint as private;
 
 impl<D: UserDataType> Default for B2gearJointDef<D> {
 	fn default() -> Self {
-		return Self {
+		Self {
 			base: B2jointDef {
 				jtype: B2jointType::EGearJoint,
 				..Default::default()
@@ -16,7 +16,7 @@ impl<D: UserDataType> Default for B2gearJointDef<D> {
 			joint1: None,
 			joint2: None,
 			ratio: 1.0,
-		};
+		}
 	}
 }
 
@@ -40,20 +40,20 @@ pub struct B2gearJointDef<D: UserDataType> {
 }
 
 impl<D: UserDataType> ToDerivedJoint<D> for B2gearJoint<D> {
-	fn as_derived(&self) -> JointAsDerived<D> {
-		return JointAsDerived::EGearJoint(self);
+	fn as_derived(&self) -> JointAsDerived<'_, D> {
+		JointAsDerived::EGearJoint(self)
 	}
-	fn as_derived_mut(&mut self) -> JointAsDerivedMut<D> {
-		return JointAsDerivedMut::EGearJoint(self);
+	fn as_derived_mut(&mut self) -> JointAsDerivedMut<'_, D> {
+		JointAsDerivedMut::EGearJoint(self)
 	}
 }
 
 impl<D: UserDataType> B2jointTraitDyn<D> for B2gearJoint<D> {
 	fn get_base(&self) -> &B2joint<D> {
-		return &self.base;
+		&self.base
 	}
 	fn get_base_mut(&mut self) -> &mut B2joint<D> {
-		return &mut self.base;
+		&mut self.base
 	}
 	fn get_anchor_a(&self) -> B2vec2 {
 		return self
@@ -74,12 +74,12 @@ impl<D: UserDataType> B2jointTraitDyn<D> for B2gearJoint<D> {
 	/// Unit is n.
 	fn get_reaction_force(&self, inv_dt: f32) -> B2vec2 {
 		let p: B2vec2 = self.m_impulse * self.m_jv_ac;
-		return inv_dt * p;
+		inv_dt * p
 	}
 
 	fn get_reaction_torque(&self, inv_dt: f32) -> f32 {
 		let l: f32 = self.m_impulse * self.m_jw_a;
-		return inv_dt * l;
+		inv_dt * l
 	}
 	fn init_velocity_constraints(
 		&mut self,
@@ -101,7 +101,7 @@ impl<D: UserDataType> B2jointTraitDyn<D> for B2gearJoint<D> {
 		data: &B2solverData,
 		positions: &mut [B2position],
 	) -> bool {
-		return private::solve_position_constraints(self, data, positions);
+		private::solve_position_constraints(self, data, positions)
 	}
 }
 
@@ -119,12 +119,12 @@ impl<D: UserDataType> B2jointTraitDyn<D> for B2gearJoint<D> {
 impl<D: UserDataType> B2gearJoint<D> {
 	/// Get the first joint.
 	pub fn get_joint1(&self) -> B2jointPtr<D> {
-		return self.m_joint1.clone();
+		self.m_joint1.clone()
 	}
 
 	/// Get the second joint.
 	pub fn get_joint2(&self) -> B2jointPtr<D> {
-		return self.m_joint2.clone();
+		self.m_joint2.clone()
 	}
 
 	/// Set/Get the gear ratio.
@@ -133,12 +133,12 @@ impl<D: UserDataType> B2gearJoint<D> {
 		self.m_ratio = ratio;
 	}
 	pub fn get_ratio(&self) -> f32 {
-		return self.m_ratio;
+		self.m_ratio
 	}
 
 	pub(crate) fn new(data: &B2gearJointDef<D>)->Self
 	{
-		return private::new(data);
+		private::new(data)
 	}
 }
 

@@ -10,7 +10,7 @@ use crate::private::dynamics::joints::b2_distance_joint as private;
 
 impl<D: UserDataType> Default for B2distanceJointDef<D> {
 	fn default() -> Self {
-		return Self {
+		Self {
 			base: B2jointDef {
 				jtype: B2jointType::EDistanceJoint,
 				..Default::default()
@@ -22,7 +22,7 @@ impl<D: UserDataType> Default for B2distanceJointDef<D> {
 			max_length: B2_MAX_FLOAT,
 			stiffness: 0.0,
 			damping: 0.0,
-		};
+		}
 	}
 }
 
@@ -72,38 +72,38 @@ impl<D: UserDataType> B2distanceJointDef<D> {
 }
 
 impl<D: UserDataType> ToDerivedJoint<D> for B2distanceJoint<D> {
-	fn as_derived(&self) -> JointAsDerived<D> {
-		return JointAsDerived::EDistanceJoint(self);
+	fn as_derived(&self) -> JointAsDerived<'_, D> {
+		JointAsDerived::EDistanceJoint(self)
 	}
-	fn as_derived_mut(&mut self) -> JointAsDerivedMut<D> {
-		return JointAsDerivedMut::EDistanceJoint(self);
+	fn as_derived_mut(&mut self) -> JointAsDerivedMut<'_, D> {
+		JointAsDerivedMut::EDistanceJoint(self)
 	}
 }
 
 impl<D: UserDataType> B2jointTraitDyn<D> for B2distanceJoint<D> {
 	fn get_base(&self) -> &B2joint<D> {
-		return &self.base;
+		&self.base
 	}
 	fn get_base_mut(&mut self) -> &mut B2joint<D> {
-		return &mut self.base;
+		&mut self.base
 	}
 	fn get_anchor_a(&self) -> B2vec2 {
-		return private::get_anchor_a(self);
+		private::get_anchor_a(self)
 	}
 	fn get_anchor_b(&self) -> B2vec2 {
-		return private::get_anchor_b(self);
+		private::get_anchor_b(self)
 	}
 
 	/// Get the reaction force given the inverse time step.
 	/// Unit is n.
 	fn get_reaction_force(&self, inv_dt: f32) -> B2vec2 {
-		return private::get_reaction_force(self, inv_dt);
+		private::get_reaction_force(self, inv_dt)
 	}
 
 	/// Get the reaction torque given the inverse time step.
 	/// Unit is n*m. This is always zero for a distance joint.
 	fn get_reaction_torque(&self, inv_dt: f32) -> f32 {
-		return private::get_reaction_torque(self, inv_dt);
+		private::get_reaction_torque(self, inv_dt)
 	}
 
 	fn init_velocity_constraints(
@@ -126,7 +126,7 @@ impl<D: UserDataType> B2jointTraitDyn<D> for B2distanceJoint<D> {
 		data: &B2solverData,
 		positions: &mut [B2position],
 	) -> bool {
-		return private::solve_position_constraints(self, data, positions);
+		private::solve_position_constraints(self, data, positions)
 	}
 	///
 	fn draw(&self, draw: &mut dyn B2drawTrait) {
@@ -137,29 +137,29 @@ impl<D: UserDataType> B2jointTraitDyn<D> for B2distanceJoint<D> {
 impl<D: UserDataType> B2distanceJoint<D> {
 	/// The local anchor point relative to body_a's origin.
 	pub fn get_local_anchor_a(&self) -> B2vec2 {
-		return self.m_local_anchor_a;
+		self.m_local_anchor_a
 	}
 
 	/// The local anchor point relative to body_b's origin.
 	pub fn get_local_anchor_b(&self) -> B2vec2 {
-		return self.m_local_anchor_b;
+		self.m_local_anchor_b
 	}
 
 	/// Get the rest length
 	pub fn get_length(&self) -> f32 {
-		return self.m_length;
+		self.m_length
 	}
 
 	/// Set the rest length
 	/// 
 	/// @returns clamped rest length
 	pub fn set_length(&mut self, length: f32)->f32 {
-		return private::set_length(self,length);
+		private::set_length(self,length)
 	}
 
 	/// Get the minimum length
 	pub fn get_min_length(&self)  -> f32  { 
-		return self.m_min_length; 
+		self.m_min_length
 	}
 
 	/// Set the minimum length
@@ -167,24 +167,24 @@ impl<D: UserDataType> B2distanceJoint<D> {
 	/// @returns the clamped minimum length
 	pub fn set_min_length(&mut self, min_length: f32)  -> f32 
 	{
-		return private::set_min_length(self, min_length);
+		private::set_min_length(self, min_length)
 	}
 
 	/// Get the maximum length
 	pub fn get_max_length(&self)  -> f32  { 
-		return self.m_max_length; 
+		self.m_max_length
 	}
 
 	/// Set the maximum length
 	/// 
 	/// @returns the clamped maximum length
 	pub fn set_max_length(&mut self, max_length: f32)  -> f32  {
-		return private::set_max_length(self, max_length);
+		private::set_max_length(self, max_length)
 	}
 
 	/// Get the current length
 	pub fn get_current_length(&self)  -> f32 {
-		return private::get_current_length(self);
+		private::get_current_length(self)
 	}
 	
 
@@ -193,7 +193,7 @@ impl<D: UserDataType> B2distanceJoint<D> {
 		self.m_stiffness = stiffness;
 	}
 	pub fn get_stiffness(&self) -> f32 {
-		return self.m_stiffness;
+		self.m_stiffness
 	}
 
 	/// Set/get linear damping in n*s/m
@@ -201,11 +201,11 @@ impl<D: UserDataType> B2distanceJoint<D> {
 		self.m_damping = damping;
 	}
 	pub fn get_damping(&self) -> f32 {
-		return self.m_damping;
+		self.m_damping
 	}	
 
 	pub(crate) fn new(data: &B2distanceJointDef<D>) -> Self {
-		return private::b2_distance_joint_new(data);
+		private::b2_distance_joint_new(data)
 	}
 }
 

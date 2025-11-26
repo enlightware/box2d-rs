@@ -38,15 +38,15 @@ where
 
 impl<T:DoubleLinkedListNode<T> + ?Sized> Default for DoubleLinkedList<T> {
     fn default() -> Self {
-        return Self { head: None };
+        Self { head: None }
     }
 }
 
 impl<T:DoubleLinkedListNode<T> + ?Sized> Clone for DoubleLinkedList<T> {
     fn clone(&self) -> Self {
-        return Self {
+        Self {
             head: self.head.clone(),
-        };
+        }
     }
 }
 
@@ -222,7 +222,7 @@ where
         self.head = None;
     }
     pub fn iter(&self)->Iter<T>{
-        return Iter{
+        Iter{
             next: self.head.clone()
         }
     }

@@ -106,5 +106,5 @@ pub(crate) fn  solve_velocity_constraints<D: UserDataType>(self_: &mut B2mouseJo
 pub(crate) fn  solve_position_constraints<D: UserDataType>(_self: &mut B2mouseJoint<D>, data: &B2solverData, _positions: &mut [B2position]) -> bool
 {
 	b2_not_used(data);
-	return true;
+	true
 }

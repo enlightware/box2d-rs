@@ -164,7 +164,7 @@ pub fn b2_aabb_ray_cast(self_: B2AABB, output: &mut B2rayCastOutput, input: &B2r
 	// Intersection.
 	output.fraction = tmin;
 	output.normal = normal;
-	return true;
+	true
 }
 
 // Sutherland-Hodgman clipping.
@@ -210,7 +210,7 @@ pub fn b2_clip_segment_to_line(
 		b2_assert(count == 2);
 	}
 
-	return count;
+	count
 }
 
 pub fn b2_test_overlap(
@@ -239,5 +239,5 @@ pub fn b2_test_overlap(
 
 	b2_distance_fn(&mut output, &mut cache, &input);
 
-	return output.distance < 10.0 * B2_EPSILON;
+	output.distance < 10.0 * B2_EPSILON
 }
