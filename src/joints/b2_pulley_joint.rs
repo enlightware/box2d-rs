@@ -56,6 +56,7 @@ pub struct B2pulleyJointDef<D: UserDataType> {
 
 impl<D: UserDataType> B2pulleyJointDef<D> {
 	/// initialize the bodies, anchors, lengths, max lengths, and ratio using the world anchors.
+	#[allow(clippy::too_many_arguments)]
 	pub fn initialize(
 		&mut self,
 		body_a: BodyPtr<D>,

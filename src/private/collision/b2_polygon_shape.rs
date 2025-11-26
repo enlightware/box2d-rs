@@ -105,12 +105,11 @@ pub fn b2_polygon_shape_set(self_: &mut B2polygonShape, vertices: &[B2vec2]) {
 	// Perform welding and copy vertices into local buffer.
 	let mut ps = <[B2vec2; B2_MAX_POLYGON_VERTICES]>::default();
 	let mut temp_count: usize = 0;
-	for i in 0..n {
-		let v: B2vec2 = vertices[i];
+	for v in vertices.iter().take(n).copied() {
 
 		let mut unique: bool = true;
-		for j in 0..temp_count {
-			if b2_distance_vec2_squared(v, ps[j])
+		for p in ps.iter().take(temp_count) {
+			if b2_distance_vec2_squared(v, *p)
 				< ((0.5 * B2_LINEAR_SLOP) * (0.5 * B2_LINEAR_SLOP))
 			{
 				unique = false;

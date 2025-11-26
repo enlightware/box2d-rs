@@ -1,6 +1,5 @@
 use crate::b2_common::{b2_assert, B2_PI};
 use crate::private::common::b2_math as private;
-use std::f32::EPSILON;
 use std::ops::{Add, AddAssign, Mul, MulAssign, Neg, Sub, SubAssign};
 
 #[cfg(feature="serde_support")]
@@ -81,7 +80,7 @@ impl B2vec2 {
     /// Convert this vector into a unit vector. Returns the length.
     pub fn normalize(&mut self) -> f32 {
         let length = self.length();
-        if length < EPSILON {
+        if length < f32::EPSILON {
             return 0.0;
         }
         let inv_length: f32 = 1.0 / length;

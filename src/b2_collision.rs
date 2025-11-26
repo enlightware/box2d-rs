@@ -1,3 +1,6 @@
+//! Structures and functions used for computing contact points, distance
+//! queries, and TOI queries.
+
 use crate::b2_math::*;
 use crate::b2_common::B2_MAX_MANIFOLD_POINTS;
 use crate::b2_shape::*;
@@ -6,11 +9,8 @@ use crate::shapes::b2_circle_shape::*;
 use crate::shapes::b2_edge_shape::*;
 use crate::shapes::b2_polygon_shape::*;
 
-/// @file
-/// Structures and functions used for computing contact points, distance
-/// queries, and TOI queries.
 
-pub const B2_NULL_FEATURE: u8 = std::u8::MAX;
+pub const B2_NULL_FEATURE: u8 = u8::MAX;
 
 pub enum B2contactFeatureType {
     EVertex = 0,
@@ -88,14 +88,17 @@ impl Default for B2manifold {
 /// Box2D supports multiple types of contact:
 /// - clip point versus plane with radius
 /// - point versus point with radius (circles)
+///
 /// The local point usage depends on the manifold type:
 /// -e_circles: the local center of circle_a
 /// -e_faceA: the center of faceA
 /// -e_faceB: the center of faceB
+///
 /// Similarly the local normal usage:
 /// -e_circles: not used
 /// -e_faceA: the normal on polygon_a
 /// -e_faceB: the normal on polygon_b
+///
 /// We store contacts in this way so that position correction can
 /// account for movement, which is critical for continuous physics.
 /// All contact scenarios must be expressed in one of these types.

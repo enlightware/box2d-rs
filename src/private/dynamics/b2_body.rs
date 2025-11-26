@@ -204,9 +204,11 @@ pub fn create_fixture_by_shape<D: UserDataType>(
 	shape: ShapeDefPtr,
 	density: f32,
 ) -> FixturePtr<D> {
-	let mut def = B2fixtureDef::default();
-	def.shape = Some(shape);
-	def.density = density;
+	let def = B2fixtureDef {
+		shape: Some(shape),
+		density,
+		..Default::default()
+	};
 
 	create_fixture(self_, &def)
 }

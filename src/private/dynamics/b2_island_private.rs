@@ -194,7 +194,7 @@ pub(crate) fn solve<D: UserDataType>(self_: &mut B2island<D>, profile: &mut B2Pr
 	{
 		contact_solver.warm_start(&mut self_.m_velocities);
 	}
-	
+
 	for j in &self_.m_joints
 	{
 		j.borrow_mut().init_velocity_constraints(&solver_data, &self_.m_positions, &mut self_.m_velocities);
@@ -472,9 +472,11 @@ pub(crate) fn report<D: UserDataType>(self_: &B2island<D>, constraints: &[B2cont
 	{
 		let mut c = c.borrow_mut();
 		let vc = &constraints[i];
-		
-		let mut impulse = B2contactImpulse::default();
-		impulse.count = vc.point_count;
+
+		let mut impulse = B2contactImpulse {
+			count: vc.point_count,
+			..Default::default()
+		};
 
 		for j in 0..vc.point_count
 		{

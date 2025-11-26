@@ -278,7 +278,7 @@ pub(crate) fn solve_position_constraints<D: UserDataType>(
 	_data: &B2solverData,
 	positions: &mut [B2position],
 ) -> bool {
-	
+
 	let mut c_a: B2vec2 = positions[self_.m_index_a].c;
 	let mut a_a: f32 = positions[self_.m_index_a].a;
 	let mut c_b: B2vec2 = positions[self_.m_index_b].c;
@@ -292,9 +292,7 @@ pub(crate) fn solve_position_constraints<D: UserDataType>(
 
 	let length: f32 = u.normalize();
 	let c: f32;
-	if self_.m_min_length == self_.m_max_length {
-		c = length - self_.m_min_length;
-	} else if length < self_.m_min_length {
+	if self_.m_min_length == self_.m_max_length || length < self_.m_min_length {
 		c = length - self_.m_min_length;
 	} else if self_.m_max_length < length {
 		c = length - self_.m_max_length;

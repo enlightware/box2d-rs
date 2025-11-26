@@ -64,7 +64,7 @@ impl<UserDataType: Clone + Default> B2dynamicTree<UserDataType> {
 		private::b2_dynamic_tree()
 	}
 
-	/// destroy the tree, freeing the node pool.
+	// /// destroy the tree, freeing the node pool.
 	//~B2dynamicTree();
 
 	/// create a proxy. Provide a tight fitting AABB and a user_data pointer.
@@ -80,14 +80,14 @@ impl<UserDataType: Clone + Default> B2dynamicTree<UserDataType> {
 	/// Move a proxy with a swepted AABB. If the proxy has moved outside of its fattened AABB,
 	/// then the proxy is removed from the tree and re-inserted. Otherwise
 	/// the function returns immediately.
-	/// 
+	///
 	/// @return true if the proxy was re-inserted.
 	pub fn move_proxy(&mut self, proxy_id: i32, aabb1: B2AABB, displacement: B2vec2) -> bool {
 		private::move_proxy(self, proxy_id, aabb1, displacement)
 	}
 
 	/// Get proxy user data.
-	/// 
+	///
 	/// @return the proxy user data or 0 if the id is invalid.
 	pub fn get_user_data(&self, proxy_id: i32) -> Option<UserDataType> {
 		inline::get_user_data(self, proxy_id)

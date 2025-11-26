@@ -104,7 +104,7 @@ pub(crate) fn destroy_body<D: UserDataType>(self_: &mut B2world<D>, b: BodyPtr<D
 		panic!();
 	}
 
-	// Delete the attached joints.	
+	// Delete the attached joints.
 	let m_joint_list = b.borrow().m_joint_list.clone();
 	for je in m_joint_list.iter() {
 		let joint = upgrade(&je.borrow().joint);
@@ -740,8 +740,8 @@ pub(crate) fn solve_toi<D: UserDataType>(self_: &mut B2world<D>, step: B2timeSte
 
 		// Get contacts on body_a and body_b.
 		let bodies: [_; 2] = [b_a.clone(), b_b.clone()];
-		for i in 0..2 {
-			let body = bodies[i].clone();
+		for body in &bodies {
+			let body = body.clone();
 			if body.borrow().m_type == B2bodyType::B2DynamicBody {
 				let contact_list = body.borrow().m_contact_list.clone();
 				for ce in contact_list.iter() {
@@ -1092,22 +1092,22 @@ pub(crate) fn draw_shape<D: UserDataType>(
 
 			let mut v1: B2vec2 = b2_mul_transform_by_vec2(*xf, vertices[0]);
 
-			for i in 1..count
+			for v in vertices.iter().take(count).skip(1)
 			{
-				let v2: B2vec2 = b2_mul_transform_by_vec2(*xf, vertices[i]);
+				let v2: B2vec2 = b2_mul_transform_by_vec2(*xf, *v);
 				m_debug_draw.draw_segment(v1, v2, *color);
 				v1 = v2;
 			}
 		}
-		ShapeAsDerived::AsPolygon(poly) => 
+		ShapeAsDerived::AsPolygon(poly) =>
 		{
 			let vertex_count = poly.m_count;
 			b2_assert(vertex_count <= B2_MAX_POLYGON_VERTICES);
 			let mut vertices= <[B2vec2;B2_MAX_POLYGON_VERTICES]>::default();
 
-			for i in 0..vertex_count
+			for (i, v) in poly.m_vertices.iter().enumerate().take(vertex_count)
 			{
-				vertices[i] = b2_mul_transform_by_vec2(*xf, poly.m_vertices[i]);
+				vertices[i] = b2_mul_transform_by_vec2(*xf, *v);
 			}
 
 			m_debug_draw.draw_solid_polygon(&vertices[..vertex_count], *color);
@@ -1135,7 +1135,7 @@ pub(crate) fn debug_draw<D: UserDataType>(self_: &B2world<D>) {
 			let b = b.borrow();
 			let xf:B2Transform = b.get_transform();
 			for f in b.get_fixture_list().iter()
-			{				
+			{
 				if b.get_type() == B2bodyType::B2DynamicBody && b.m_mass == 0.0
 				{
 					// Bad body

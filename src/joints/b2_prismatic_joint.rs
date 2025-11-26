@@ -316,7 +316,6 @@ impl<D: UserDataType> B2jointTraitDyn<D> for B2prismaticJoint<D> {
         private::solve_position_constraints(self, data, positions)
     }
 
-    ///
     fn draw(&self, draw: &mut dyn B2drawTrait) {
         private::draw(self, draw);
     }

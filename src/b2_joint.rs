@@ -54,7 +54,7 @@ pub enum B2jointType {
 	EPulleyJoint,
 	ERevoluteJoint,
 	EWeldJoint,
-	EWheelJoint,	
+	EWheelJoint,
 }
 
 impl Default for B2jointType {
@@ -263,7 +263,7 @@ pub trait B2jointTraitDyn<D: UserDataType>: ToDerivedJoint<D> {
 	/// Debug draw this joint
 	fn draw(&self, draw: &mut dyn B2drawTrait) {
 		private::draw(self, draw);
-	} 
+	}
 
 	fn init_velocity_constraints(
 		&mut self,
@@ -327,7 +327,7 @@ pub struct B2joint<D: UserDataType> {
 	pub(crate) m_body_a: BodyPtr<D>,
 	pub(crate) m_body_b: BodyPtr<D>,
 
-	pub(crate) m_index: i32,
+	//pub(crate) m_index: i32,
 
 	pub(crate) m_island_flag: bool,
 	pub(crate) m_collide_connected: bool,

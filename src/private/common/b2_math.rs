@@ -28,7 +28,6 @@ pub fn solve22(self_: B2Mat33, b: B2vec2) -> B2vec2 {
         y: det * (a11 * b.y - a21 * b.x),
     }
 }
-///
 pub fn get_inverse22(self_: B2Mat33, m: &mut B2Mat33) {
     let (a, b, c, d) = (self_.ex.x, self_.ey.x, self_.ex.y, self_.ey.y);
     let mut det: f32 = a * d - b * c;

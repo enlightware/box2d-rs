@@ -196,32 +196,30 @@ pub fn insert_leaf<T: Clone + Default>(self_: &mut B2dynamicTree<T>, leaf: i32) 
 		let inheritance_cost: f32 = 2.0 * (combined_area - area);
 
 		// Cost of descending into child1
-		let cost1: f32;
-		if self_.m_nodes[child1 as usize].is_leaf() {
+		let cost1: f32 = if self_.m_nodes[child1 as usize].is_leaf() {
 			let mut aabb = B2AABB::default();
 			aabb.combine_two(leaf_aabb, self_.m_nodes[child1 as usize].aabb);
-			cost1 = aabb.get_perimeter() + inheritance_cost;
+			aabb.get_perimeter() + inheritance_cost
 		} else {
 			let mut aabb = B2AABB::default();
 			aabb.combine_two(leaf_aabb, self_.m_nodes[child1 as usize].aabb);
 			let old_area: f32 = self_.m_nodes[child1 as usize].aabb.get_perimeter();
 			let new_area: f32 = aabb.get_perimeter();
-			cost1 = (new_area - old_area) + inheritance_cost;
-		}
+			(new_area - old_area) + inheritance_cost
+		};
 
 		// Cost of descending into child2
-		let cost2: f32;
-		if self_.m_nodes[child2 as usize].is_leaf() {
+		let cost2: f32 = if self_.m_nodes[child2 as usize].is_leaf() {
 			let mut aabb = B2AABB::default();
 			aabb.combine_two(leaf_aabb, self_.m_nodes[child2 as usize].aabb);
-			cost2 = aabb.get_perimeter() + inheritance_cost;
+			aabb.get_perimeter() + inheritance_cost
 		} else {
 			let mut aabb = B2AABB::default();
 			aabb.combine_two(leaf_aabb, self_.m_nodes[child2 as usize].aabb);
 			let old_area: f32 = self_.m_nodes[child2 as usize].aabb.get_perimeter();
 			let new_area: f32 = aabb.get_perimeter();
-			cost2 = new_area - old_area + inheritance_cost;
-		}
+			new_area - old_area + inheritance_cost
+		};
 
 		// Descend according to the minimum cost.
 		if cost < cost1 && cost < cost2 {
@@ -305,12 +303,11 @@ pub fn remove_leaf<T: Clone + Default>(self_: &mut B2dynamicTree<T>, leaf: i32) 
 
 	let parent: i32 = self_.m_nodes[leaf as usize].parent;
 	let grand_parent: i32 = self_.m_nodes[parent as usize].parent;
-	let sibling: i32;
-	if self_.m_nodes[parent as usize].child1 == leaf {
-		sibling = self_.m_nodes[parent as usize].child2;
+	let sibling: i32 = if self_.m_nodes[parent as usize].child1 == leaf {
+		self_.m_nodes[parent as usize].child2
 	} else {
-		sibling = self_.m_nodes[parent as usize].child1;
-	}
+		self_.m_nodes[parent as usize].child1
+	};
 
 	if grand_parent != B2_NULL_NODE {
 		// destroy parent and connect sibling to grandParent.

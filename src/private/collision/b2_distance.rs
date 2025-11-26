@@ -415,7 +415,10 @@ pub fn b2_distance_fn(
 	let transform_b: B2Transform = input.transform_b;
 
 	// initialize the simplex.
-	let mut simplex = B2simplex::default();
+	let mut simplex = B2simplex {
+		m_count: 0,
+		..Default::default()
+	};
 	simplex.read_cache(cache, proxy_a, transform_a, proxy_b, transform_b);
 
 	// Get simplex vertices as an array.
@@ -499,7 +502,7 @@ pub fn b2_distance_fn(
 		// New vertex is ok and needed.
 		simplex.m_count += 1;
 	}
-	
+
 		B2_GJK_MAX_ITERS.fetch_max(iter, Ordering::SeqCst);
 
 	// Prepare output.
@@ -559,7 +562,6 @@ pub fn b2_shape_cast(output: &mut B2shapeCastOutput, input: B2shapeCastInput) ->
 
 	// Initial simplex
 	let mut simplex = B2simplex::default();
-	simplex.m_count = 0;
 
 	// Get simplex vertices as an array.
 	//b2SimplexVertex* vertices = &simplex.m_v[0];

@@ -83,7 +83,7 @@ pub(crate) fn create<D: UserDataType>(def: &B2JointDefEnum<D>) -> B2jointPtr<D>
 		B2JointDefEnum::RevoluteJoint(ref def)=> Rc::new(RefCell::new(B2revoluteJoint::new(def))),
 		B2JointDefEnum::PrismaticJoint(ref def)=> Rc::new(RefCell::new(B2prismaticJoint::new(def))),
 		B2JointDefEnum::WeldJoint(ref def)=> Rc::new(RefCell::new(B2weldJoint::new(def))),
-		B2JointDefEnum::WheelJoint(ref def)=> Rc::new(RefCell::new(B2wheelJoint::new(def))),	
+		B2JointDefEnum::WheelJoint(ref def)=> Rc::new(RefCell::new(B2wheelJoint::new(def))),
 	}
 }
 
@@ -98,7 +98,7 @@ pub(crate) fn new<D: UserDataType>(def: &B2jointDef<D>)-> B2joint<D>
 		m_next : None,
 		m_body_a : def.body_a.clone().unwrap(),
 		m_body_b : def.body_b.clone().unwrap(),
-		m_index : 0,
+		//m_index : 0,
 		m_collide_connected : def.collide_connected,
 		m_island_flag : false,
 		m_user_data : def.user_data.clone(),

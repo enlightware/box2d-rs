@@ -79,30 +79,30 @@ pub fn b2_get_point_states(
 	}
 
 	// Detect persists and removes.
-	for i in 0..manifold1.point_count {
+	for (i, state) in state1.iter_mut().enumerate().take(manifold1.point_count) {
 		let id: B2contactId = manifold1.points[i].id;
 
-		state1[i] = B2pointState::B2RemoveState;
+		*state = B2pointState::B2RemoveState;
 
 		for j in 0..manifold2.point_count {
-			
+
 				if manifold2.points[j].id.cf == id.cf {
-					state1[i] = B2pointState::B2PersistState;
+					*state = B2pointState::B2PersistState;
 					break;
 				}
-			
+
 		}
 	}
 
 	// Detect persists and adds.
-	for i in 0..manifold2.point_count {
+	for (i, state) in state2.iter_mut().enumerate().take(manifold2.point_count) {
 		let id: B2contactId = manifold2.points[i].id;
 
-		state2[i] = B2pointState::B2AddState;
+		*state = B2pointState::B2AddState;
 
 		for j in 0..manifold1.point_count {
 			if manifold1.points[j].id == id {
-				state2[i] = B2pointState::B2PersistState;
+				*state = B2pointState::B2PersistState;
 				break;
 			}
 		}
@@ -200,9 +200,9 @@ pub fn b2_clip_segment_to_line(
 
 		// VertexA is hitting edgeB.
 		v_out[count].id.cf.index_a = vertex_index_a as u8;
-		
+
 			v_out[count].id.cf.index_b = v_in[0].id.cf.index_b;
-		
+
 		v_out[count].id.cf.type_a = B2contactFeatureType::EVertex as u8;
 		v_out[count].id.cf.type_b = B2contactFeatureType::EFace as u8;
 		count += 1;
@@ -232,8 +232,10 @@ pub fn b2_test_overlap(
 	input.proxy_a.set_shape(shape_a,index_a);
 	input.proxy_b.set_shape(shape_b, index_b);
 
-	let mut cache = B2simplexCache::default();
-	cache.count = 0;
+	let mut cache = B2simplexCache {
+		count: 0,
+		..Default::default()
+	};
 
 	let mut output = B2distanceOutput::default();
 

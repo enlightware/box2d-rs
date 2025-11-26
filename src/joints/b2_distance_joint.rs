@@ -51,8 +51,8 @@ pub struct B2distanceJointDef<D: UserDataType> {
 
 	/// Maximum length. Must be greater than or equal to the minimum length.
 	pub max_length: f32,
-	
-	/// The linear stiffness in N/m.	
+
+	/// The linear stiffness in N/m.
 	pub damping: f32,
 
 }
@@ -128,7 +128,6 @@ impl<D: UserDataType> B2jointTraitDyn<D> for B2distanceJoint<D> {
 	) -> bool {
 		private::solve_position_constraints(self, data, positions)
 	}
-	///
 	fn draw(&self, draw: &mut dyn B2drawTrait) {
 		private::draw(self, draw);
 	}
@@ -151,32 +150,32 @@ impl<D: UserDataType> B2distanceJoint<D> {
 	}
 
 	/// Set the rest length
-	/// 
+	///
 	/// @returns clamped rest length
 	pub fn set_length(&mut self, length: f32)->f32 {
 		private::set_length(self,length)
 	}
 
 	/// Get the minimum length
-	pub fn get_min_length(&self)  -> f32  { 
+	pub fn get_min_length(&self)  -> f32  {
 		self.m_min_length
 	}
 
 	/// Set the minimum length
-	/// 
+	///
 	/// @returns the clamped minimum length
-	pub fn set_min_length(&mut self, min_length: f32)  -> f32 
+	pub fn set_min_length(&mut self, min_length: f32)  -> f32
 	{
 		private::set_min_length(self, min_length)
 	}
 
 	/// Get the maximum length
-	pub fn get_max_length(&self)  -> f32  { 
+	pub fn get_max_length(&self)  -> f32  {
 		self.m_max_length
 	}
 
 	/// Set the maximum length
-	/// 
+	///
 	/// @returns the clamped maximum length
 	pub fn set_max_length(&mut self, max_length: f32)  -> f32  {
 		private::set_max_length(self, max_length)
@@ -186,7 +185,7 @@ impl<D: UserDataType> B2distanceJoint<D> {
 	pub fn get_current_length(&self)  -> f32 {
 		private::get_current_length(self)
 	}
-	
+
 
 	/// Set/get the linear stiffness in n/m
 	pub fn set_stiffness(&mut self, stiffness: f32) {
@@ -202,7 +201,7 @@ impl<D: UserDataType> B2distanceJoint<D> {
 	}
 	pub fn get_damping(&self) -> f32 {
 		self.m_damping
-	}	
+	}
 
 	pub(crate) fn new(data: &B2distanceJointDef<D>) -> Self {
 		private::b2_distance_joint_new(data)

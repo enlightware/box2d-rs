@@ -38,7 +38,7 @@ pub(crate) fn random_float_range(lo: f32, hi: f32) -> f32 {
 // This is called when a joint in the world is implicitly destroyed
 // because an attached body is destroyed. This gives us a chance to
 // nullify the mouse joint.
-pub(crate)struct B2testDestructionListenerDefault<D: UserDataType> 
+pub(crate)struct B2testDestructionListenerDefault<D: UserDataType>
 {
 	pub(crate) base: TestBasePtrWeak<D>,
 }
@@ -80,10 +80,10 @@ pub(crate) struct ContactPoint<D: UserDataType> {
 	pub(crate) state: B2pointState,
 	pub(crate) normal_impulse: f32,
 	pub(crate) tangent_impulse: f32,
-	pub(crate) separation: f32,
+	// pub(crate) separation: f32,
 }
 
-pub(crate)struct B2testContactListenerDefault<D: UserDataType> 
+pub(crate)struct B2testContactListenerDefault<D: UserDataType>
 {
 	pub(crate) base: TestBasePtrWeak<D>,
 }
@@ -108,7 +108,7 @@ pub(crate) type TestPtr<D,F> = Rc<RefCell<dyn TestDyn<D,F>>>;
 pub(crate) trait TestDyn<D: UserDataType, F:Facade>
 {
 	fn get_base(&self) -> TestBasePtr<D>;
-	
+
 	fn step(&mut self, ui: &imgui::Ui, display: &F, target: &mut glium::Frame, settings: &mut Settings, camera: &mut Camera);
 	fn update_ui(&mut self, _ui: &imgui::Ui) {}
 	fn keyboard(&mut self, key: &KeyboardInput) {
@@ -129,17 +129,22 @@ pub(crate) trait TestDyn<D: UserDataType, F:Facade>
 	fn launch_bomb_rand(&mut self) {
 		private::launch_bomb_rand(&mut self.get_base().borrow_mut());
 	}
+
+	#[allow(dead_code)]
 	fn launch_bomb(&mut self, position: B2vec2, velocity: B2vec2) {
 		private::launch_bomb(&mut self.get_base().borrow_mut(), position, velocity);
 	}
+	#[allow(dead_code)]
 	fn spawn_bomb(&mut self, world_pt: B2vec2) {
 		private::spawn_bomb(&mut self.get_base().borrow_mut(), world_pt);
 	}
+	#[allow(dead_code)]
 	fn complete_bomb_spawn(&mut self, p: B2vec2) {
 		private::complete_bomb_spawn(&mut self.get_base().borrow_mut(), p);
 	}
 
 	// Let derived tests know that a joint was destroyed.
+	#[allow(dead_code)]
 	fn joint_destroyed(&mut self, joint: B2jointPtr<D>) {
 		b2_not_used(joint);
 	}

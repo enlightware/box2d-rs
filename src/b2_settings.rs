@@ -1,4 +1,4 @@
-/// Settings that can be overriden for your application
+//! Settings that can be overriden for your application
 
 // Tunable Constants
 
