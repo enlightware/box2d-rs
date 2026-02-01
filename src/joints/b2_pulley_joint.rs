@@ -10,7 +10,7 @@ use crate::private::dynamics::joints::b2_pulley_joint as private;
 
 impl<D: UserDataType> Default for B2pulleyJointDef<D> {
 	fn default() -> Self {
-		return Self {
+		Self {
 			base: B2jointDef {
 				jtype: B2jointType::EPulleyJoint,
 				collide_connected: true,
@@ -23,7 +23,7 @@ impl<D: UserDataType> Default for B2pulleyJointDef<D> {
 			length_a: 0.0,
 			length_b: 0.0,
 			ratio: 1.0,
-		};
+		}
 	}
 }
 
@@ -56,6 +56,7 @@ pub struct B2pulleyJointDef<D: UserDataType> {
 
 impl<D: UserDataType> B2pulleyJointDef<D> {
 	/// initialize the bodies, anchors, lengths, max lengths, and ratio using the world anchors.
+	#[allow(clippy::too_many_arguments)]
 	pub fn initialize(
 		&mut self,
 		body_a: BodyPtr<D>,
@@ -83,20 +84,20 @@ impl<D: UserDataType> B2pulleyJointDef<D> {
 }
 
 impl<D: UserDataType> ToDerivedJoint<D> for B2pulleyJoint<D> {
-	fn as_derived(&self) -> JointAsDerived<D> {
-		return JointAsDerived::EPulleyJoint(self);
+	fn as_derived(&self) -> JointAsDerived<'_, D> {
+		JointAsDerived::EPulleyJoint(self)
 	}
-	fn as_derived_mut(&mut self) -> JointAsDerivedMut<D> {
-		return JointAsDerivedMut::EPulleyJoint(self);
+	fn as_derived_mut(&mut self) -> JointAsDerivedMut<'_, D> {
+		JointAsDerivedMut::EPulleyJoint(self)
 	}
 }
 
 impl<D: UserDataType> B2jointTraitDyn<D> for B2pulleyJoint<D> {
 	fn get_base(&self) -> &B2joint<D> {
-		return &self.base;
+		&self.base
 	}
 	fn get_base_mut(&mut self) -> &mut B2joint<D> {
-		return &mut self.base;
+		&mut self.base
 	}
 	fn get_anchor_a(&self) -> B2vec2 {
 		return self
@@ -117,12 +118,12 @@ impl<D: UserDataType> B2jointTraitDyn<D> for B2pulleyJoint<D> {
 	/// Unit is n.
 	fn get_reaction_force(&self, inv_dt: f32) -> B2vec2 {
 		let p: B2vec2 = self.m_impulse * self.m_u_b;
-		return inv_dt * p;
+		inv_dt * p
 	}
 
 	fn get_reaction_torque(&self, inv_dt: f32) -> f32 {
 		b2_not_used(inv_dt);
-		return 0.0;
+		0.0
 	}
 	fn init_velocity_constraints(
 		&mut self,
@@ -144,7 +145,7 @@ impl<D: UserDataType> B2jointTraitDyn<D> for B2pulleyJoint<D> {
 		data: &B2solverData,
 		positions: &mut [B2position],
 	) -> bool {
-		return private::solve_position_constraints(self, data, positions);
+		private::solve_position_constraints(self, data, positions)
 	}
 
 	/// Implement B2joint::shift_origin
@@ -166,27 +167,27 @@ impl<D: UserDataType> B2jointTraitDyn<D> for B2pulleyJoint<D> {
 impl<D: UserDataType> B2pulleyJoint<D> {
 	/// Get the first ground anchor.
 	pub fn get_ground_anchor_a(&self) -> B2vec2 {
-		return self.m_ground_anchor_a;
+		self.m_ground_anchor_a
 	}
 
 	/// Get the second ground anchor.
 	pub fn get_ground_anchor_b(&self) -> B2vec2 {
-		return self.m_ground_anchor_b;
+		self.m_ground_anchor_b
 	}
 
 	/// Get the current length of the segment attached to body_a.
 	pub fn get_length_a(&self) -> f32 {
-		return self.m_length_a;
+		self.m_length_a
 	}
 
 	/// Get the current length of the segment attached to body_b.
 	pub fn get_length_b(&self) -> f32 {
-		return self.m_length_b;
+		self.m_length_b
 	}
 
 	/// Get the pulley ratio.
 	pub fn get_ratio(&self) -> f32 {
-		return self.m_ratio;
+		self.m_ratio
 	}
 
 	/// Get the current length of the segment attached to body_a.
@@ -198,7 +199,7 @@ impl<D: UserDataType> B2pulleyJoint<D> {
 			.get_world_point(self.m_local_anchor_a);
 		let s: B2vec2 = self.m_ground_anchor_a;
 		let d: B2vec2 = p - s;
-		return d.length();
+		d.length()
 	}
 
 	/// Get the current length of the segment attached to body_b.
@@ -210,11 +211,11 @@ impl<D: UserDataType> B2pulleyJoint<D> {
 			.get_world_point(self.m_local_anchor_b);
 		let s: B2vec2 = self.m_ground_anchor_b;
 		let d: B2vec2 = p - s;
-		return d.length();
+		d.length()
 	}
 
 	pub(crate) fn new(def: &B2pulleyJointDef<D>) -> B2pulleyJoint<D> {
-		return private::new(def);
+		private::new(def)
 	}
 }
 

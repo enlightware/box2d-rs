@@ -4,11 +4,11 @@ use serde::{de::DeserializeOwned, Serialize};
 use std::rc::{Rc,Weak};
 
 pub fn upgrade<T: ?Sized>(v: &Weak<T>) -> Rc<T> {
-	return v.upgrade().unwrap();
+	v.upgrade().unwrap()
 }
 
 pub fn upgrade_opt<T: ?Sized>(v: &Option<Weak<T>>) -> Rc<T> {
-	return v.as_ref().unwrap().upgrade().unwrap();
+	v.as_ref().unwrap().upgrade().unwrap()
 }
 
 #[cfg(not(feature="serde_support"))]

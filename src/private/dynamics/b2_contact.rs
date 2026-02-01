@@ -24,9 +24,9 @@ pub fn b2_contact_create<D: UserDataType>(
 	let create_fcn = s_register.create_fcn.unwrap();
 
 	if s_register.primary {
-		return create_fcn(fixture_a, index_a, fixture_b, index_b);
+		create_fcn(fixture_a, index_a, fixture_b, index_b)
 	} else {
-		return create_fcn(fixture_b, index_b, fixture_a, index_a);
+		create_fcn(fixture_b, index_b, fixture_a, index_a)
 	}
 }
 
@@ -37,8 +37,8 @@ pub fn b2_contact_destroy<D: UserDataType>(self_: &dyn B2contactDynTrait<D>) {
 	let fixture_b = contact_base.m_fixture_b.borrow();
 
 	if contact_base.m_manifold.point_count > 0
-		&& fixture_a.is_sensor() == false
-		&& fixture_b.is_sensor() == false
+		&& !fixture_a.is_sensor()
+		&& !fixture_b.is_sensor()
 	{
 		fixture_a.get_body().borrow_mut().set_awake(true);
 		fixture_b.get_body().borrow_mut().set_awake(true);
@@ -203,15 +203,15 @@ pub fn b2_contact_update<D: UserDataType>(
 
 		let mut contact_listener = contact_listener.borrow_mut();
 
-		if was_touching == false && touching == true {
+		if !was_touching && touching {
 			contact_listener.begin_contact(self_);
 		}
 
-		if was_touching == true && touching == false {
+		if was_touching && !touching {
 			contact_listener.end_contact(self_);
 		}
 
-		if sensor == false && touching {
+		if !sensor && touching {
 			contact_listener.pre_solve(self_, &old_manifold);
 		}
 	}

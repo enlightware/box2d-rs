@@ -26,14 +26,20 @@ enum B2rsStackOrVec<T: Copy + Default, const N: usize>
 	DynVec(Vec<T>)
 }
 
+impl<T: Copy + Default, const N: usize> Default for B2growableStack<T,N> {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl<T: Copy + Default, const N: usize> B2growableStack<T,N> {
 	pub fn new() -> Self {
-		return B2growableStack {
+		B2growableStack {
 			value: B2rsStackOrVec::Stack(B2rsStaticArrayWithSize {
 				m_array: [T::default(); N],
 				m_count: 0,
 			})
-		};
+		}
 	}
 
 	pub fn push(&mut self, element: &T) {
@@ -62,11 +68,11 @@ impl<T: Copy + Default, const N: usize> B2growableStack<T,N> {
 			B2rsStackOrVec::Stack(ref mut stack)=>{
 				b2_assert(stack.m_count > 0);
 				stack.m_count-=1;
-				return stack.m_array[stack.m_count];
+				stack.m_array[stack.m_count]
 			},
 			B2rsStackOrVec::DynVec(ref mut vec)=>{
-				b2_assert(vec.len() > 0);
-				return vec.pop().unwrap();
+				b2_assert(!vec.is_empty());
+				vec.pop().unwrap()
 			}
 		}
 	}
@@ -75,10 +81,10 @@ impl<T: Copy + Default, const N: usize> B2growableStack<T,N> {
 		match self.value
 		{
 			B2rsStackOrVec::Stack(ref stack)=>{
-				return stack.m_count;
+				stack.m_count
 			},
 			B2rsStackOrVec::DynVec(ref vec)=>{
-				return vec.len();
+				vec.len()
 			}
 		}
 	}

@@ -163,5 +163,5 @@ pub(crate) fn solve_position_constraints<D: UserDataType>(
 ) -> bool {
 	b2_not_used(data);
 
-	return true;
+	true
 }

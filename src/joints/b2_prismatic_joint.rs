@@ -9,7 +9,7 @@ use crate::private::dynamics::joints::b2_prismatic_joint as private;
 
 impl<D: UserDataType> Default for B2prismaticJointDef<D> {
     fn default() -> Self {
-        return Self {
+        Self {
             base: B2jointDef {
                 jtype: B2jointType::EPrismaticJoint,
                 ..Default::default()
@@ -24,7 +24,7 @@ impl<D: UserDataType> Default for B2prismaticJointDef<D> {
             enable_motor: false,
             max_motor_force: 0.0,
             motor_speed: 0.0,
-        };
+        }
     }
 }
 
@@ -89,11 +89,11 @@ impl<D: UserDataType> B2prismaticJointDef<D> {
 }
 
 impl<D: UserDataType> ToDerivedJoint<D> for B2prismaticJoint<D> {
-    fn as_derived(&self) -> JointAsDerived<D> {
-        return JointAsDerived::EPrismaticJoint(self);
+    fn as_derived(&self) -> JointAsDerived<'_, D> {
+        JointAsDerived::EPrismaticJoint(self)
     }
-    fn as_derived_mut(&mut self) -> JointAsDerivedMut<D> {
-        return JointAsDerivedMut::EPrismaticJoint(self);
+    fn as_derived_mut(&mut self) -> JointAsDerivedMut<'_, D> {
+        JointAsDerivedMut::EPrismaticJoint(self)
     }
 }
 
@@ -143,37 +143,37 @@ pub struct B2prismaticJoint<D: UserDataType> {
 impl<D: UserDataType> B2prismaticJoint<D> {
     /// The local anchor point relative to body_a's origin.
     pub fn get_local_anchor_a(&self) -> B2vec2 {
-        return self.m_local_anchor_a;
+        self.m_local_anchor_a
     }
 
     /// The local anchor point relative to body_b's origin.
     pub fn get_local_anchor_b(&self) -> B2vec2 {
-        return self.m_local_anchor_b;
+        self.m_local_anchor_b
     }
 
     /// The local joint axis relative to body_a.
     pub fn get_local_axis_a(&self) -> B2vec2 {
-        return self.m_local_xaxis_a;
+        self.m_local_xaxis_a
     }
 
     /// Get the reference angle.
     pub fn get_reference_angle(&self) -> f32 {
-        return self.m_reference_angle;
+        self.m_reference_angle
     }
 
     /// Get the current joint translation, usually in meters.
     pub fn get_joint_translation(&self) -> f32 {
-        return private::get_joint_translation(self);
+        private::get_joint_translation(self)
     }
 
     /// Get the current joint translation speed, usually in meters per second.
     pub fn get_joint_speed(&self) -> f32 {
-        return private::get_joint_speed(self);
+        private::get_joint_speed(self)
     }
 
     /// Is the joint limit enabled?
     pub  fn is_limit_enabled(&self) -> bool {
-        return self.m_enable_limit;
+        self.m_enable_limit
     }
 
     /// Enable/disable the joint limit.
@@ -189,12 +189,12 @@ impl<D: UserDataType> B2prismaticJoint<D> {
 
     /// Get the lower joint limit, usually in meters.
     pub fn get_lower_limit(&self) -> f32 {
-        return self.m_lower_translation;
+        self.m_lower_translation
     }
 
     /// Get the upper joint limit, usually in meters.
     pub fn get_upper_limit(&self) -> f32 {
-        return self.m_upper_translation;
+        self.m_upper_translation
     }
 
     /// Set the joint limits, usually in meters.
@@ -212,7 +212,7 @@ impl<D: UserDataType> B2prismaticJoint<D> {
 
     /// Is the joint motor enabled?
     pub fn is_motor_enabled(&self) -> bool {
-        return self.m_enable_motor;
+        self.m_enable_motor
     }
 
     /// Enable/disable the joint motor.
@@ -235,7 +235,7 @@ impl<D: UserDataType> B2prismaticJoint<D> {
 
     /// Get the motor speed, usually in meters per second.
     pub fn get_motor_speed(&self) -> f32 {
-        return self.m_motor_speed;
+        self.m_motor_speed
     }
 
     /// Set the maximum motor force, usually in n.
@@ -248,24 +248,24 @@ impl<D: UserDataType> B2prismaticJoint<D> {
     }
 
     pub fn get_max_motor_force(&self) -> f32 {
-        return self.m_max_motor_force;
+        self.m_max_motor_force
     }
 
     /// Get the current motor force given the inverse time step, usually in n.
     pub  fn get_motor_force(&self, inv_dt: f32) -> f32 {
-        return inv_dt * self.m_motor_impulse;
+        inv_dt * self.m_motor_impulse
     }
 
     pub(crate) fn new(def: &B2prismaticJointDef<D>) -> Self {
-        return private::new(def);
+        private::new(def)
     }
 }
 impl<D: UserDataType> B2jointTraitDyn<D> for B2prismaticJoint<D> {
     fn get_base(&self) -> &B2joint<D> {
-        return &self.base;
+        &self.base
     }
     fn get_base_mut(&mut self) -> &mut B2joint<D> {
-        return &mut self.base;
+        &mut self.base
     }
     fn get_anchor_a(&self) -> B2vec2 {
         return self
@@ -285,13 +285,13 @@ impl<D: UserDataType> B2jointTraitDyn<D> for B2prismaticJoint<D> {
     /// Get the reaction force given the inverse time step.
     /// Unit is n.
     fn get_reaction_force(&self, inv_dt: f32) -> B2vec2 {
-        return inv_dt
+        inv_dt
             * (self.m_impulse.x * self.m_perp
-                + (self.m_motor_impulse + self.m_lower_impulse - self.m_upper_impulse) * self.m_axis);
+                + (self.m_motor_impulse + self.m_lower_impulse - self.m_upper_impulse) * self.m_axis)
     }
 
     fn get_reaction_torque(&self, inv_dt: f32) -> f32 {
-        return inv_dt * self.m_impulse.y;
+        inv_dt * self.m_impulse.y
     }
     fn init_velocity_constraints(
         &mut self,
@@ -313,10 +313,9 @@ impl<D: UserDataType> B2jointTraitDyn<D> for B2prismaticJoint<D> {
         data: &B2solverData,
         positions: &mut [B2position],
     ) -> bool {
-        return private::solve_position_constraints(self, data, positions);
+        private::solve_position_constraints(self, data, positions)
     }
 
-    ///
     fn draw(&self, draw: &mut dyn B2drawTrait) {
         private::draw(self, draw);
     }

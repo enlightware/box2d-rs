@@ -9,7 +9,7 @@ use crate::private::dynamics::joints::b2_wheel_joint as private;
 
 impl<D: UserDataType> Default for B2wheelJointDef<D> {
 	fn default() -> Self {
-		return Self {
+		Self {
 			base: B2jointDef {
 				jtype: B2jointType::EWheelJoint,
 				..Default::default()
@@ -25,7 +25,7 @@ impl<D: UserDataType> Default for B2wheelJointDef<D> {
 			motor_speed: 0.0,
 			stiffness: 0.0,
 			damping: 0.0,
-		};
+		}
 	}
 }
 
@@ -92,11 +92,11 @@ impl<D: UserDataType> B2wheelJointDef<D> {
 }
 
 impl<D: UserDataType> ToDerivedJoint<D> for B2wheelJoint<D> {
-	fn as_derived(&self) -> JointAsDerived<D> {
-		return JointAsDerived::EWheelJoint(self);
+	fn as_derived(&self) -> JointAsDerived<'_, D> {
+		JointAsDerived::EWheelJoint(self)
 	}
-	fn as_derived_mut(&mut self) -> JointAsDerivedMut<D> {
-		return JointAsDerivedMut::EWheelJoint(self);
+	fn as_derived_mut(&mut self) -> JointAsDerivedMut<'_, D> {
+		JointAsDerivedMut::EWheelJoint(self)
 	}
 }
 
@@ -160,17 +160,17 @@ pub struct B2wheelJoint<D: UserDataType> {
 impl<D: UserDataType> B2wheelJoint<D> {
 	/// The local anchor point relative to body_a's origin.
 	pub fn get_local_anchor_a(&self) -> B2vec2 {
-		return self.m_local_anchor_a;
+		self.m_local_anchor_a
 	}
 
 	/// The local anchor point relative to body_b's origin.
 	pub fn get_local_anchor_b(&self) -> B2vec2 {
-		return self.m_local_anchor_b;
+		self.m_local_anchor_b
 	}
 
 	/// The local joint axis relative to body_a.
 	pub fn get_local_axis_a(&self) -> B2vec2 {
-		return self.m_local_xaxis_a;
+		self.m_local_xaxis_a
 	}
 
 	/// Get the current joint translation, usually in meters.
@@ -182,7 +182,7 @@ impl<D: UserDataType> B2wheelJoint<D> {
 		let d: B2vec2 = p_b - p_a;
 		let axis: B2vec2 = b_a.get_world_vector(self.m_local_xaxis_a);
 		let translation: f32 = b2_dot(d, axis);
-		return translation;
+		translation
 	}
 
 	/// Get the current joint linear speed, usually in meters per second.
@@ -209,26 +209,26 @@ impl<D: UserDataType> B2wheelJoint<D> {
 				axis,
 				v_b + b2_cross_scalar_by_vec(w_b, r_b) - v_a - b2_cross_scalar_by_vec(w_a, r_a),
 			);
-		return speed;
+		speed
 	}
 
 	/// Get the current joint angle in radians.
 	pub fn get_joint_angle(&self) -> f32 {
 		let b_a = self.base.m_body_a.borrow();
 		let b_b = self.base.m_body_b.borrow();
-		return b_b.m_sweep.a - b_a.m_sweep.a;
+		b_b.m_sweep.a - b_a.m_sweep.a
 	}
 
 	/// Get the current joint angular speed in radians per second.
 	pub fn get_joint_angular_speed(&self) -> f32 {
 		let w_a: f32 = self.base.m_body_a.borrow().m_angular_velocity;
 		let w_b: f32 = self.base.m_body_b.borrow().m_angular_velocity;
-		return w_b - w_a;
+		w_b - w_a
 	}
 
 	/// Is the joint limit enabled?
 	pub fn is_limit_enabled(&self) -> bool {
-		return self.m_enable_limit;
+		self.m_enable_limit
 	}
 
 	/// Enable/disable the joint translation limit.
@@ -244,12 +244,12 @@ impl<D: UserDataType> B2wheelJoint<D> {
 
 	/// Get the lower joint translation limit, usually in meters.
 	pub fn get_lower_limit(&self) -> f32 {
-		return self.m_lower_translation;
+		self.m_lower_translation
 	}
 
 	/// Get the upper joint translation limit, usually in meters.
 	pub fn get_upper_limit(&self) -> f32 {
-		return self.m_upper_translation;
+		self.m_upper_translation
 	}
 
 	/// Set the joint translation limits, usually in meters.
@@ -267,7 +267,7 @@ impl<D: UserDataType> B2wheelJoint<D> {
 
 	/// Is the joint motor enabled?
 	pub fn is_motor_enabled(&self) -> bool {
-		return self.m_enable_motor;
+		self.m_enable_motor
 	}
 
 	/// Enable/disable the joint motor.
@@ -290,7 +290,7 @@ impl<D: UserDataType> B2wheelJoint<D> {
 
 	/// Get the motor speed, usually in radians per second.
 	pub fn get_motor_speed(&self) -> f32 {
-		return self.m_motor_speed;
+		self.m_motor_speed
 	}
 
 	/// Set/Get the maximum motor force, usually in n-m.
@@ -302,12 +302,12 @@ impl<D: UserDataType> B2wheelJoint<D> {
 		}
 	}
 	pub fn get_max_motor_torque(&self) -> f32 {
-		return self.m_max_motor_torque;
+		self.m_max_motor_torque
 	}
 
 	/// Get the current motor torque given the inverse time step, usually in n-m.
 	pub fn get_motor_torque(&self, inv_dt: f32) -> f32 {
-		return inv_dt * self.m_motor_impulse;
+		inv_dt * self.m_motor_impulse
 	}
 
 	/// Access spring stiffness
@@ -315,7 +315,7 @@ impl<D: UserDataType> B2wheelJoint<D> {
 		self.m_stiffness = stiffness;
 	}
 	pub fn get_stiffness(&self) -> f32 {
-		return self.m_stiffness;
+		self.m_stiffness
 	}
 
 	/// Access damping
@@ -323,11 +323,11 @@ impl<D: UserDataType> B2wheelJoint<D> {
 		self.m_damping = damping;
 	}
 	pub fn get_damping(&self) -> f32 {
-		return self.m_damping;
+		self.m_damping
 	}
 
 	pub(crate) fn new(def: &B2wheelJointDef<D>) -> Self {
-		return Self {
+		Self {
 			base: B2joint::new(&def.base),
 			m_local_anchor_a: def.local_anchor_a,
 			m_local_anchor_b: def.local_anchor_b,
@@ -376,16 +376,16 @@ impl<D: UserDataType> B2wheelJoint<D> {
 			m_s_bx: 0.0,
 			m_s_ay: 0.0,
 			m_s_by: 0.0,
-		};
+		}
 	}
 }
 
 impl<D: UserDataType> B2jointTraitDyn<D> for B2wheelJoint<D> {
 	fn get_base(&self) -> &B2joint<D> {
-		return &self.base;
+		&self.base
 	}
 	fn get_base_mut(&mut self) -> &mut B2joint<D> {
-		return &mut self.base;
+		&mut self.base
 	}
 	fn get_anchor_a(&self) -> B2vec2 {
 		return self
@@ -405,11 +405,11 @@ impl<D: UserDataType> B2jointTraitDyn<D> for B2wheelJoint<D> {
 	/// Get the reaction force given the inverse time step.
 	/// Unit is n.
 	fn get_reaction_force(&self, inv_dt: f32) -> B2vec2 {
-		return inv_dt * (self.m_impulse * self.m_ay + (self.m_spring_impulse + self.m_lower_impulse - self.m_upper_impulse) * self.m_ax);
+		inv_dt * (self.m_impulse * self.m_ay + (self.m_spring_impulse + self.m_lower_impulse - self.m_upper_impulse) * self.m_ax)
 	}
 
 	fn get_reaction_torque(&self, inv_dt: f32) -> f32 {
-		return inv_dt * self.m_motor_impulse;
+		inv_dt * self.m_motor_impulse
 	}
 
 	fn init_velocity_constraints(
@@ -432,7 +432,7 @@ impl<D: UserDataType> B2jointTraitDyn<D> for B2wheelJoint<D> {
 		data: &B2solverData,
 		positions: &mut [B2position],
 	) -> bool {
-		return private::solve_position_constraints(self, data, positions);
+		private::solve_position_constraints(self, data, positions)
 	}
 
 	/// Debug draw this joint

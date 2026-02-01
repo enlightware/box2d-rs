@@ -7,7 +7,7 @@ use crate::private::dynamics::joints::b2_weld_joint as private;
 
 impl<D: UserDataType> Default for B2weldJointDef<D> {
 	fn default() -> Self {
-		return Self {
+		Self {
 			base: B2jointDef {
 				jtype: B2jointType::EWeldJoint,
 				..Default::default()
@@ -17,7 +17,7 @@ impl<D: UserDataType> Default for B2weldJointDef<D> {
 			reference_angle: 0.0,
 			stiffness : 0.0,
 			damping : 0.0,	
-		};
+		}
 	}
 }
 
@@ -61,11 +61,11 @@ impl<D: UserDataType> B2weldJointDef<D> {
 }
 
 impl<D: UserDataType> ToDerivedJoint<D> for B2weldJoint<D> {
-	fn as_derived(&self) -> JointAsDerived<D> {
-		return JointAsDerived::EWeldJoint(self);
+	fn as_derived(&self) -> JointAsDerived<'_, D> {
+		JointAsDerived::EWeldJoint(self)
 	}
-	fn as_derived_mut(&mut self) -> JointAsDerivedMut<D> {
-		return JointAsDerivedMut::EWeldJoint(self);
+	fn as_derived_mut(&mut self) -> JointAsDerivedMut<'_, D> {
+		JointAsDerivedMut::EWeldJoint(self)
 	}
 }
 
@@ -101,30 +101,30 @@ pub struct B2weldJoint<D: UserDataType> {
 impl<D: UserDataType> B2weldJoint<D> {
 	/// The local anchor point relative to body_a's origin.
 	pub fn get_local_anchor_a(&self) -> B2vec2 {
-		return self.m_local_anchor_a;
+		self.m_local_anchor_a
 	}
 
 	/// The local anchor point relative to body_b's origin.
 	pub fn get_local_anchor_b(&self) -> B2vec2 {
-		return self.m_local_anchor_b;
+		self.m_local_anchor_b
 	}
 
 	/// Get the reference angle.
 	pub fn get_reference_angle(&self) -> f32 {
-		return self.m_reference_angle;
+		self.m_reference_angle
 	}
 
 		/// Set/get stiffness in n*m
 		pub fn  set_stiffness(&mut self,hz: f32) { self.m_stiffness = hz; }
-		pub fn  get_stiffness(&self)-> f32 { return self.m_stiffness; }
+		pub fn  get_stiffness(&self)-> f32 { self.m_stiffness}
 	
 		/// Set/get damping in n*m*s
 		pub fn  set_damping(&mut self,damping: f32) { self.m_damping = damping; }
-		pub fn  get_damping(&self) -> f32{ return self.m_damping; }
+		pub fn  get_damping(&self) -> f32{ self.m_damping}
 
 
 	pub(crate) fn new(def: &B2weldJointDef<D>) -> Self {
-		return Self {
+		Self {
 			base: B2joint::new(&def.base),
 
 			m_local_anchor_a: def.local_anchor_a,
@@ -156,10 +156,10 @@ impl<D: UserDataType> B2weldJoint<D> {
 
 impl<D: UserDataType> B2jointTraitDyn<D> for B2weldJoint<D> {
 	fn get_base(&self) -> &B2joint<D> {
-		return &self.base;
+		&self.base
 	}
 	fn get_base_mut(&mut self) -> &mut B2joint<D> {
-		return &mut self.base;
+		&mut self.base
 	}
 	fn get_anchor_a(&self) -> B2vec2 {
 		return self
@@ -180,11 +180,11 @@ impl<D: UserDataType> B2jointTraitDyn<D> for B2weldJoint<D> {
 	/// Unit is n.
 	fn get_reaction_force(&self, inv_dt: f32) -> B2vec2 {
 		let p = B2vec2::new(self.m_impulse.x, self.m_impulse.y);
-		return inv_dt * p;
+		inv_dt * p
 	}
 
 	fn get_reaction_torque(&self, inv_dt: f32) -> f32 {
-		return inv_dt * self.m_impulse.z;
+		inv_dt * self.m_impulse.z
 	}
 	fn init_velocity_constraints(
 		&mut self,
@@ -206,6 +206,6 @@ impl<D: UserDataType> B2jointTraitDyn<D> for B2weldJoint<D> {
 		data: &B2solverData,
 		positions: &mut [B2position],
 	) -> bool {
-		return private::solve_position_constraints(self, data, positions);
+		private::solve_position_constraints(self, data, positions)
 	}
 }

@@ -8,7 +8,7 @@ use crate::private::dynamics::joints::b2_friction_joint as private;
 
 impl<D: UserDataType> Default for B2frictionJointDef<D> {
 	fn default() -> Self {
-		return Self {
+		Self {
 			base: B2jointDef {
 				jtype: B2jointType::EFrictionJoint,
 				..Default::default()
@@ -17,7 +17,7 @@ impl<D: UserDataType> Default for B2frictionJointDef<D> {
 			local_anchor_b: B2vec2::zero(),
 			max_force: 0.0,
 			max_torque: 0.0,
-		};
+		}
 	}
 }
 
@@ -50,11 +50,11 @@ impl<D: UserDataType> B2frictionJointDef<D> {
 }
 
 impl<D: UserDataType> ToDerivedJoint<D> for B2frictionJoint<D> {
-	fn as_derived(&self) -> JointAsDerived<D> {
-		return JointAsDerived::EFrictionJoint(self);
+	fn as_derived(&self) -> JointAsDerived<'_, D> {
+		JointAsDerived::EFrictionJoint(self)
 	}
-	fn as_derived_mut(&mut self) -> JointAsDerivedMut<D> {
-		return JointAsDerivedMut::EFrictionJoint(self);
+	fn as_derived_mut(&mut self) -> JointAsDerivedMut<'_, D> {
+		JointAsDerivedMut::EFrictionJoint(self)
 	}
 }
 
@@ -89,11 +89,11 @@ pub struct B2frictionJoint<D: UserDataType> {
 impl<D: UserDataType> B2frictionJoint<D> {
 	/// The local anchor point relative to body_a's origin.
 	pub fn get_local_anchor_a(&self) -> B2vec2 {
-		return self.m_local_anchor_a;
+		self.m_local_anchor_a
 	}
 	/// The local anchor point relative to body_b's origin.
 	pub fn get_local_anchor_b(&self) -> B2vec2 {
-		return self.m_local_anchor_b;
+		self.m_local_anchor_b
 	}
 	/// Set the maximum friction force in n.
 	pub fn set_max_force(&mut self, force: f32) {
@@ -103,7 +103,7 @@ impl<D: UserDataType> B2frictionJoint<D> {
 
 	/// Get the maximum friction force in n.
 	pub fn get_max_force(&self) -> f32 {
-		return self.m_max_force;
+		self.m_max_force
 	}
 
 	/// Set the maximum friction torque in n*m.
@@ -114,11 +114,11 @@ impl<D: UserDataType> B2frictionJoint<D> {
 
 	/// Get the maximum friction torque in n*m.
 	pub fn get_max_torque(&self) -> f32 {
-		return self.m_max_torque;
+		self.m_max_torque
 	}
 
 	pub(crate) fn new(def: &B2frictionJointDef<D>) -> Self {
-		return Self {
+		Self {
 			base: B2joint::new(&def.base),
 			m_local_anchor_a: def.local_anchor_a,
 			m_local_anchor_b: def.local_anchor_b,
@@ -141,16 +141,16 @@ impl<D: UserDataType> B2frictionJoint<D> {
 			m_inv_ib: 0.0,
 			m_linear_mass: B2Mat22::new(B2vec2::zero(), B2vec2::zero()),
 			m_angular_mass: 0.0,
-		};
+		}
 	}
 }
 
 impl<D: UserDataType> B2jointTraitDyn<D> for B2frictionJoint<D> {
 	fn get_base(&self) -> &B2joint<D> {
-		return &self.base;
+		&self.base
 	}
 	fn get_base_mut(&mut self) -> &mut B2joint<D> {
-		return &mut self.base;
+		&mut self.base
 	}
 	fn get_anchor_a(&self) -> B2vec2 {
 		return self
@@ -170,11 +170,11 @@ impl<D: UserDataType> B2jointTraitDyn<D> for B2frictionJoint<D> {
 	/// Get the reaction force given the inverse time step.
 	/// Unit is n.
 	fn get_reaction_force(&self, inv_dt: f32) -> B2vec2 {
-		return inv_dt * self.m_linear_impulse;
+		inv_dt * self.m_linear_impulse
 	}
 
 	fn get_reaction_torque(&self, inv_dt: f32) -> f32 {
-		return inv_dt * self.m_angular_impulse;
+		inv_dt * self.m_angular_impulse
 	}
 	fn init_velocity_constraints(
 		&mut self,
@@ -196,6 +196,6 @@ impl<D: UserDataType> B2jointTraitDyn<D> for B2frictionJoint<D> {
 		data: &B2solverData,
 		positions: &mut [B2position],
 	) -> bool {
-		return private::solve_position_constraints(self, data, positions);
+		private::solve_position_constraints(self, data, positions)
 	}
 }

@@ -18,18 +18,24 @@ use std::rc::Rc;
 // 	}
 // }
 
+impl<D: UserDataType> Default for B2contactManager<D> {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl<D: UserDataType> B2contactManager<D> {
 	
 	//TODO_humman переместить в приват и использовать B2contactFilterDefault
 	pub fn new() ->Self{
-		return Self{
+		Self{
 			m_registers: Default::default(),
 			m_broad_phase: Rc::new(RefCell::new(B2broadPhase::new())),
 			m_contact_list: Default::default(),
 			m_contact_count: 0,
 			m_contact_filter: Some(Rc::new(RefCell::new(B2contactFilterDefault{}))),
 			m_contact_listener: Default::default(),
-		};
+		}
 	}
 
 	pub fn find_new_contacts(&mut self) {
@@ -45,7 +51,7 @@ impl<D: UserDataType> B2contactManager<D> {
 	}
 
 	pub fn get_broad_phase(&self)->B2broadPhasePtr<FixtureProxyPtr<D>>{
-		return self.m_broad_phase.clone();
+		self.m_broad_phase.clone()
 	}
 }
 

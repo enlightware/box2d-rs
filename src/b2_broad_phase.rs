@@ -40,9 +40,15 @@ pub struct B2broadPhasePairs {
 
 pub const E_NULL_PROXY: i32 = -1;
 
+impl<UserDataType: Default + Clone> Default for B2broadPhase<UserDataType> {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl<UserDataType: Default + Clone> B2broadPhase<UserDataType> {
 	pub fn new() -> Self {
-		return private::b2_broad_phase_b2_broad_phase();
+		private::b2_broad_phase_b2_broad_phase()
 	}
 
 	//~B2broadPhase();
@@ -50,7 +56,7 @@ impl<UserDataType: Default + Clone> B2broadPhase<UserDataType> {
 	/// create a proxy with an initial AABB. Pairs are not reported until
 	/// UpdatePairs is called.
 	pub fn create_proxy(&mut self, aabb: B2AABB, user_data: &UserDataType) -> i32 {
-		return private::b2_broad_phase_create_proxy(self, aabb, user_data);
+		private::b2_broad_phase_create_proxy(self, aabb, user_data)
 	}
 
 	/// destroy a proxy. It is up to the client to remove any pairs.
@@ -71,22 +77,22 @@ impl<UserDataType: Default + Clone> B2broadPhase<UserDataType> {
 
 	/// Get the fat AABB for a proxy.
 	pub fn get_fat_aabb(&self, proxy_id: i32) -> B2AABB {
-		return inline::get_fat_aabb(self, proxy_id);
+		inline::get_fat_aabb(self, proxy_id)
 	}
 
 	/// Get user data from a proxy. Returns None if the id is invalid.
 	pub fn get_user_data(&self, proxy_id: i32) -> Option<UserDataType> {
-		return inline::get_user_data(self, proxy_id);
+		inline::get_user_data(self, proxy_id)
 	}
 
 	/// Test overlap of fat AABBs.
 	pub fn test_overlap(&self, proxy_id_a: i32, proxy_id_b: i32) -> bool {
-		return inline::test_overlap(self, proxy_id_a, proxy_id_b);
+		inline::test_overlap(self, proxy_id_a, proxy_id_b)
 	}
 
 	/// Get the number of proxies.
 	pub fn get_proxy_count(&self) -> i32 {
-		return inline::get_proxy_count(self);
+		inline::get_proxy_count(self)
 	}
 
 	/// update the pairs. This results in pair callbacks. This can only add pairs.
@@ -116,17 +122,17 @@ impl<UserDataType: Default + Clone> B2broadPhase<UserDataType> {
 
 	/// Get the height of the embedded tree.
 	pub fn get_tree_height(&self) -> i32 {
-		return inline::get_tree_height(self);
+		inline::get_tree_height(self)
 	}
 
 	/// Get the balance of the embedded tree.
 	pub fn get_tree_balance(&self) -> i32 {
-		return inline::get_tree_balance(self);
+		inline::get_tree_balance(self)
 	}
 
 	/// Get the quality metric of the embedded tree.
 	pub fn get_tree_quality(&self) -> f32 {
-		return inline::get_tree_quality(self);
+		inline::get_tree_quality(self)
 	}
 
 	/// Shift the world origin. Useful for large worlds.
@@ -137,7 +143,7 @@ impl<UserDataType: Default + Clone> B2broadPhase<UserDataType> {
 	}
 
 	pub fn get_tree_mut(&mut self)->&mut B2dynamicTree<UserDataType>{
-		return &mut self.m_tree;
+		&mut self.m_tree
 	}
 
 	pub(crate) fn buffer_move(&mut self, proxy_id: i32) {
@@ -164,7 +170,7 @@ mod inline {
 		self_: &B2broadPhase<UserDataType>,
 		proxy_id: i32,
 	) -> Option<UserDataType> {
-		return self_.m_tree.get_user_data(proxy_id);
+		self_.m_tree.get_user_data(proxy_id)
 	}
 
 	pub fn test_overlap<T: Default + Clone>(
@@ -174,27 +180,27 @@ mod inline {
 	) -> bool {
 		let aabb_a: B2AABB = self_.m_tree.get_fat_aabb(proxy_id_a);
 		let aabb_b: B2AABB = self_.m_tree.get_fat_aabb(proxy_id_b);
-		return b2_test_overlap(aabb_a, aabb_b);
+		b2_test_overlap(aabb_a, aabb_b)
 	}
 
 	pub fn get_fat_aabb<T: Default + Clone>(self_: &B2broadPhase<T>, proxy_id: i32) -> B2AABB {
-		return self_.m_tree.get_fat_aabb(proxy_id);
+		self_.m_tree.get_fat_aabb(proxy_id)
 	}
 
 	pub fn get_proxy_count<T: Default + Clone>(self_: &B2broadPhase<T>) -> i32 {
-		return self_.m_proxy_count;
+		self_.m_proxy_count
 	}
 
 	pub fn get_tree_height<T: Default + Clone>(self_: &B2broadPhase<T>) -> i32 {
-		return self_.m_tree.get_height();
+		self_.m_tree.get_height()
 	}
 
 	pub fn get_tree_balance<T: Default + Clone>(self_: &B2broadPhase<T>) -> i32 {
-		return self_.m_tree.get_max_balance();
+		self_.m_tree.get_max_balance()
 	}
 
 	pub fn get_tree_quality<T: Default + Clone>(self_: &B2broadPhase<T>) -> f32 {
-		return self_.m_tree.get_area_ration();
+		self_.m_tree.get_area_ration()
 	}
 
 	pub fn update_pairs<T: Default + Clone, CallbackType: AddPairTrait<T>>(
@@ -220,7 +226,7 @@ mod inline {
 				// query tree, create pairs and add them pair buffer.
 				tree.query(|proxy_id:i32|->bool{
 					let moved = tree.was_moved(proxy_id);
-					return private::b2_broad_phase_query_callback(pairs, m_query_proxy_id, proxy_id, moved);
+					private::b2_broad_phase_query_callback(pairs, m_query_proxy_id, proxy_id, moved)
 				}, fat_aabb);
 			}
 		}

@@ -32,14 +32,14 @@ pub enum B2bodyType {
 
 impl Default for B2bodyType {
 	fn default() -> Self {
-		return B2bodyType::B2StaticBody;
+		B2bodyType::B2StaticBody
 	}
 }
 
 impl<D: UserDataType> Default for B2bodyDef<D> {
 	/// This constructor sets the body definition default values.
 	fn default() -> Self {
-		return Self {
+		Self {
 			position: B2vec2::zero(),
 			angle: 0.0,
 			linear_velocity: B2vec2::zero(),
@@ -54,21 +54,21 @@ impl<D: UserDataType> Default for B2bodyDef<D> {
 			enabled: true,
 			gravity_scale: 1.0,
 			user_data: None,
-		};
+		}
 	}
 }
 
 impl<D:UserDataType> LinkedListNode<B2body<D>> for B2body<D>
 {
     fn get_next(&self) -> Option<BodyPtr<D>> {
-        return self.m_next.clone();
+        self.m_next.clone()
 	}
 	fn set_next(&mut self, value: Option<BodyPtr<D>>)
     {
         self.m_next = value;
     }
 	fn take_next(&mut self) -> Option<BodyPtr<D>> {
-		return self.m_next.take();
+		self.m_next.take()
 	}
 }
 
@@ -76,7 +76,7 @@ impl<D:UserDataType> DoubleLinkedListNode<B2body<D>> for B2body<D>
 { 	
 	fn get_prev(&self) -> Option<BodyWeakPtr<D>>
 	{
-		return self.m_prev.clone();
+		self.m_prev.clone()
 	}
 	fn set_prev(&mut self, value: Option<BodyWeakPtr<D>>)
 	{
@@ -231,7 +231,7 @@ impl<D: UserDataType> B2body<D> {
 	/// <strong>Warning:</strong> This function is locked during callbacks.
 	/// </p>
 	pub fn create_fixture(self_: BodyPtr<D>, def: &B2fixtureDef<D>) -> FixturePtr<D> {
-		return private::create_fixture(self_, def);
+		private::create_fixture(self_, def)
 	}
 
 	/// Creates a fixture from a shape and attach it to this body.
@@ -244,7 +244,7 @@ impl<D: UserDataType> B2body<D> {
 	/// <strong>Warning:</strong> This function is locked during callbacks.
 	/// </p>
 	pub fn create_fixture_by_shape(self_: BodyPtr<D>, shape: ShapeDefPtr, density: f32) -> FixturePtr<D> {
-		return private::create_fixture_by_shape(self_, shape, density);
+		private::create_fixture_by_shape(self_, shape, density)
 	}
 
 	/// destroy a fixture. This removes the fixture from the broad-phase and
@@ -273,31 +273,31 @@ impl<D: UserDataType> B2body<D> {
 	/// 
 	/// @return the world transform of the body's origin.
 	pub fn get_transform(&self) -> B2Transform {
-		return inline::get_transform(self);
+		inline::get_transform(self)
 	}
 
 	/// Get the world body origin position.
 	/// 
 	/// @return the world position of the body's origin.
 	pub fn get_position(&self) -> B2vec2 {
-		return inline::get_position(self);
+		inline::get_position(self)
 	}
 
 	/// Get the angle in radians.
 	/// 
 	/// @return the current world rotation angle in radians.
 	pub fn get_angle(&self) -> f32 {
-		return inline::get_angle(self);
+		inline::get_angle(self)
 	}
 
 	/// Get the world position of the center of mass.
 	pub fn get_world_center(&self) -> B2vec2 {
-		return inline::get_world_center(self);
+		inline::get_world_center(self)
 	}
 
 	/// Get the local position of the center of mass.
 	pub fn get_local_center(&self) -> B2vec2 {
-		return inline::get_local_center(self);
+		inline::get_local_center(self)
 	}
 
 	/// Set the linear velocity of the center of mass.
@@ -310,7 +310,7 @@ impl<D: UserDataType> B2body<D> {
 	/// 
 	/// @return the linear velocity of the center of mass.
 	pub fn get_linear_velocity(&self) -> B2vec2 {
-		return inline::get_linear_velocity(self);
+		inline::get_linear_velocity(self)
 	}
 
 	/// Set the angular velocity.
@@ -323,7 +323,7 @@ impl<D: UserDataType> B2body<D> {
 	/// 
 	/// @return the angular velocity in radians/second.
 	pub fn get_angular_velocity(&self) -> f32 {
-		return inline::get_angular_velocity(self);
+		inline::get_angular_velocity(self)
 	}
 
 	/// Apply a force at a world point. If the force is not
@@ -379,14 +379,14 @@ impl<D: UserDataType> B2body<D> {
 	/// 
 	/// @return the mass, usually in kilograms (kg).
 	pub fn get_mass(&self) -> f32 {
-		return inline::get_mass(self);
+		inline::get_mass(self)
 	}
 
 	/// Get the rotational inertia of the body about the local origin.
 	/// 
 	/// @return the rotational inertia, usually in kg-m^2.
 	pub fn get_inertia(&self) -> f32 {
-		return inline::get_inertia(self);
+		inline::get_inertia(self)
 	}
 
 	/// Get the mass data of the body.
@@ -417,7 +417,7 @@ impl<D: UserDataType> B2body<D> {
 	/// 
 	/// @return the same point expressed in world coordinates.
 	pub fn get_world_point(&self, local_point: B2vec2) -> B2vec2 {
-		return inline::get_world_point(self, local_point);
+		inline::get_world_point(self, local_point)
 	}
 
 	/// Get the world coordinates of a vector given the local coordinates.
@@ -425,7 +425,7 @@ impl<D: UserDataType> B2body<D> {
 	/// 
 	/// @return the same vector expressed in world coordinates.
 	pub fn get_world_vector(&self, local_vector: B2vec2) -> B2vec2 {
-		return inline::get_world_vector(self, local_vector);
+		inline::get_world_vector(self, local_vector)
 	}
 
 	/// Gets a local point relative to the body's origin given a world point.
@@ -433,7 +433,7 @@ impl<D: UserDataType> B2body<D> {
 	/// 
 	/// @return the corresponding local point relative to the body's origin.
 	pub fn get_local_point(&self, world_point: B2vec2) -> B2vec2 {
-		return inline::get_local_point(self, world_point);
+		inline::get_local_point(self, world_point)
 	}
 
 	/// Gets a local vector given a world vector.
@@ -441,7 +441,7 @@ impl<D: UserDataType> B2body<D> {
 	/// 
 	/// @return the corresponding local vector.
 	pub fn get_local_vector(&self, world_vector: B2vec2) -> B2vec2 {
-		return inline::get_local_vector(self, world_vector);
+		inline::get_local_vector(self, world_vector)
 	}
 
 	/// Get the world linear velocity of a world point attached to this body.
@@ -449,7 +449,7 @@ impl<D: UserDataType> B2body<D> {
 	/// 
 	/// @return the world velocity of a point.
 	pub fn get_linear_velocity_from_world_point(&self, world_point: B2vec2) -> B2vec2 {
-		return inline::get_linear_velocity_from_world_point(self, world_point);
+		inline::get_linear_velocity_from_world_point(self, world_point)
 	}
 
 	/// Get the world velocity of a local point.
@@ -457,12 +457,12 @@ impl<D: UserDataType> B2body<D> {
 	/// 
 	/// @return the world velocity of a point.
 	pub fn get_linear_velocity_from_local_point(&self, local_point: B2vec2) -> B2vec2 {
-		return inline::get_linear_velocity_from_local_point(self, local_point);
+		inline::get_linear_velocity_from_local_point(self, local_point)
 	}
 
 	/// Get the linear damping of the body.
 	pub fn get_linear_damping(&self) -> f32 {
-		return inline::get_linear_damping(self);
+		inline::get_linear_damping(self)
 	}
 
 	/// Set the linear damping of the body.
@@ -472,7 +472,7 @@ impl<D: UserDataType> B2body<D> {
 
 	/// Get the angular damping of the body.
 	pub fn get_angular_damping(&self) -> f32 {
-		return inline::get_angular_damping(self);
+		inline::get_angular_damping(self)
 	}
 
 	/// Set the angular damping of the body.
@@ -482,7 +482,7 @@ impl<D: UserDataType> B2body<D> {
 
 	/// Get the gravity scale of the body.
 	pub fn get_gravity_scale(&self) -> f32 {
-		return inline::get_gravity_scale(self);
+		inline::get_gravity_scale(self)
 	}
 
 	/// Set the gravity scale of the body.
@@ -497,7 +497,7 @@ impl<D: UserDataType> B2body<D> {
 
 	/// Get the type of this body.
 	pub fn get_type(&self) -> B2bodyType {
-		return inline::get_type(self);
+		inline::get_type(self)
 	}
 
 	/// Should this body be treated like a bullet for continuous collision detection?
@@ -507,7 +507,7 @@ impl<D: UserDataType> B2body<D> {
 
 	/// Is this body treated like a bullet for continuous collision detection?
 	pub fn is_bullet(&self) -> bool {
-		return inline::is_bullet(self);
+		inline::is_bullet(self)
 	}
 
 	/// You can disable sleeping on this body. If you disable sleeping, the
@@ -518,7 +518,7 @@ impl<D: UserDataType> B2body<D> {
 
 	/// Is this body allowed to sleep
 	pub fn is_sleeping_allowed(&self) -> bool {
-		return inline::is_sleeping_allowed(self);
+		inline::is_sleeping_allowed(self)
 	}
 
 	/// Set the sleep state of the body. A sleeping body has very
@@ -532,7 +532,7 @@ impl<D: UserDataType> B2body<D> {
 	/// 
 	/// @return true if the body is awake.
 	pub fn is_awake(&self) -> bool {
-		return inline::is_awake(self);
+		inline::is_awake(self)
 	}
 
 	/// Allow a body to be disabled. A disabled body is not simulated and cannot
@@ -553,7 +553,7 @@ impl<D: UserDataType> B2body<D> {
 
 	/// Get the active state of the body.
 	pub fn is_enabled(&self) -> bool {
-		return inline::is_enabled(self);
+		inline::is_enabled(self)
 	}
 
 	/// Set this body to have fixed rotation. This causes the mass
@@ -564,12 +564,12 @@ impl<D: UserDataType> B2body<D> {
 
 	/// Does this body have fixed rotation?
 	pub fn is_fixed_rotation(&self) -> bool {
-		return inline::is_fixed_rotation(self);
+		inline::is_fixed_rotation(self)
 	}
 
 	/// Get the list of all fixtures attached to this body.
 	pub fn get_fixture_list(&self) -> &LinkedList<B2fixture<D>> {
-		return inline::get_fixture_list(self);
+		inline::get_fixture_list(self)
 	}
 	// pub fn get_fixture_list_mut(&mut self) -> &mut Option<FixturePtr<D>> {
 	// 	return inline::get_fixture_list_mut(self);
@@ -577,10 +577,10 @@ impl<D: UserDataType> B2body<D> {
 
 	/// Get the list of all joints attached to this body.
 	pub fn get_joint_list(&self) -> &DoubleLinkedList<B2jointEdge<D>> {
-		return inline::get_joint_list(self);
+		inline::get_joint_list(self)
 	}
 	pub fn get_joint_list_mut(&mut self) -> &mut DoubleLinkedList<B2jointEdge<D>> {
-		return inline::get_joint_list_mut(self);
+		inline::get_joint_list_mut(self)
 	}
 
 	/// Get the list of all contacts attached to this body.
@@ -589,7 +589,7 @@ impl<D: UserDataType> B2body<D> {
 	/// miss some collisions if you don't use B2contactListener.
 	/// </p>
 	pub fn get_contact_list(&self) -> &DoubleLinkedList<B2contactEdge<D>> {
-		return inline::get_contact_list(self);
+		inline::get_contact_list(self)
 	}
 	// pub fn get_contact_list_mut(&mut self) -> &mut Option<ContactEdgePtr<D>> {
 	// 	return inline::get_contact_list_mut(self);
@@ -597,12 +597,12 @@ impl<D: UserDataType> B2body<D> {
 
 	/// Get the next body in the world's body list.
 	pub fn get_next(&self) -> Option<BodyPtr<D>> {
-		return inline::get_next(self);
+		inline::get_next(self)
 	}
 
 	/// Get the user data pointer that was provided in the body definition.
 	pub fn get_user_data(&self) -> Option<D::Body> {
-		return inline::get_user_data(self);
+		inline::get_user_data(self)
 	}
 
 	/// Set the user data. Use this to store your application specific data.
@@ -612,13 +612,13 @@ impl<D: UserDataType> B2body<D> {
 
 	/// Get the parent world of this body.
 	pub fn get_world(&self) -> B2worldPtr<D> {
-		return inline::get_world(self);
+		inline::get_world(self)
 	}
 
 	// private:
 
 	pub(crate) fn new(bd: &B2bodyDef<D>, world: B2worldPtr<D>) -> Self {
-		return private::b2_body(bd, world);
+		private::b2_body(bd, world)
 	}
 
 	pub(crate) fn synchronize_fixtures(&mut self) {
@@ -634,7 +634,7 @@ impl<D: UserDataType> B2body<D> {
 	// This is used to prevent connected bodies from colliding.
 	// It may lie, depending on the collide_connected flag.
 	pub(crate) fn should_collide(&self, other: BodyPtr<D>) -> bool {
-		return private::should_collide(self, other);
+		private::should_collide(self, other)
 	}
 
 	pub(crate) fn advance(&mut self, t: f32) {
@@ -646,27 +646,27 @@ mod inline {
 	use super::*;
 
 	pub fn get_type<D: UserDataType>(self_: &B2body<D>) -> B2bodyType {
-		return self_.m_type;
+		self_.m_type
 	}
 
 	pub fn get_transform<D: UserDataType>(self_: &B2body<D>) -> B2Transform {
-		return self_.m_xf;
+		self_.m_xf
 	}
 
 	pub fn get_position<D: UserDataType>(self_: &B2body<D>) -> B2vec2 {
-		return self_.m_xf.p;
+		self_.m_xf.p
 	}
 
 	pub fn get_angle<D: UserDataType>(self_: &B2body<D>) -> f32 {
-		return self_.m_sweep.a;
+		self_.m_sweep.a
 	}
 
 	pub fn get_world_center<D: UserDataType>(self_: &B2body<D>) -> B2vec2 {
-		return self_.m_sweep.c;
+		self_.m_sweep.c
 	}
 
 	pub fn get_local_center<D: UserDataType>(self_: &B2body<D>) -> B2vec2 {
-		return self_.m_sweep.local_center;
+		self_.m_sweep.local_center
 	}
 
 	pub fn set_linear_velocity<D: UserDataType>(self_: &mut B2body<D>, v: B2vec2) {
@@ -682,7 +682,7 @@ mod inline {
 	}
 
 	pub fn get_linear_velocity<D: UserDataType>(self_: &B2body<D>) -> B2vec2 {
-		return self_.m_linear_velocity;
+		self_.m_linear_velocity
 	}
 
 	pub fn set_angular_velocity<D: UserDataType>(self_: &mut B2body<D>, w: f32) {
@@ -698,16 +698,16 @@ mod inline {
 	}
 
 	pub fn get_angular_velocity<D: UserDataType>(self_: &B2body<D>) -> f32 {
-		return self_.m_angular_velocity;
+		self_.m_angular_velocity
 	}
 
 	pub fn get_mass<D: UserDataType>(self_: &B2body<D>) -> f32 {
-		return self_.m_mass;
+		self_.m_mass
 	}
 
 	pub fn get_inertia<D: UserDataType>(self_: &B2body<D>) -> f32 {
-		return self_.m_i
-			+ self_.m_mass * b2_dot(self_.m_sweep.local_center, self_.m_sweep.local_center);
+		self_.m_i
+			+ self_.m_mass * b2_dot(self_.m_sweep.local_center, self_.m_sweep.local_center)
 	}
 
 	pub fn get_mass_data<D: UserDataType>(self_: &B2body<D>, data: &mut B2massData) {
@@ -718,38 +718,38 @@ mod inline {
 	}
 
 	pub fn get_world_point<D: UserDataType>(self_: &B2body<D>, local_point: B2vec2) -> B2vec2 {
-		return b2_mul_transform_by_vec2(self_.m_xf, local_point);
+		b2_mul_transform_by_vec2(self_.m_xf, local_point)
 	}
 
 	pub fn get_world_vector<D: UserDataType>(self_: &B2body<D>, local_vector: B2vec2) -> B2vec2 {
-		return b2_mul_rot_by_vec2(self_.m_xf.q, local_vector);
+		b2_mul_rot_by_vec2(self_.m_xf.q, local_vector)
 	}
 
 	pub fn get_local_point<D: UserDataType>(self_: &B2body<D>, world_point: B2vec2) -> B2vec2 {
-		return b2_mul_t_transform_by_vec2(self_.m_xf, world_point);
+		b2_mul_t_transform_by_vec2(self_.m_xf, world_point)
 	}
 
 	pub fn get_local_vector<D: UserDataType>(self_: &B2body<D>, world_vector: B2vec2) -> B2vec2 {
-		return b2_mul_t_rot_by_vec2(self_.m_xf.q, world_vector);
+		b2_mul_t_rot_by_vec2(self_.m_xf.q, world_vector)
 	}
 
 	pub fn get_linear_velocity_from_world_point<D: UserDataType>(
 		self_: &B2body<D>,
 		world_point: B2vec2,
 	) -> B2vec2 {
-		return self_.m_linear_velocity
-			+ b2_cross_scalar_by_vec(self_.m_angular_velocity, world_point - self_.m_sweep.c);
+		self_.m_linear_velocity
+			+ b2_cross_scalar_by_vec(self_.m_angular_velocity, world_point - self_.m_sweep.c)
 	}
 
 	pub fn get_linear_velocity_from_local_point<D: UserDataType>(
 		self_: &B2body<D>,
 		local_point: B2vec2,
 	) -> B2vec2 {
-		return self_.get_linear_velocity_from_world_point(self_.get_world_point(local_point));
+		self_.get_linear_velocity_from_world_point(self_.get_world_point(local_point))
 	}
 
 	pub fn get_linear_damping<D: UserDataType>(self_: &B2body<D>) -> f32 {
-		return self_.m_linear_damping;
+		self_.m_linear_damping
 	}
 
 	pub fn set_linear_damping<D: UserDataType>(self_: &mut B2body<D>, linear_damping: f32) {
@@ -757,7 +757,7 @@ mod inline {
 	}
 
 	pub fn get_angular_damping<D: UserDataType>(self_: &B2body<D>) -> f32 {
-		return self_.m_angular_damping;
+		self_.m_angular_damping
 	}
 
 	pub fn set_angular_damping<D: UserDataType>(self_: &mut B2body<D>, angular_damping: f32) {
@@ -765,7 +765,7 @@ mod inline {
 	}
 
 	pub fn get_gravity_scale<D: UserDataType>(self_: &B2body<D>) -> f32 {
-		return self_.m_gravity_scale;
+		self_.m_gravity_scale
 	}
 
 	pub fn set_gravity_scale<D: UserDataType>(self_: &mut B2body<D>, scale: f32) {
@@ -777,7 +777,7 @@ mod inline {
 	}
 
 	pub fn is_bullet<D: UserDataType>(self_: &B2body<D>) -> bool {
-		return self_.m_flags.contains(BodyFlags::E_BULLET_FLAG);
+		self_.m_flags.contains(BodyFlags::E_BULLET_FLAG)
 	}
 
 	pub fn set_awake<D: UserDataType>(self_: &mut B2body<D>, flag: bool) {
@@ -801,15 +801,15 @@ mod inline {
 	}
 
 	pub fn is_awake<D: UserDataType>(self_: &B2body<D>) -> bool {
-		return self_.m_flags.contains(BodyFlags::E_AWAKE_FLAG);
+		self_.m_flags.contains(BodyFlags::E_AWAKE_FLAG)
 	}
 
 	pub fn is_enabled<D: UserDataType>(self_: &B2body<D>) -> bool {
-		return self_.m_flags.contains(BodyFlags::E_ENABLED_FLAG);
+		self_.m_flags.contains(BodyFlags::E_ENABLED_FLAG)
 	}
 
 	pub fn is_fixed_rotation<D: UserDataType>(self_: &B2body<D>) -> bool {
-		return self_.m_flags.contains(BodyFlags::E_FIXED_ROTATION_FLAG);
+		self_.m_flags.contains(BodyFlags::E_FIXED_ROTATION_FLAG)
 	}
 
 	pub fn set_sleeping_allowed<D: UserDataType>(self_: &mut B2body<D>, flag: bool) {
@@ -821,7 +821,7 @@ mod inline {
 	}
 
 	pub fn is_sleeping_allowed<D: UserDataType>(self_: &B2body<D>) -> bool {
-		return self_.m_flags.contains(BodyFlags::E_AUTO_SLEEP_FLAG);
+		self_.m_flags.contains(BodyFlags::E_AUTO_SLEEP_FLAG)
 	}
 
 	// pub fn get_fixture_list_mut<D: UserDataType>(
@@ -831,17 +831,17 @@ mod inline {
 	// }
 
 	pub fn get_fixture_list<D: UserDataType>(self_: &B2body<D>) -> &LinkedList<B2fixture<D>> {
-		return &self_.m_fixture_list;
+		&self_.m_fixture_list
 	}
 
 	pub fn get_joint_list_mut<D: UserDataType>(
 		self_: &mut B2body<D>,
 	) -> &mut DoubleLinkedList<B2jointEdge<D>> {
-		return &mut self_.m_joint_list;
+		&mut self_.m_joint_list
 	}
 
 	pub fn get_joint_list<D: UserDataType>(self_: &B2body<D>) -> &DoubleLinkedList<B2jointEdge<D>> {
-		return &self_.m_joint_list;
+		&self_.m_joint_list
 	}
 
 	// pub fn get_contact_list_mut<D: UserDataType>(
@@ -851,11 +851,11 @@ mod inline {
 	// }
 
 	pub fn get_contact_list<D: UserDataType>(self_: &B2body<D>) -> &DoubleLinkedList<B2contactEdge<D>> {
-		return &self_.m_contact_list;
+		&self_.m_contact_list
 	}
 
 	pub fn get_next<D: UserDataType>(self_: &B2body<D>) -> Option<BodyPtr<D>> {
-		return self_.m_next.clone();
+		self_.m_next.clone()
 	}
 
 	pub fn set_user_data<D: UserDataType>(self_: &mut B2body<D>, data: &D::Body) {
@@ -863,7 +863,7 @@ mod inline {
 	}
 
 	pub fn get_user_data<D: UserDataType>(self_: &B2body<D>) -> Option<D::Body> {
-		return self_.m_user_data.clone();
+		self_.m_user_data.clone()
 	}
 
 	pub fn apply_force<D: UserDataType>(
@@ -986,6 +986,6 @@ mod inline {
 	}
 
 	pub fn get_world<D: UserDataType>(self_: &B2body<D>) -> B2worldPtr<D> {
-		return self_.m_world.upgrade().unwrap();
+		self_.m_world.upgrade().unwrap()
 	}
 }

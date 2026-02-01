@@ -28,8 +28,8 @@ fn b2_find_max_separation(
 
 		// Find deepest point for normal i.
 		let mut si: f32 = B2_MAX_FLOAT;
-		for j in 0..count2 {
-			let sij: f32 = b2_dot(n, v2s[j] - v1);
+		for v2 in v2s.iter().take(count2) {
+			let sij: f32 = b2_dot(n, *v2 - v1);
 			if sij < si {
 				si = sij;
 			}
@@ -42,7 +42,7 @@ fn b2_find_max_separation(
 	}
 
 	*edge_index = best_index;
-	return max_separation;
+	max_separation
 }
 
 pub fn b2_find_incident_edge(
@@ -67,8 +67,8 @@ pub fn b2_find_incident_edge(
 	// Find the incident edge on poly2.
 	let mut index: usize = 0;
 	let mut min_dot: f32 = B2_MAX_FLOAT;
-	for i in 0..count2 {
-		let dot: f32 = b2_dot(normal1, normals2[i]);
+	for (i, normal2) in normals2.iter().enumerate().take(count2) {
+		let dot: f32 = b2_dot(normal1, *normal2);
 		if dot < min_dot {
 			min_dot = dot;
 			index = i;
@@ -201,13 +201,13 @@ pub fn b2_collide_polygons(
 	manifold.local_point = plane_point;
 
 	let mut point_count: usize = 0;
-	for i in 0..B2_MAX_MANIFOLD_POINTS {
-		let separation: f32 = b2_dot(normal, clip_points2[i].v) - front_offset;
+	for cp2 in clip_points2.iter().take(B2_MAX_MANIFOLD_POINTS) {
+		let separation: f32 = b2_dot(normal, cp2.v) - front_offset;
 
 		if separation <= total_radius {
 			let cp = &mut manifold.points[point_count];
-			cp.local_point = b2_mul_t_transform_by_vec2(xf2, clip_points2[i].v);
-			cp.id = clip_points2[i].id;
+			cp.local_point = b2_mul_t_transform_by_vec2(xf2, cp2.v);
+			cp.id = cp2.id;
 			if flip != 0 {
 				// Swap features
 

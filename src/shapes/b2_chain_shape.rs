@@ -28,7 +28,7 @@ pub struct B2chainShape {
 
 impl Default for B2chainShape {
 	fn default() -> Self {
-		return inline::b2_chain_shape();
+		inline::b2_chain_shape()
 	}
 }
 
@@ -62,28 +62,28 @@ impl B2chainShape {
 
 impl B2shapeDynTrait for B2chainShape {
 	fn get_base(&self) -> &B2Shape {
-		return &self.base;
+		&self.base
 	}
 
 	fn get_type(&self) -> B2ShapeType {
-		return self.base.get_type();
+		self.base.get_type()
 	}
 	/// Implement b2Shape. Vertices are cloned using b2Alloc.
 	fn clone_box(&self) -> Box<dyn B2shapeDynTrait> {
-		return private::b2_shape_dyn_trait_clone(self);
+		private::b2_shape_dyn_trait_clone(self)
 	}
 	fn clone_rc(&self) -> ShapePtr {
-		return Rc::new(self.clone());
+		Rc::new(self.clone())
 	}
 	/// [see](B2shapeDynTrait::get_child_count)
 	fn get_child_count(&self) -> usize {
-		return private::b2_shape_dyn_trait_get_child_count(self);
+		private::b2_shape_dyn_trait_get_child_count(self)
 	}
 
 	/// This always return false.
 	/// [see](B2shapeDynTrait::test_point)
 	fn test_point(&self, transform: B2Transform, p: B2vec2) -> bool {
-		return private::b2_shape_dyn_trait_test_point(self, transform, p);
+		private::b2_shape_dyn_trait_test_point(self, transform, p)
 	}
 
 	/// Implement b2Shape.
@@ -94,7 +94,7 @@ impl B2shapeDynTrait for B2chainShape {
 		xf: B2Transform,
 		child_index: usize,
 	) -> bool {
-		return private::b2_shape_dyn_trait_ray_cast(self, output, input, xf, child_index);
+		private::b2_shape_dyn_trait_ray_cast(self, output, input, xf, child_index)
 	}
 
 	/// [see](B2shapeDynTrait::compute_aabb)
@@ -112,7 +112,7 @@ impl B2shapeDynTrait for B2chainShape {
 mod inline {
 	use super::*;
 	pub fn b2_chain_shape() -> B2chainShape {
-		return B2chainShape {
+		B2chainShape {
 			base: B2Shape {
 				m_type: B2ShapeType::EChain,
 				m_radius: B2_POLYGON_RADIUS,
@@ -120,6 +120,6 @@ mod inline {
 			m_next_vertex: B2vec2 { x: 0.0, y: 0.0 },
 			m_prev_vertex: B2vec2 { x: 0.0, y: 0.0 },
 			m_vertices: Vec::<B2vec2>::new(),
-		};
+		}
 	}
 }

@@ -78,7 +78,7 @@ pub(crate) fn new<D: UserDataType>(def: &B2prismaticJointDef<D>) -> B2prismaticJ
 	let m_axis = B2vec2::zero();
 	let m_perp = B2vec2::zero();
 
-	return B2prismaticJoint {
+	B2prismaticJoint {
 		base: B2joint::new(&def.base),
 
 		m_local_anchor_a,
@@ -114,7 +114,7 @@ pub(crate) fn new<D: UserDataType>(def: &B2prismaticJointDef<D>) -> B2prismaticJ
 		m_k: B2Mat22::default(),
 		m_translation: 0.0,
 		m_axial_mass: 0.0,
-	};
+	}
 }
 
 pub(crate) fn init_velocity_constraints<D: UserDataType>(
@@ -194,7 +194,7 @@ pub(crate) fn init_velocity_constraints<D: UserDataType>(
 		self_.m_upper_impulse = 0.0;
 	}
 
-	if self_.m_enable_motor == false {
+	if !self_.m_enable_motor {
 		self_.m_motor_impulse = 0.0;
 	}
 
@@ -456,7 +456,7 @@ pub(crate) fn solve_position_constraints<D: UserDataType>(
 	positions[self_.m_index_b as usize].c = c_b;
 	positions[self_.m_index_b as usize].a = a_b;
 
-	return linear_error <= B2_LINEAR_SLOP && angular_error <= B2_ANGULAR_SLOP;
+	linear_error <= B2_LINEAR_SLOP && angular_error <= B2_ANGULAR_SLOP
 }
 
 pub(crate) fn get_joint_translation<D: UserDataType>(self_: &B2prismaticJoint<D>) -> f32 {
@@ -478,7 +478,7 @@ pub(crate) fn get_joint_translation<D: UserDataType>(self_: &B2prismaticJoint<D>
 		.get_world_vector(self_.m_local_xaxis_a);
 
 	let translation: f32 = b2_dot(d, axis);
-	return translation;
+	translation
 }
 
 pub(crate) fn get_joint_speed<D: UserDataType>(self_: &B2prismaticJoint<D>) -> f32 {
@@ -504,7 +504,7 @@ pub(crate) fn get_joint_speed<D: UserDataType>(self_: &B2prismaticJoint<D>) -> f
 			axis,
 			v_b + b2_cross_scalar_by_vec(w_b, r_b) - v_a - b2_cross_scalar_by_vec(w_a, r_a),
 		);
-	return speed;
+	speed
 }
 
 pub(crate) fn draw<D: UserDataType>(self_: &B2prismaticJoint<D>, draw: &mut dyn B2drawTrait) {

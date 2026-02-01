@@ -38,7 +38,7 @@ impl Default for B2toioutputState
 {
 	fn default()->Self
 	{
-		return B2toioutputState::EUnknown;
+		B2toioutputState::EUnknown
 	}
 }
 

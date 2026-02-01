@@ -371,7 +371,7 @@ pub(crate) fn solve_position_constraints<D: UserDataType>(
 	positions[self_.m_index_a as usize] = B2position { c: c_a, a: a_a };
 	positions[self_.m_index_b as usize] = B2position { c: c_b, a: a_b };
 
-	return linear_error <= B2_LINEAR_SLOP;
+	linear_error <= B2_LINEAR_SLOP
 }
 
 // void B2wheelJoint::dump()
@@ -396,7 +396,6 @@ pub(crate) fn solve_position_constraints<D: UserDataType>(
 // 	b2Log("  joints[%d] = m_world->create_joint(&jd);\n", m_index);
 // }
 
-///
 pub(crate) fn draw<D: UserDataType>(self_: &B2wheelJoint<D>, draw: &mut dyn B2drawTrait) {
 	let xf_a = self_.base.m_body_a.borrow().get_transform();
 	let xf_b = self_.base.m_body_b.borrow().get_transform();

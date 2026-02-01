@@ -25,18 +25,16 @@ pub(crate) fn create(_self: &mut B2rope, def: &B2ropeDef) {
 	_self.m_positions.resize(m_count, Default::default());
 
 	for (i,def) in def.vertices.iter().enumerate() {
-		let mut new_pos = B2ropePositions::default();
-		new_pos.m_bind_positions = def.position;
-		new_pos.m_ps = def.position + _self.m_position;
-		new_pos.m_p0s = def.position + _self.m_position;
-		new_pos.m_vs.set_zero();
-
 		let m: f32 = def.mass;
-		if m > 0.0 {
-			new_pos.m_inv_masses = 1.0 / m;
-		} else {
-			new_pos.m_inv_masses = 0.0;
-		}
+		let inv_masses = if m > 0.0 { 1.0 / m } else { 0.0 };
+
+		let new_pos = B2ropePositions {
+			m_bind_positions: def.position,
+			m_ps: def.position + _self.m_position,
+			m_p0s: def.position + _self.m_position,
+			m_vs: B2vec2::zero(),
+			m_inv_masses: inv_masses,
+		};
 
 		_self.m_positions[i]=new_pos;
 	}
@@ -347,16 +345,11 @@ pub(crate) fn solve_bend_pbd_angle(_self: &mut B2rope) {
 
 		let angle: f32 = b2_atan2(a, b);
 
-		let l1sqr: f32;
-		let l2sqr: f32;
-
-		if _self.m_tuning.isometric {
-			l1sqr = c.l1 * c.l1;
-			l2sqr = c.l2 * c.l2;
+		let (l1sqr, l2sqr) = if _self.m_tuning.isometric {
+			(c.l1 * c.l1, c.l2 * c.l2)
 		} else {
-			l1sqr = d1.length_squared();
-			l2sqr = d2.length_squared();
-		}
+			(d1.length_squared(), d2.length_squared())
+		};
 
 		if l1sqr * l2sqr == 0.0 {
 			continue;
@@ -369,14 +362,13 @@ pub(crate) fn solve_bend_pbd_angle(_self: &mut B2rope) {
 		let j2: B2vec2 = jd1 - jd2;
 		let j3: B2vec2 = jd2;
 
-		let mut sum: f32;
-		if _self.m_tuning.fixed_effective_mass {
-			sum = c.inv_effective_mass;
+		let mut sum: f32 = if _self.m_tuning.fixed_effective_mass {
+			c.inv_effective_mass
 		} else {
-			sum = c.inv_mass1 * b2_dot(j1, j1)
+			c.inv_mass1 * b2_dot(j1, j1)
 				+ c.inv_mass2 * b2_dot(j2, j2)
-				+ c.inv_mass3 * b2_dot(j3, j3);
-		}
+				+ c.inv_mass3 * b2_dot(j3, j3)
+		};
 
 		if sum == 0.0 {
 			sum = c.inv_effective_mass;
@@ -409,16 +401,11 @@ pub(crate) fn solve_bend_xpbd_angle(_self: &mut B2rope, dt: f32) {
 		let d1: B2vec2 = p2 - p1;
 		let d2: B2vec2 = p3 - p2;
 
-		let l1sqr: f32;
-		let l2sqr: f32;
-
-		if _self.m_tuning.isometric {
-			l1sqr = c.l1 * c.l1;
-			l2sqr = c.l2 * c.l2;
+		let (l1sqr, l2sqr) = if _self.m_tuning.isometric {
+			(c.l1 * c.l1, c.l2 * c.l2)
 		} else {
-			l1sqr = d1.length_squared();
-			l2sqr = d2.length_squared();
-		}
+			(d1.length_squared(), d2.length_squared())
+		};
 
 		if l1sqr * l2sqr == 0.0 {
 			continue;
@@ -436,14 +423,13 @@ pub(crate) fn solve_bend_xpbd_angle(_self: &mut B2rope, dt: f32) {
 		let j2: B2vec2 = jd1 - jd2;
 		let j3: B2vec2 = jd2;
 
-		let sum: f32;
-		if _self.m_tuning.fixed_effective_mass {
-			sum = c.inv_effective_mass;
+		let sum: f32 = if _self.m_tuning.fixed_effective_mass {
+			c.inv_effective_mass
 		} else {
-			sum = c.inv_mass1 * b2_dot(j1, j1)
+			c.inv_mass1 * b2_dot(j1, j1)
 				+ c.inv_mass2 * b2_dot(j2, j2)
-				+ c.inv_mass3 * b2_dot(j3, j3);
-		}
+				+ c.inv_mass3 * b2_dot(j3, j3)
+		};
 
 		if sum == 0.0 {
 			continue;
@@ -489,16 +475,11 @@ pub(crate) fn apply_bend_forces(_self: &mut B2rope, dt: f32) {
 		let d1: B2vec2 = p2 - p1;
 		let d2: B2vec2 = p3 - p2;
 
-		let l1sqr: f32;
-		let l2sqr: f32;
-
-		if _self.m_tuning.isometric {
-			l1sqr = c.l1 * c.l1;
-			l2sqr = c.l2 * c.l2;
+		let (l1sqr, l2sqr) = if _self.m_tuning.isometric {
+			(c.l1 * c.l1, c.l2 * c.l2)
 		} else {
-			l1sqr = d1.length_squared();
-			l2sqr = d2.length_squared();
-		}
+			(d1.length_squared(), d2.length_squared())
+		};
 
 		if l1sqr * l2sqr == 0.0 {
 			continue;
@@ -516,14 +497,13 @@ pub(crate) fn apply_bend_forces(_self: &mut B2rope, dt: f32) {
 		let j2: B2vec2 = jd1 - jd2;
 		let j3: B2vec2 = jd2;
 
-		let sum: f32;
-		if _self.m_tuning.fixed_effective_mass {
-			sum = c.inv_effective_mass;
+		let sum: f32 = if _self.m_tuning.fixed_effective_mass {
+			c.inv_effective_mass
 		} else {
-			sum = c.inv_mass1 * b2_dot(j1, j1)
+			c.inv_mass1 * b2_dot(j1, j1)
 				+ c.inv_mass2 * b2_dot(j2, j2)
-				+ c.inv_mass3 * b2_dot(j3, j3);
-		}
+				+ c.inv_mass3 * b2_dot(j3, j3)
+		};
 
 		if sum == 0.0 {
 			continue;

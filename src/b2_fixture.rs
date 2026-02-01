@@ -16,11 +16,11 @@ use serde::{Serialize, Deserialize};
 
 impl Default for B2filter {
 	fn default() -> Self {
-		return B2filter {
+		B2filter {
 			category_bits: 0x0001,
 			mask_bits: 0xFFFF,
 			group_index: 0,
-		};
+		}
 	}
 }
 
@@ -44,7 +44,7 @@ pub struct B2filter {
 impl<D: UserDataType> Default for B2fixtureDef<D> {
 	/// The constructor sets the default fixture definition values.
 	fn default() -> Self {
-		return B2fixtureDef {
+		B2fixtureDef {
 			shape: None,
 			user_data: None,
 			friction: 0.2,
@@ -53,7 +53,7 @@ impl<D: UserDataType> Default for B2fixtureDef<D> {
 			density: 0.0,
 			is_sensor: false,
 			filter: B2filter::default(),
-		};
+		}
 	}
 }
 
@@ -105,14 +105,14 @@ pub struct B2fixtureProxy<D: UserDataType> {
 impl<D:UserDataType> LinkedListNode<B2fixture<D>> for B2fixture<D>
 {
     fn get_next(&self) -> Option<FixturePtr<D>> {
-        return self.m_next.clone();
+        self.m_next.clone()
 	}
 	fn set_next(&mut self, value: Option<FixturePtr<D>>)
     {
         self.m_next = value;
     }
 	fn take_next(&mut self) -> Option<FixturePtr<D>> {
-		return self.m_next.take();
+		self.m_next.take()
 	}
 }
 
@@ -151,14 +151,14 @@ impl<D: UserDataType> B2fixture<D> {
 	/// 
 	/// @return the shape type.
 	pub fn get_type(&self) -> B2ShapeType {
-		return inline::get_type(self);
+		inline::get_type(self)
 	}
 
 	/// Get the child shape. You can modify the child shape, however you should not change the
 	/// number of vertices because this will crash some collision caching mechanisms.
 	/// Manipulating the shape may lead to non-physical behavior.
 	pub fn get_shape(&self) -> ShapePtr {
-		return inline::get_shape(self);
+		inline::get_shape(self)
 	}
 
 	/// Set if this fixture is a sensor.
@@ -170,7 +170,7 @@ impl<D: UserDataType> B2fixture<D> {
 	/// 
 	/// @return the true if the shape is a sensor.
 	pub fn is_sensor(&self) -> bool {
-		return inline::is_sensor(self);
+		inline::is_sensor(self)
 	}
 
 	/// Set the contact filtering data. This will not update contacts until the next time
@@ -182,7 +182,7 @@ impl<D: UserDataType> B2fixture<D> {
 
 	/// Get the contact filtering data.
 	pub fn get_filter_data(&self) -> B2filter {
-		return inline::get_filter_data(self);
+		inline::get_filter_data(self)
 	}
 
 	/// Call this if you want to establish collision that was previously disabled by B2contactFilter::should_collide.
@@ -194,20 +194,20 @@ impl<D: UserDataType> B2fixture<D> {
 	/// 
 	/// @return the parent body.
 	pub fn get_body(&self) -> BodyPtr<D> {
-		return inline::get_body(self);
+		inline::get_body(self)
 	}
 
 	/// Get the next fixture in the parent body's fixture list.
 	/// 
 	/// @return the next shape.
 	pub fn get_next(&self) -> Option<FixturePtr<D>> {
-		return inline::get_next(self);
+		inline::get_next(self)
 	}
 
 	/// Get the user data that was assigned in the fixture definition. Use this to
 	/// store your application specific data.
 	pub fn get_user_data(&self) -> Option<D::Fixture> {
-		return inline::get_user_data(self);
+		inline::get_user_data(self)
 	}
 
 	/// Set the user data. Use this to store your application specific data.
@@ -218,7 +218,7 @@ impl<D: UserDataType> B2fixture<D> {
 	/// Test a point for containment in this fixture.
 	/// * `p` - a point in world coordinates.
 	pub fn test_point(&self, p: B2vec2) -> bool {
-		return inline::test_point(self, p);
+		inline::test_point(self, p)
 	}
 
 	/// Cast a ray against this shape.
@@ -231,7 +231,7 @@ impl<D: UserDataType> B2fixture<D> {
 		input: &B2rayCastInput,
 		child_index: i32,
 	) -> bool {
-		return inline::ray_cast(self, output, input, child_index);
+		inline::ray_cast(self, output, input, child_index)
 	}
 
 	/// Get the mass data for this fixture. The mass data is based on the density and
@@ -249,23 +249,23 @@ impl<D: UserDataType> B2fixture<D> {
 
 	/// Get the density of this fixture.
 	pub fn get_density(&self) -> f32 {
-		return inline::get_density(self);
+		inline::get_density(self)
 	}
 
 	/// Get the coefficient of friction.
 	pub fn get_friction(&self) -> f32 {
-		return inline::get_friction(self);
+		inline::get_friction(self)
 	}
 
 	/// Set the coefficient of friction. This will _not_ change the friction of
 	/// existing contacts.
 	pub fn set_friction(&mut self, friction: f32) {
-		return inline::set_friction(self, friction);
+		inline::set_friction(self, friction)
 	}
 
 	/// Get the coefficient of restitution.
 	pub fn get_restitution(&self) -> f32 {
-		return inline::get_restitution(self);
+		inline::get_restitution(self)
 	}
 
 	/// Set the coefficient of restitution. This will _not_ change the restitution of
@@ -276,7 +276,7 @@ impl<D: UserDataType> B2fixture<D> {
 
 	/// Get the restitution velocity threshold.
 	pub fn  get_restitution_threshold(&self)-> f32{
-		return inline::get_restitution_threshold(self);
+		inline::get_restitution_threshold(self)
 	}
 
 	/// Set the restitution threshold. This will _not_ change the restitution threshold of
@@ -290,11 +290,11 @@ impl<D: UserDataType> B2fixture<D> {
 	/// If you need a more accurate AABB, compute it using the shape and
 	/// the body transform.
 	pub fn get_aabb(&self, child_index: i32) -> B2AABB {
-		return inline::get_aabb(self, child_index);
+		inline::get_aabb(self, child_index)
 	}
 
 	pub(crate) fn default() -> Self {
-		return private::b2_fixture_default();
+		private::b2_fixture_default()
 	}
 
 	// We need separation create/destroy functions from the constructor/destructor because
@@ -336,23 +336,23 @@ mod inline {
 	use super::*;
 
 	pub fn get_type<T: UserDataType>(self_: &B2fixture<T>) -> B2ShapeType {
-		return self_.m_shape.as_ref().unwrap().get_type();
+		self_.m_shape.as_ref().unwrap().get_type()
 	}
 
 	pub fn get_shape<T: UserDataType>(self_: &B2fixture<T>) -> ShapePtr {
-		return self_.m_shape.as_ref().unwrap().clone();
+		self_.m_shape.as_ref().unwrap().clone()
 	}
 
 	pub fn is_sensor<T: UserDataType>(self_: &B2fixture<T>) -> bool {
-		return self_.m_is_sensor;
+		self_.m_is_sensor
 	}
 
 	pub fn get_filter_data<T: UserDataType>(self_: &B2fixture<T>) -> B2filter {
-		return self_.m_filter;
+		self_.m_filter
 	}
 
 	pub fn get_user_data<D: UserDataType>(self_: &B2fixture<D>) -> Option<D::Fixture> {
-		return self_.m_user_data.clone();
+		self_.m_user_data.clone()
 	}
 
 	pub fn set_user_data<D: UserDataType>(self_: &mut B2fixture<D>, data: &D::Fixture) {
@@ -360,11 +360,11 @@ mod inline {
 	}
 
 	pub fn get_body<T: UserDataType>(self_: &B2fixture<T>) -> BodyPtr<T> {
-		return self_.m_body.as_ref().unwrap().upgrade().unwrap();
+		self_.m_body.as_ref().unwrap().upgrade().unwrap()
 	}
 
 	pub fn get_next<T: UserDataType>(self_: &B2fixture<T>) -> Option<FixturePtr<T>> {
-		return self_.m_next.clone();
+		self_.m_next.clone()
 	}
 
 	pub fn set_density<T: UserDataType>(self_: &mut B2fixture<T>, density: f32) {
@@ -373,11 +373,11 @@ mod inline {
 	}
 
 	pub fn get_density<T: UserDataType>(self_: &B2fixture<T>) -> f32 {
-		return self_.m_density;
+		self_.m_density
 	}
 
 	pub fn get_friction<T: UserDataType>(self_: &B2fixture<T>) -> f32 {
-		return self_.m_friction;
+		self_.m_friction
 	}
 
 	pub fn set_friction<T: UserDataType>(self_: &mut B2fixture<T>, friction: f32) {
@@ -385,7 +385,7 @@ mod inline {
 	}
 
 	pub fn get_restitution<T: UserDataType>(self_: &B2fixture<T>) -> f32 {
-		return self_.m_restitution;
+		self_.m_restitution
 	}
 
 	pub fn set_restitution<T: UserDataType>(self_: &mut B2fixture<T>, restitution: f32) {
@@ -394,7 +394,7 @@ mod inline {
 
 	pub fn get_restitution_threshold<T: UserDataType>(self_: &B2fixture<T>) ->f32
 	{
-		return self_.m_restitution_threshold;
+		self_.m_restitution_threshold
 	}
 
 	pub fn set_restitution_threshold<T: UserDataType>(self_: &mut B2fixture<T>, threshold:f32)

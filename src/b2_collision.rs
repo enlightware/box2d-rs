@@ -1,3 +1,6 @@
+//! Structures and functions used for computing contact points, distance
+//! queries, and TOI queries.
+
 use crate::b2_math::*;
 use crate::b2_common::B2_MAX_MANIFOLD_POINTS;
 use crate::b2_shape::*;
@@ -6,11 +9,8 @@ use crate::shapes::b2_circle_shape::*;
 use crate::shapes::b2_edge_shape::*;
 use crate::shapes::b2_polygon_shape::*;
 
-/// @file
-/// Structures and functions used for computing contact points, distance
-/// queries, and TOI queries.
 
-pub const B2_NULL_FEATURE: u8 = std::u8::MAX;
+pub const B2_NULL_FEATURE: u8 = u8::MAX;
 
 pub enum B2contactFeatureType {
     EVertex = 0,
@@ -68,19 +68,19 @@ pub enum B2manifoldType {
 
 impl Default for B2manifoldType {
     fn default() -> Self {
-        return B2manifoldType::ECircles;
+        B2manifoldType::ECircles
     }
 }
 
 impl Default for B2manifold {
     fn default() -> Self {
-        return B2manifold {
+        B2manifold {
             points: [B2manifoldPoint::default();B2_MAX_MANIFOLD_POINTS],
             local_normal: B2vec2::default(),
             local_point: B2vec2::default(),
             manifold_type: B2manifoldType::ECircles,
             point_count: 0,
-        };
+        }
     }
 }
 
@@ -88,14 +88,17 @@ impl Default for B2manifold {
 /// Box2D supports multiple types of contact:
 /// - clip point versus plane with radius
 /// - point versus point with radius (circles)
+///
 /// The local point usage depends on the manifold type:
 /// -e_circles: the local center of circle_a
 /// -e_faceA: the center of faceA
 /// -e_faceB: the center of faceB
+///
 /// Similarly the local normal usage:
 /// -e_circles: not used
 /// -e_faceA: the normal on polygon_a
 /// -e_faceB: the normal on polygon_b
+///
 /// We store contacts in this way so that position correction can
 /// account for movement, which is critical for continuous physics.
 /// All contact scenarios must be expressed in one of these types.
@@ -208,24 +211,24 @@ pub struct B2AABB {
 impl B2AABB {
     /// Verify that the bounds are sorted.
     pub fn is_valid(self) -> bool {
-        return b2_aabb_is_valid(self);
+        b2_aabb_is_valid(self)
     }
 
     /// Get the center of the AABB.
     pub fn get_center(self) -> B2vec2 {
-        return 0.5 * (self.lower_bound + self.upper_bound);
+        0.5 * (self.lower_bound + self.upper_bound)
     }
 
     /// Get the extents of the AABB (half-widths).
     pub fn get_extents(self) -> B2vec2 {
-        return 0.5 * (self.upper_bound - self.lower_bound);
+        0.5 * (self.upper_bound - self.lower_bound)
     }
 
     /// Get the perimeter length
     pub fn get_perimeter(self) -> f32 {
         let wx = self.upper_bound.x - self.lower_bound.x;
         let wy = self.upper_bound.y - self.lower_bound.y;
-        return 2.0 * (wx + wy);
+        2.0 * (wx + wy)
     }
 
     /// Combine an AABB into this one.
@@ -247,11 +250,11 @@ impl B2AABB {
         result = result && self.lower_bound.y <= aabb.lower_bound.y;
         result = result && aabb.upper_bound.x <= self.upper_bound.x;
         result = result && aabb.upper_bound.y <= self.upper_bound.y;
-        return result;
+        result
     }
 
     pub fn ray_cast(self, output: &mut B2rayCastOutput, input: &B2rayCastInput) -> bool {
-        return private::b2_collision::b2_aabb_ray_cast(self, output, input);
+        private::b2_collision::b2_aabb_ray_cast(self, output, input)
     }
 }
 
@@ -322,13 +325,13 @@ pub fn b2_clip_segment_to_line(
     offset: f32,
     vertex_index_a: usize,
 ) -> usize {
-    return private::b2_collision::b2_clip_segment_to_line(
+    private::b2_collision::b2_clip_segment_to_line(
         v_out,
         v_in,
         normal,
         offset,
         vertex_index_a,
-    );
+    )
 }
 
 /// Determine if two generic shapes overlap.
@@ -340,7 +343,7 @@ pub fn b2_test_overlap_shapes(
     xf_a: B2Transform,
     xf_b: B2Transform,
 ) -> bool {
-    return private::b2_collision::b2_test_overlap(shape_a, index_a, shape_b, index_b, xf_a, xf_b);
+    private::b2_collision::b2_test_overlap(shape_a, index_a, shape_b, index_b, xf_a, xf_b)
 }
 
 // ---------------- Inline Functions ------------------------------------------
@@ -349,7 +352,7 @@ pub fn b2_aabb_is_valid(self_: B2AABB) -> bool {
     let d: B2vec2 = self_.upper_bound - self_.lower_bound;
     let mut valid: bool = d.x >= 0.0 && d.y >= 0.0;
     valid = valid && self_.lower_bound.is_valid() && self_.upper_bound.is_valid();
-    return valid;
+    valid
 }
 
 pub fn b2_test_overlap(a: B2AABB, b: B2AABB) -> bool {
@@ -364,5 +367,5 @@ pub fn b2_test_overlap(a: B2AABB, b: B2AABB) -> bool {
         return false;
     }
 
-    return true;
+    true
 }

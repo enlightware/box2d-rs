@@ -23,7 +23,7 @@ impl<D: UserDataType> B2world<D> {
 	/// Construct a world object.
 	/// * `gravity` - the world gravity vector.
 	pub fn new(gravity: B2vec2) -> B2worldPtr<D> {
-		return private::b2_world_new(gravity);
+		private::b2_world_new(gravity)
 	}
 
 	/// Register a destruction listener. The listener is owned by you and must
@@ -58,7 +58,7 @@ impl<D: UserDataType> B2world<D> {
 	/// <strong>Warning:</strong> This function is locked during callbacks.
 	/// </p>
 	pub fn create_body(self_: B2worldPtr<D>, def: &B2bodyDef<D>) -> BodyPtr<D> {
-		return private::create_body(self_, def);
+		private::create_body(self_, def)
 	}
 
 	/// destroy a rigid body given a definition. No reference to the definition
@@ -79,7 +79,7 @@ impl<D: UserDataType> B2world<D> {
 	/// <strong>Warning:</strong> This function is locked during callbacks.
 	/// </p>
 	pub fn create_joint(&mut self, def: &B2JointDefEnum<D>) -> B2jointPtr<D> {
-		return private::create_joint(self, def);
+		private::create_joint(self, def)
 	}
 
 	/// destroy a joint. This may cause the connected bodies to begin colliding.
@@ -137,7 +137,7 @@ impl<D: UserDataType> B2world<D> {
 	/// 
 	/// @return the head of the world body list.
 	pub fn get_body_list(&self) -> DoubleLinkedList<B2body<D>> {
-		return inline::get_body_list(self);
+		inline::get_body_list(self)
 	}
 
 	/// Get the world joint list. With the returned joint, use B2joint::get_next to get
@@ -145,7 +145,7 @@ impl<D: UserDataType> B2world<D> {
 	/// 
 	/// @return the head of the world joint list.
 	pub fn get_joint_list(&self) -> DoubleLinkedList<dyn B2jointTraitDyn<D>> {
-		return inline::get_joint_list(self);
+		inline::get_joint_list(self)
 	}
 
 	/// Get the world contact list. With the returned contact, use B2contact::get_next to get
@@ -157,7 +157,7 @@ impl<D: UserDataType> B2world<D> {
 	/// </p>
 	/// Use B2contactListener to avoid missing contacts.
 	pub fn get_contact_list(&self) -> DoubleLinkedList<dyn B2contactDynTrait<D>> {
-		return inline::get_contact_list(self);
+		inline::get_contact_list(self)
 	}
 
 	/// Enable/disable sleep.
@@ -165,7 +165,7 @@ impl<D: UserDataType> B2world<D> {
 		private::set_allow_sleeping(self, flag);
 	}
 	pub fn get_allow_sleeping(&self) -> bool {
-		return self.m_allow_sleep;
+		self.m_allow_sleep
 	}
 
 	/// Enable/disable warm starting. For testing.
@@ -173,7 +173,7 @@ impl<D: UserDataType> B2world<D> {
 		self.m_warm_starting = flag;
 	}
 	pub fn get_warm_starting(&self) -> bool {
-		return self.m_warm_starting;
+		self.m_warm_starting
 	}
 
 	/// Enable/disable continuous physics. For testing.
@@ -181,7 +181,7 @@ impl<D: UserDataType> B2world<D> {
 		self.m_continuous_physics = flag;
 	}
 	pub fn get_continuous_physics(&self) -> bool {
-		return self.m_continuous_physics;
+		self.m_continuous_physics
 	}
 
 	/// Enable/disable single stepped continuous physics. For testing.
@@ -189,43 +189,43 @@ impl<D: UserDataType> B2world<D> {
 		self.m_sub_stepping = flag;
 	}
 	pub fn get_sub_stepping(&self) -> bool {
-		return self.m_sub_stepping;
+		self.m_sub_stepping
 	}
 
 	/// Get the number of broad-phase proxies.
 	pub fn get_proxy_count(&self) -> i32 {
-		return private::get_proxy_count(self);
+		private::get_proxy_count(self)
 	}
 
 	/// Get the number of bodies.
 	pub fn get_body_count(&self) -> usize {
-		return inline::get_body_count(self);
+		inline::get_body_count(self)
 	}
 
 	/// Get the number of joints.
 	pub fn get_joint_count(&self) -> usize {
-		return inline::get_joint_count(self);
+		inline::get_joint_count(self)
 	}
 
 	/// Get the number of contacts (each may have 0 or more contact points).
 	pub fn get_contact_count(&self) -> usize {
-		return inline::get_contact_count(self);
+		inline::get_contact_count(self)
 	}
 
 	/// Get the height of the dynamic tree.
 	pub fn get_tree_height(&self) -> i32 {
-		return private::get_tree_height(self);
+		private::get_tree_height(self)
 	}
 
 	/// Get the balance of the dynamic tree.
 	pub fn get_tree_balance(&self) -> i32 {
-		return private::get_tree_balance(self);
+		private::get_tree_balance(self)
 	}
 
 	/// Get the quality metric of the dynamic tree. The smaller the better.
 	/// The minimum is 1.
 	pub fn get_tree_quality(&self) -> f32 {
-		return private::get_tree_quality(self);
+		private::get_tree_quality(self)
 	}
 
 	/// Change the global gravity vector.
@@ -234,12 +234,12 @@ impl<D: UserDataType> B2world<D> {
 	}
 	/// Get the global gravity vector.
 	pub fn get_gravity(&self) -> B2vec2 {
-		return inline::get_gravity(self);
+		inline::get_gravity(self)
 	}
 
 	/// Is the world locked (in the middle of a time step).
 	pub fn is_locked(&self) -> bool {
-		return inline::is_locked(self);
+		inline::is_locked(self)
 	}
 
 	/// Set flag to control automatic clearing of forces after each time step.
@@ -249,7 +249,7 @@ impl<D: UserDataType> B2world<D> {
 
 	/// Get the flag that controls automatic clearing of forces after each time step.
 	pub fn get_auto_clear_forces(&self) -> bool {
-		return inline::get_auto_clear_forces(self);
+		inline::get_auto_clear_forces(self)
 	}
 
 	/// Shift the world origin. Useful for large worlds.
@@ -261,12 +261,12 @@ impl<D: UserDataType> B2world<D> {
 
 	/// Get the contact manager for testing.
 	pub fn get_contact_manager(&self) -> B2contactManagerPtr<D> {
-		return inline::get_contact_manager(self);
+		inline::get_contact_manager(self)
 	}
 
 	/// Get the current profile.
 	pub fn get_profile(&self) -> B2Profile {
-		return inline::get_profile(self);
+		inline::get_profile(self)
 	}
 
 	// private:
@@ -332,11 +332,11 @@ mod inline {
 	use super::*;
 
 	pub fn get_body_list<D: UserDataType>(self_: &B2world<D>) -> DoubleLinkedList<B2body<D>> {
-		return self_.m_body_list.clone();
+		self_.m_body_list.clone()
 	}
 
 	pub fn get_joint_list<D: UserDataType>(self_: &B2world<D>) -> DoubleLinkedList<dyn B2jointTraitDyn<D>> {
-		return self_.m_joint_list.clone();
+		self_.m_joint_list.clone()
 	}
 
 	pub fn get_contact_list<D: UserDataType>(self_: &B2world<D>) -> DoubleLinkedList<dyn B2contactDynTrait<D>> {
@@ -344,11 +344,11 @@ mod inline {
 	}
 
 	pub fn get_body_count<D: UserDataType>(self_: &B2world<D>) -> usize {
-		return self_.m_body_count;
+		self_.m_body_count
 	}
 
 	pub fn get_joint_count<D: UserDataType>(self_: &B2world<D>) -> usize {
-		return self_.m_joint_count;
+		self_.m_joint_count
 	}
 
 	pub fn get_contact_count<D: UserDataType>(self_: &B2world<D>) -> usize {
@@ -360,11 +360,11 @@ mod inline {
 	}
 
 	pub fn get_gravity<D: UserDataType>(self_: &B2world<D>) -> B2vec2 {
-		return self_.m_gravity;
+		self_.m_gravity
 	}
 
 	pub fn is_locked<D: UserDataType>(self_: &B2world<D>) -> bool {
-		return self_.m_locked;
+		self_.m_locked
 	}
 
 	pub fn set_auto_clear_forces<D: UserDataType>(self_: &mut B2world<D>, flag: bool) {
@@ -373,14 +373,14 @@ mod inline {
 
 	/// Get the flag that controls automatic clearing of forces after each time step.
 	pub fn get_auto_clear_forces<D: UserDataType>(self_: &B2world<D>) -> bool {
-		return self_.m_clear_forces;
+		self_.m_clear_forces
 	}
 
 	pub fn get_contact_manager<D: UserDataType>(self_: &B2world<D>) -> B2contactManagerPtr<D> {
-		return self_.m_contact_manager.clone();
+		self_.m_contact_manager.clone()
 	}
 
 	pub(crate) fn get_profile<D: UserDataType>(self_: &B2world<D>) -> B2Profile {
-		return self_.m_profile;
+		self_.m_profile
 	}
 }

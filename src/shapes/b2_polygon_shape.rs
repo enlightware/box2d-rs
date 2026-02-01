@@ -21,32 +21,32 @@ pub struct B2polygonShape {
 
 impl Default for B2polygonShape {
 	fn default() -> Self {
-		return inline::b2_polygon_shape();
+		inline::b2_polygon_shape()
 	}
 }
 
 impl B2shapeDynTrait for B2polygonShape {
 	fn get_base(&self) -> &B2Shape {
-		return &self.base;
+		&self.base
 	}
 	fn get_type(&self) -> B2ShapeType {
-		return self.base.get_type();
+		self.base.get_type()
 	}
 	/// Implement b2Shape.
 	fn clone_box(&self) -> Box<dyn B2shapeDynTrait> {
-		return private::b2_shape_dyn_trait_clone(self);
+		private::b2_shape_dyn_trait_clone(self)
 	}
 	fn clone_rc(&self) -> ShapePtr {
-		return Rc::new(self.clone());
+		Rc::new(*self)
 	}
 	/// [see](B2shapeDynTrait::get_child_count)
 	fn get_child_count(&self) -> usize {
-		return private::b2_shape_dyn_trait_get_child_count(self);
+		private::b2_shape_dyn_trait_get_child_count(self)
 	}
 
 	/// [see](B2shapeDynTrait::test_point)
 	fn test_point(&self, transform: B2Transform, p: B2vec2) -> bool {
-		return private::b2_shape_dyn_trait_test_point(self, transform, p);
+		private::b2_shape_dyn_trait_test_point(self, transform, p)
 	}
 
 	/// Implement b2Shape.
@@ -59,7 +59,7 @@ impl B2shapeDynTrait for B2polygonShape {
 		xf: B2Transform,
 		child_index: usize,
 	) -> bool {
-		return private::b2_shape_dyn_trait_ray_cast(self, output, input, xf, child_index);
+		private::b2_shape_dyn_trait_ray_cast(self, output, input, xf, child_index)
 	}
 
 	/// [see](B2shapeDynTrait::compute_aabb)
@@ -108,14 +108,14 @@ impl B2polygonShape {
 	/// 
 	/// @returns true if valid
 	pub fn validate(self) -> bool {
-		return private::b2_polygon_shape_validate(self);
+		private::b2_polygon_shape_validate(self)
 	}
 }
 
 mod inline {
 	use super::*;
 	pub fn b2_polygon_shape() -> B2polygonShape {
-		return B2polygonShape {
+		B2polygonShape {
 			base: B2Shape {
 				m_type: B2ShapeType::EPolygon,
 				m_radius: B2_POLYGON_RADIUS,
@@ -124,6 +124,6 @@ mod inline {
 			m_count: 0,
 			m_vertices: <[B2vec2; B2_MAX_POLYGON_VERTICES]>::default(),
 			m_normals: <[B2vec2; B2_MAX_POLYGON_VERTICES]>::default(),
-		};
+		}
 	}
 }

@@ -63,7 +63,7 @@ pub(crate) fn pre_solve<D: UserDataType>(
 			state: state2[i],
 			normal_impulse: manifold.points[i].normal_impulse,
 			tangent_impulse: manifold.points[i].tangent_impulse,
-			separation: world_manifold.separations[i],
+			// separation: world_manifold.separations[i],
 		});
 	}
 }
@@ -117,7 +117,7 @@ pub(crate) fn mouse_down<D: UserDataType>(self_: &mut Test<D>, p: B2vec2) {
 		{
 			let frequency_hz: f32 = 5.0;
 			let damping_ratio: f32 = 0.7;
-	
+
 			jd = B2mouseJointDef {
 				base: B2jointDef {
 					jtype: B2jointType::EMouseJoint,

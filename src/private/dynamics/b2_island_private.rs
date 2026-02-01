@@ -133,7 +133,7 @@ pub(crate) fn solve<D: UserDataType>(self_: &mut B2island<D>, profile: &mut B2Pr
 	let h: f32 = step.dt;
 
 	// Integrate velocities and apply damping. initialize the body state.
-	for (i, b) in (&self_.m_bodies).iter().enumerate()
+	for (i, b) in self_.m_bodies.iter().enumerate()
 	{
 		let mut b = b.borrow_mut();
 
@@ -172,7 +172,7 @@ pub(crate) fn solve<D: UserDataType>(self_: &mut B2island<D>, profile: &mut B2Pr
 	timer.reset();
 
 	// Solver data
-	let mut solver_data = B2solverData{
+	let solver_data = B2solverData{
 		step : *step,
 		//positions : &mut self_.m_positions,
 		//velocities : &mut self_.m_velocities,
@@ -194,10 +194,10 @@ pub(crate) fn solve<D: UserDataType>(self_: &mut B2island<D>, profile: &mut B2Pr
 	{
 		contact_solver.warm_start(&mut self_.m_velocities);
 	}
-	
+
 	for j in &self_.m_joints
 	{
-		j.borrow_mut().init_velocity_constraints(&mut solver_data, &mut self_.m_positions, &mut self_.m_velocities);
+		j.borrow_mut().init_velocity_constraints(&solver_data, &self_.m_positions, &mut self_.m_velocities);
 	}
 
 	profile.solve_init = timer.get_milliseconds();
@@ -208,7 +208,7 @@ pub(crate) fn solve<D: UserDataType>(self_: &mut B2island<D>, profile: &mut B2Pr
 	{
 		for joint in &self_.m_joints
 		{
-			joint.borrow_mut().solve_velocity_constraints(&mut solver_data, &mut self_.m_velocities);
+			joint.borrow_mut().solve_velocity_constraints(&solver_data, &mut self_.m_velocities);
 		}
 
 		contact_solver.solve_velocity_constraints(&mut self_.m_velocities);
@@ -261,7 +261,7 @@ pub(crate) fn solve<D: UserDataType>(self_: &mut B2island<D>, profile: &mut B2Pr
 		let mut joints_okay: bool = true;
 		for joint in &self_.m_joints
 		{
-			let joint_okay: bool = joint.borrow_mut().solve_position_constraints(&mut solver_data, &mut self_.m_positions);
+			let joint_okay: bool = joint.borrow_mut().solve_position_constraints(&solver_data, &mut self_.m_positions);
 			joints_okay = joints_okay && joint_okay;
 		}
 
@@ -274,7 +274,7 @@ pub(crate) fn solve<D: UserDataType>(self_: &mut B2island<D>, profile: &mut B2Pr
 	}
 
 	// Copy state buffers back to the bodies
-	for (i,body) in (&self_.m_bodies).iter().enumerate()
+	for (i,body) in self_.m_bodies.iter().enumerate()
 	{
 		let mut body = body.borrow_mut();
 		body.m_sweep.c = self_.m_positions[i].c;
@@ -468,13 +468,15 @@ pub(crate) fn report<D: UserDataType>(self_: &B2island<D>, constraints: &[B2cont
 
 	assert_eq!(self_.m_contacts.len(), constraints.len());
 
-	for (i,c) in (&self_.m_contacts).iter().enumerate()
+	for (i,c) in self_.m_contacts.iter().enumerate()
 	{
 		let mut c = c.borrow_mut();
 		let vc = &constraints[i];
-		
-		let mut impulse = B2contactImpulse::default();
-		impulse.count = vc.point_count;
+
+		let mut impulse = B2contactImpulse {
+			count: vc.point_count,
+			..Default::default()
+		};
 
 		for j in 0..vc.point_count
 		{

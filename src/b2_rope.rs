@@ -60,7 +60,6 @@ pub struct B2ropeDefVertices {
 	pub mass: f32,
 }
 
-///
 pub struct B2ropeDef {
 	pub position: B2vec2,
 	pub vertices: Vec<B2ropeDefVertices>,
@@ -140,24 +139,19 @@ impl Default for B2rope {
 	}
 }
 
-///
 impl B2rope {
-	///
 	pub fn create(&mut self, def: &B2ropeDef) {
 		private::create(self, def);
 	}
 
-	///
 	pub fn set_tuning(&mut self, tuning: &B2ropeTuning) {
 		private::set_tuning(self, tuning);
 	}
 
-	///
 	pub fn step(&mut self, time_step: f32, iterations: i32, position: B2vec2) {
 		private::step(self, time_step, iterations, position);
 	}
 
-	///
 	pub fn reset(&mut self, position: B2vec2) {
 		private::reset(self, position);
 	}

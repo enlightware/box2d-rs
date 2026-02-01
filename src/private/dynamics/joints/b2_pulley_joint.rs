@@ -33,7 +33,7 @@ pub(crate) fn new<D: UserDataType>(def: &B2pulleyJointDef<D>) -> B2pulleyJoint<D
 		let m_constant = def.length_a + m_ratio * def.length_b;
 
 		let m_impulse = 0.0;
-		return B2pulleyJoint{
+		B2pulleyJoint{
 			base: B2joint::new(&def.base),
 			m_ground_anchor_a,
 			m_ground_anchor_b,
@@ -59,7 +59,7 @@ pub(crate) fn new<D: UserDataType>(def: &B2pulleyJointDef<D>) -> B2pulleyJoint<D
 			m_inv_ia: 0.0,
 			m_inv_ib: 0.0,
 			m_mass: 0.0,
-		};
+		}
 }
 
 pub(crate) fn init_velocity_constraints<D: UserDataType>(
@@ -273,5 +273,5 @@ pub(crate) fn solve_position_constraints<D: UserDataType>(
 	positions[self_.m_index_a as usize] = B2position{c: c_a, a: a_a};
 	positions[self_.m_index_b as usize] = B2position{c: c_b, a: a_b};
 
-	return linear_error < B2_LINEAR_SLOP;
+	linear_error < B2_LINEAR_SLOP
 }

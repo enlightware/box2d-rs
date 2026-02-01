@@ -62,7 +62,7 @@ impl<'a> B2separationFunction<'a> {
 			result.m_axis = point_b - point_a;
 			let s: f32 = result.m_axis.normalize();
 			*separation = s;
-			return result;
+			result
 		} else if cache.index_a[0] == cache.index_a[1] {
 			// Two points on b and one on A.
 			result.m_type = B2separationFunctionType::EFaceB;
@@ -85,7 +85,7 @@ impl<'a> B2separationFunction<'a> {
 				s = -s;
 			}
 			*separation = s;
-			return result;
+			result
 		} else {
 			// Two points on A and one or two points on b.
 			result.m_type = B2separationFunctionType::EFaceA;
@@ -107,7 +107,7 @@ impl<'a> B2separationFunction<'a> {
 				s = -s;
 			}
 			*separation = s;
-			return result;
+			result
 		}
 	}
 
@@ -133,7 +133,7 @@ impl<'a> B2separationFunction<'a> {
 				let point_b: B2vec2 = b2_mul_transform_by_vec2(xf_b, local_point_b);
 
 				let separation: f32 = b2_dot(point_b - point_a, self.m_axis);
-				return separation;
+				separation
 			}
 
 			B2separationFunctionType::EFaceA => {
@@ -148,7 +148,7 @@ impl<'a> B2separationFunction<'a> {
 				let point_b: B2vec2 = b2_mul_transform_by_vec2(xf_b, local_point_b);
 
 				let separation: f32 = b2_dot(point_b - point_a, normal);
-				return separation;
+				separation
 			}
 
 			B2separationFunctionType::EFaceB => {
@@ -164,7 +164,7 @@ impl<'a> B2separationFunction<'a> {
 				let point_a: B2vec2 = b2_mul_transform_by_vec2(xf_a, local_point_a);
 
 				let separation: f32 = b2_dot(point_a - point_b, normal);
-				return separation;
+				separation
 			}
 
 			//unreachable
@@ -193,7 +193,7 @@ impl<'a> B2separationFunction<'a> {
 				let point_b: B2vec2 = b2_mul_transform_by_vec2(xf_b, local_point_b);
 				let separation: f32 = b2_dot(point_b - point_a, self.m_axis);
 
-				return separation;
+				separation
 			}
 
 			B2separationFunctionType::EFaceA => {
@@ -204,7 +204,7 @@ impl<'a> B2separationFunction<'a> {
 				let point_b: B2vec2 = b2_mul_transform_by_vec2(xf_b, local_point_b);
 
 				let separation: f32 = b2_dot(point_b - point_a, normal);
-				return separation;
+				separation
 			}
 
 			B2separationFunctionType::EFaceB => {
@@ -215,7 +215,7 @@ impl<'a> B2separationFunction<'a> {
 				let point_a: B2vec2 = b2_mul_transform_by_vec2(xf_a, local_point_a);
 
 				let separation: f32 = b2_dot(point_a - point_b, normal);
-				return separation;
+				separation
 			}
 
 			//unreachable
@@ -260,14 +260,17 @@ pub fn b2_time_of_impact(output: &mut B2toioutput, input: &B2toiinput) {
 	let mut iter: i32 = 0;
 
 	// Prepare input for distance query.
-	let mut cache = B2simplexCache::default();
-	cache.count = 0;
-	let mut distance_input = B2distanceInput::default();
-
+	let mut cache = B2simplexCache {
+		count: 0,
+		..Default::default()
+	};
 	//box2d-rs: because of borrowing and lifetime problems
-	distance_input.proxy_a = input.proxy_a.clone();
-	distance_input.proxy_b = input.proxy_b.clone();
-	distance_input.use_radii = false;
+	let mut distance_input = B2distanceInput {
+		proxy_a: input.proxy_a.clone(),
+		proxy_b: input.proxy_b.clone(),
+		use_radii: false,
+		..Default::default()
+	};
 
 	// The outer loop progressively attempts to compute new separating axes.
 	// This loop terminates when an axis is repeated (no progress is made).
@@ -391,19 +394,18 @@ pub fn b2_time_of_impact(output: &mut B2toioutput, input: &B2toiinput) {
 			let mut a2: f32 = t2;
 			loop {
 				// Use a mix of the secant rule and bisection.
-				let t: f32;
-				if (root_iter_count & 1) == 1 {
+				let t: f32 = if (root_iter_count & 1) == 1 {
 					// Secant rule to improve convergence.
-					t = a1 + (target - s1) * (a2 - a1) / (s2 - s1);
+					a1 + (target - s1) * (a2 - a1) / (s2 - s1)
 				} else {
 					// Bisection to guarantee progress.
-					t = 0.5 * (a1 + a2);
-				}
+					0.5 * (a1 + a2)
+				};
 
 				root_iter_count += 1;
-				
+
 				B2_TOI_ROOT_ITERS.fetch_add(1, Ordering::SeqCst);
-				
+
 
 				let s: f32 = fcn.evaluate(index_a, index_b, t);
 
@@ -426,7 +428,7 @@ pub fn b2_time_of_impact(output: &mut B2toioutput, input: &B2toiinput) {
 					break;
 				}
 			}
-			
+
 			B2_TOI_MAX_ROOT_ITERS.fetch_max(root_iter_count as usize, Ordering::SeqCst);
 
 			push_back_iter += 1;
@@ -453,11 +455,11 @@ pub fn b2_time_of_impact(output: &mut B2toioutput, input: &B2toiinput) {
 	}
 
 	B2_TOI_MAX_ITERS.fetch_max(iter as usize, Ordering::SeqCst);
-	
+
 
 	let time = timer.precise_time_ns();
 
 	B2_TOI_MAX_TIME.fetch_max(time, Ordering::SeqCst);
 	B2_TOI_TIME.fetch_add(time, Ordering::SeqCst);
-	
+
 }

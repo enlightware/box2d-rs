@@ -20,14 +20,14 @@ pub struct DoubleLinkedList<T: DoubleLinkedListNode<T> + ?Sized> {
     head: Option<Rc<RefCell<T>>>,
 }
 
-impl<T> fmt::Debug for dyn DoubleLinkedListNode<T> 
+impl<T> fmt::Debug for dyn DoubleLinkedListNode<T>
     {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "Node")
     }
 }
 
-impl<T> fmt::Debug for DoubleLinkedList<T> 
+impl<T> fmt::Debug for DoubleLinkedList<T>
 where
     T: DoubleLinkedListNode<T> + fmt::Debug + ?Sized,
     {
@@ -38,15 +38,15 @@ where
 
 impl<T:DoubleLinkedListNode<T> + ?Sized> Default for DoubleLinkedList<T> {
     fn default() -> Self {
-        return Self { head: None };
+        Self { head: None }
     }
 }
 
 impl<T:DoubleLinkedListNode<T> + ?Sized> Clone for DoubleLinkedList<T> {
     fn clone(&self) -> Self {
-        return Self {
+        Self {
             head: self.head.clone(),
-        };
+        }
     }
 }
 
@@ -101,7 +101,7 @@ where
 		{
 			next.borrow_mut().set_prev(prev);
         }
-        
+
         if self.head.is_some() {
             if ptr::eq(
                 self.head.as_ref().unwrap().as_ref(),
@@ -113,7 +113,7 @@ where
         }
          else {
             //println!("{:#?}", self);
-            assert!(false);
+            panic!();
         }
 
         //assert!(original_len==self.len()+1);
@@ -160,7 +160,7 @@ where
     //         for (i, node) in list.iter().enumerate(){
     //             let prev = node.borrow().get_prev();
     //             let next = node.borrow().get_next();
-                
+
     //             if i==0 {
     //                 assert!(prev.is_none());
     //                 assert!(!next.is_none());
@@ -215,14 +215,14 @@ where
         self.head = Some(node_to_push.clone());
         //assert!(original_len+1==self.len());
         //assert!(self.contains(node_to_push.clone()));
-        //self.validate(); 
+        //self.validate();
     }
-    
+
     pub fn clear(&mut self){
         self.head = None;
     }
     pub fn iter(&self)->Iter<T>{
-        return Iter{
+        Iter{
             next: self.head.clone()
         }
     }
@@ -235,7 +235,7 @@ where
     next: Option<Rc<RefCell<T>>>
 }
 
-impl<T> Iterator for Iter<T> 
+impl<T> Iterator for Iter<T>
 where
     T: DoubleLinkedListNode<T> + ?Sized,
 {

@@ -19,17 +19,17 @@ pub fn b2_set_two_sided(self_: &mut B2edgeShape, v1: B2vec2, v2: B2vec2) {
 }
 
 pub fn b2_shape_dyn_trait_clone(self_: &B2edgeShape) -> Box<dyn B2shapeDynTrait> {
-	return Box::new(B2edgeShape::clone(&self_));
+	Box::new(B2edgeShape::clone(self_))
 }
 
 pub fn b2_shape_dyn_trait_get_child_count(_self: &B2edgeShape) -> usize {
-	return 1;
+	1
 }
 
 pub fn b2_shape_dyn_trait_test_point(_self: &B2edgeShape, xf: B2Transform, p: B2vec2) -> bool {
 	b2_not_used(xf);
 	b2_not_used(p);
-	return false;
+	false
 }
 
 // p = p1 + t * d
@@ -88,7 +88,7 @@ pub fn b2_shape_dyn_trait_ray_cast(
 	}
 
 	let s: f32 = b2_dot(q - v1, r) / rr;
-	if s < 0.0 || 1.0 < s {
+	if !(0.0..=1.0).contains(&s) {
 		return false;
 	}
 
@@ -98,7 +98,7 @@ pub fn b2_shape_dyn_trait_ray_cast(
 	} else {
 		output.normal = b2_mul_rot_by_vec2(xf.q, normal);
 	}
-	return true;
+	true
 }
 
 pub fn b2_shape_dyn_trait_compute_aabb(

@@ -14,8 +14,8 @@ pub fn b2_assert(a: bool) {
     assert!(a);
 }
 
-pub const B2_MAX_FLOAT: f32 = std::f32::MAX;
-pub const B2_EPSILON: f32 = std::f32::EPSILON;
+pub const B2_MAX_FLOAT: f32 = f32::MAX;
+pub const B2_EPSILON: f32 = f32::EPSILON;
 pub const B2_PI: f32 = std::f32::consts::PI;
 
 // Collision

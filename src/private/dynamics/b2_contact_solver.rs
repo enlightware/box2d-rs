@@ -55,7 +55,7 @@ impl B2contactSolver
 {
 	pub fn new<D: UserDataType>(def: &B2contactSolverDef, 
 		contacts: &Vec<ContactPtr<D>>)->Self{
-		return private::new(def, contacts);
+		private::new(def, contacts)
 	}
 
 	pub fn  initialize_velocity_constraints<D: UserDataType>(&mut self,
@@ -75,12 +75,12 @@ impl B2contactSolver
 
 	pub fn  solve_position_constraints(&mut self, m_positions: &mut [B2position]) -> bool
 	{
-		return private::solve_position_constraints(self, m_positions);
+		private::solve_position_constraints(self, m_positions)
 	}
 	pub fn  solve_toiposition_constraints(&mut self, toi_index_a: i32, toi_index_b: i32, 
 		m_positions: &mut [B2position]) -> bool
 	{
-		return private::solve_toiposition_constraints(self, toi_index_a, toi_index_b, m_positions);
+		private::solve_toiposition_constraints(self, toi_index_a, toi_index_b, m_positions)
 	}
 
 }

@@ -104,17 +104,16 @@ pub fn b2_contact_manager_collide<D: UserDataType>(self_: B2contactManagerPtr<D>
 			.contains(ContactFlags::E_FILTER_FLAG)
 		{
 			// Should these bodies collide?
-			if body_b.borrow().should_collide(body_a.clone()) == false {
+			if !body_b.borrow().should_collide(body_a.clone()) {
 				contacts_to_destroy.push(c);
 				continue;
 			}
 
 			// Check user filtering.
 			if let Some(m_contact_filter) = m_contact_filter.clone() {
-				if m_contact_filter
+				if !m_contact_filter
 					.borrow()
 					.should_collide(fixture_a.clone(), fixture_b.clone())
-					== false
 				{
 					contacts_to_destroy.push(c);
 					continue;
@@ -134,7 +133,7 @@ pub fn b2_contact_manager_collide<D: UserDataType>(self_: B2contactManagerPtr<D>
 			body_b.borrow().is_awake() && body_b.borrow().m_type != B2bodyType::B2StaticBody;
 
 		// At least one body must be awake and it must be dynamic or kinematic.
-		if active_a == false && active_b == false {
+		if !active_a && !active_b {
 			continue;
 		}
 
@@ -149,7 +148,7 @@ pub fn b2_contact_manager_collide<D: UserDataType>(self_: B2contactManagerPtr<D>
 			.test_overlap(proxy_id_a, proxy_id_b);
 
 		// Here we destroy contacts that cease to overlap in the broad-phase.
-		if overlap == false {
+		if !overlap {
 			contacts_to_destroy.push(c);
 			continue;
 		}
@@ -161,7 +160,7 @@ pub fn b2_contact_manager_collide<D: UserDataType>(self_: B2contactManagerPtr<D>
 		);
 	}
 
-	if contacts_to_destroy.len()>0
+	if !contacts_to_destroy.is_empty()
 	{
 		let mut self_ = self_.borrow_mut();
 		for c in contacts_to_destroy {
@@ -235,19 +234,18 @@ pub fn b2_contact_manager_add_pair<D: UserDataType>(
 	}
 
 	// Does a joint override collision? Is at least one body dynamic?
-	if body_b.borrow().should_collide(body_a) == false {
+	if !body_b.borrow().should_collide(body_a) {
 		return;
 	}
 
 	// Check user filtering.
 	if self_.m_contact_filter.is_some()
-		&& self_
+		&& !self_
 			.m_contact_filter
 			.as_ref()
 			.unwrap()
 			.borrow()
 			.should_collide(fixture_a.clone(), fixture_b.clone())
-			== false
 	{
 		return;
 	}

@@ -228,9 +228,6 @@ pub(crate) fn solve_position_constraints<D: UserDataType>(
 	let r_a: B2vec2 = b2_mul_rot_by_vec2(q_a, self_.m_local_anchor_a - self_.m_local_center_a);
 	let r_b: B2vec2 = b2_mul_rot_by_vec2(q_b, self_.m_local_anchor_b - self_.m_local_center_b);
 
-	let position_error: f32;
-	let angular_error: f32;
-
 	let mut k = B2Mat33::default();
 	k.ex.x = m_a + m_b + r_a.y * r_a.y * i_a + r_b.y * r_b.y * i_b;
 	k.ey.x = -r_a.y * r_a.x * i_a - r_b.y * r_b.x * i_b;
@@ -242,11 +239,8 @@ pub(crate) fn solve_position_constraints<D: UserDataType>(
 	k.ey.z = k.ez.y;
 	k.ez.z = i_a + i_b;
 
-	if self_.m_stiffness > 0.0 {
+	let (position_error, angular_error) = if self_.m_stiffness > 0.0 {
 		let c1: B2vec2 = c_b + r_b - c_a - r_a;
-
-		position_error = c1.length();
-		angular_error = 0.0;
 
 		let p: B2vec2 = -k.solve22(c1);
 
@@ -255,21 +249,19 @@ pub(crate) fn solve_position_constraints<D: UserDataType>(
 
 		c_b += m_b * p;
 		a_b += i_b * b2_cross(r_b, p);
+
+		(c1.length(), 0.0)
 	} else {
 		let c1: B2vec2 = c_b + r_b - c_a - r_a;
 		let c2: f32 = a_b - a_a - self_.m_reference_angle;
 
-		position_error = c1.length();
-		angular_error = b2_abs(c2);
-
 		let c = B2Vec3::new(c1.x, c1.y, c2);
-		let impulse: B2Vec3;
-		if k.ez.z > 0.0 {
-			impulse = -k.solve33(c);
+		let impulse: B2Vec3 = if k.ez.z > 0.0 {
+			-k.solve33(c)
 		} else {
 			let impulse2: B2vec2 = -k.solve22(c1);
-			impulse = B2Vec3::new(impulse2.x, impulse2.y, 0.0);
-		}
+			B2Vec3::new(impulse2.x, impulse2.y, 0.0)
+		};
 
 		let p = B2vec2::new(impulse.x, impulse.y);
 
@@ -278,12 +270,14 @@ pub(crate) fn solve_position_constraints<D: UserDataType>(
 
 		c_b += m_b * p;
 		a_b += i_b * (b2_cross(r_b, p) + impulse.z);
-	}
+
+		(c1.length(), b2_abs(c2))
+	};
 
 	positions[self_.m_index_a as usize] = B2position { c: c_a, a: a_a };
 	positions[self_.m_index_b as usize] = B2position { c: c_b, a: a_b };
 
-	return position_error <= B2_LINEAR_SLOP && angular_error <= B2_ANGULAR_SLOP;
+	position_error <= B2_LINEAR_SLOP && angular_error <= B2_ANGULAR_SLOP
 }
 
 // void B2weldJoint::dump()

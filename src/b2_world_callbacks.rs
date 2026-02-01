@@ -36,7 +36,7 @@ pub trait B2contactFilter<D: UserDataType> {
 	/// <strong>Warning:</strong> for performance reasons this is only called when the AABBs begin to overlap.
 	/// </p>
 	fn should_collide(&self, fixture_a: FixturePtr<D>, fixture_b: FixturePtr<D>) -> bool {
-		return private::should_collide(fixture_a, fixture_b);
+		private::should_collide(fixture_a, fixture_b)
 	}
 }
 

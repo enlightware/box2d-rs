@@ -62,7 +62,7 @@ pub(crate) fn new<D: UserDataType>(def: &B2gearJointDef<D>)->B2gearJoint<D>
 
 	match  m_joint1.borrow().as_derived()
 	{
-		JointAsDerived::ERevoluteJoint(ref revolute) => {
+		JointAsDerived::ERevoluteJoint(revolute) => {
 				m_local_anchor_c = revolute.m_local_anchor_a;
 				m_local_anchor_a = revolute.m_local_anchor_b;
 				m_reference_angle_a = revolute.m_reference_angle;
@@ -70,7 +70,7 @@ pub(crate) fn new<D: UserDataType>(def: &B2gearJointDef<D>)->B2gearJoint<D>
 
 				coordinate_a = a_a - a_c - m_reference_angle_a;
 		}
-		JointAsDerived::EPrismaticJoint(ref prismatic) => {
+		JointAsDerived::EPrismaticJoint(prismatic) => {
 				m_local_anchor_c = prismatic.m_local_anchor_a;
 				m_local_anchor_a = prismatic.m_local_anchor_b;
 				m_reference_angle_a = prismatic.m_reference_angle;
@@ -102,7 +102,7 @@ pub(crate) fn new<D: UserDataType>(def: &B2gearJointDef<D>)->B2gearJoint<D>
 
 	match  m_joint2.borrow().as_derived()
 	{
-		JointAsDerived::ERevoluteJoint(ref revolute) => {
+		JointAsDerived::ERevoluteJoint(revolute) => {
 			m_local_anchor_d = revolute.m_local_anchor_a;
 			m_local_anchor_b = revolute.m_local_anchor_b;
 			m_reference_angle_b = revolute.m_reference_angle;
@@ -110,7 +110,7 @@ pub(crate) fn new<D: UserDataType>(def: &B2gearJointDef<D>)->B2gearJoint<D>
 	
 			coordinate_b = a_b - a_d - m_reference_angle_b;
 		}
-		JointAsDerived::EPrismaticJoint(ref prismatic) => {
+		JointAsDerived::EPrismaticJoint(prismatic) => {
 			m_local_anchor_d = prismatic.m_local_anchor_a;
 			m_local_anchor_b = prismatic.m_local_anchor_b;
 			m_reference_angle_b = prismatic.m_reference_angle;
@@ -129,7 +129,7 @@ pub(crate) fn new<D: UserDataType>(def: &B2gearJointDef<D>)->B2gearJoint<D>
 
 	let m_impulse = 0.0;
 
-	return B2gearJoint{
+	B2gearJoint{
 
 		base: B2joint::new(&def.base),
 
@@ -181,7 +181,7 @@ pub(crate) fn new<D: UserDataType>(def: &B2gearJointDef<D>)->B2gearJoint<D>
 		m_jw_c: 0.0,
 		m_jw_d: 0.0,
 		m_mass: 0.0,
-	};
+	}
 }
 
 pub(crate) fn init_velocity_constraints<D: UserDataType>(self_: &mut B2gearJoint<D>, 
@@ -433,5 +433,5 @@ pub(crate) fn solve_position_constraints<D: UserDataType>(self_: &B2gearJoint<D>
 	positions[self_.m_index_d as usize].a = a_d;
 
 	// TODO_ERIN not implemented
-	return linear_error < B2_LINEAR_SLOP;
+	linear_error < B2_LINEAR_SLOP
 }

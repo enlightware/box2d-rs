@@ -37,9 +37,11 @@ pub fn b2_collide_edge_and_circle(
 	let v: f32 = b2_dot(e, q - a);
 
 	let radius: f32 = edge_a.base.m_radius + circle_b.base.m_radius;
-	let mut cf = B2contactFeature::default();
-	cf.index_b = 0;
-	cf.type_b = B2contactFeatureType::EVertex as u8;
+	let mut cf = B2contactFeature {
+		index_b: 0,
+		type_b: B2contactFeatureType::EVertex as u8,
+		..Default::default()
+	};
 	// Region A
 	if v <= 0.0 {
 		let p: B2vec2 = a;
@@ -131,7 +133,7 @@ enum B2ePAxisType {
 
 impl Default for B2ePAxisType {
 	fn default() -> Self {
-		return B2ePAxisType::EUnknown;
+		B2ePAxisType::EUnknown
 	}
 }
 
@@ -180,12 +182,12 @@ fn b2_compute_edge_separation(polygon_b: B2tempPolygon, v1: B2vec2, normal1: B2v
 	let axes: [B2vec2; 2] = [normal1, -normal1];
 
 	// Find axis with least overlap (min-max problem)
-	for j in 0..2 {
+	for (j, axis_vec) in axes.iter().enumerate() {
 		let mut sj: f32 = B2_MAX_FLOAT;
 
 		// Find deepest polygon vertex along axis j
 		for i in 0..polygon_b.count {
-			let si: f32 = b2_dot(axes[j], polygon_b.vertices[i] - v1);
+			let si: f32 = b2_dot(*axis_vec, polygon_b.vertices[i] - v1);
 			if si < sj {
 				sj = si;
 			}
@@ -194,11 +196,11 @@ fn b2_compute_edge_separation(polygon_b: B2tempPolygon, v1: B2vec2, normal1: B2v
 		if sj > axis.separation {
 			axis.index = j as i32;
 			axis.separation = sj;
-			axis.normal = axes[j];
+			axis.normal = *axis_vec;
 		}
 	}
 
-	return axis;
+	axis
 }
 
 fn b2_compute_polygon_separation(polygon_b: B2tempPolygon, v1: B2vec2, v2: B2vec2) -> B2epaxis {
@@ -224,7 +226,7 @@ fn b2_compute_polygon_separation(polygon_b: B2tempPolygon, v1: B2vec2, v2: B2vec
 		}
 	}
 
-	return axis;
+	axis
 }
 
 pub fn b2_collide_edge_and_polygon(
@@ -256,8 +258,10 @@ pub fn b2_collide_edge_and_polygon(
 	}
 
 	// Get polygon_b in frameA
-	let mut temp_polygon_b = B2tempPolygon::default();
-	temp_polygon_b.count = polygon_b.m_count;
+	let mut temp_polygon_b = B2tempPolygon {
+		count: polygon_b.m_count,
+		..Default::default()
+	};
 	for i in 0..polygon_b.m_count {
 		temp_polygon_b.vertices[i] = b2_mul_transform_by_vec2(xf, polygon_b.m_vertices[i]);
 		temp_polygon_b.normals[i] = b2_mul_rot_by_vec2(xf.q, polygon_b.m_normals[i]);
@@ -306,6 +310,7 @@ pub fn b2_collide_edge_and_polygon(
 		let side1: bool = b2_dot(primary_axis.normal, edge1) <= 0.0;
 
 		// Check Gauss Map
+		#[allow(clippy::collapsible_else_if)]
 		if side1 {
 			if convex1 {
 				if b2_cross(primary_axis.normal, normal0) > SIN_TOL {
@@ -448,23 +453,23 @@ pub fn b2_collide_edge_and_polygon(
 	}
 
 	let mut point_count: usize = 0;
-	for i in 0..B2_MAX_MANIFOLD_POINTS {
-		let separation: f32;
+	for cp2 in clip_points2.iter().take(B2_MAX_MANIFOLD_POINTS) {
 
-		separation = b2_dot(rf.normal, clip_points2[i].v - rf.v1);
+
+		let separation: f32 = b2_dot(rf.normal, cp2.v - rf.v1);
 
 		if separation <= radius {
 			let cp: &mut B2manifoldPoint = &mut manifold.points[point_count];
 
 			if primary_axis.axis_type == B2ePAxisType::EEdgeA {
-				cp.local_point = b2_mul_t_transform_by_vec2(xf, clip_points2[i].v);
-				cp.id = clip_points2[i].id;
+				cp.local_point = b2_mul_t_transform_by_vec2(xf, cp2.v);
+				cp.id = cp2.id;
 			} else {
-				cp.local_point = clip_points2[i].v;
-				cp.id.cf.type_a = clip_points2[i].id.cf.type_b;
-				cp.id.cf.type_b = clip_points2[i].id.cf.type_a;
-				cp.id.cf.index_a = clip_points2[i].id.cf.index_b;
-				cp.id.cf.index_b = clip_points2[i].id.cf.index_a;
+				cp.local_point = cp2.v;
+				cp.id.cf.type_a = cp2.id.cf.type_b;
+				cp.id.cf.type_b = cp2.id.cf.type_a;
+				cp.id.cf.index_a = cp2.id.cf.index_b;
+				cp.id.cf.index_b = cp2.id.cf.index_a;
 			}
 
 			point_count += 1;

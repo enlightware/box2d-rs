@@ -139,7 +139,7 @@ impl<D: UserDataType, F: Facade> TestDyn<D, F> for Rope<D> {
 			.build(|| {
 				ui.separator();
 				//TODO_humman sys::igGetWindowWidth()
-				let width_token = ui.push_item_width(200.0 * 0.5);
+				let _width_token = ui.push_item_width(200.0 * 0.5);
 
 				let bend_models = ["Spring", "PBD Ang", "XPBD Ang", "PBD Dist", "PBD Height", "PBD Triangle"];
 				let stretch_models = ["PBD", "XPBD"];
@@ -171,7 +171,7 @@ impl<D: UserDataType, F: Facade> TestDyn<D, F> for Rope<D> {
 							}
 							_ => {}
 						}
-					}					
+					}
 				}
 
 				ui.slider_config("Damping##B1", 0.0, 4.0)
@@ -255,7 +255,7 @@ impl<D: UserDataType, F: Facade> TestDyn<D, F> for Rope<D> {
 								*bend_model2 = B2bendingModel::B2PbdHeightBendingModel;
 							}
 							_ => {}
-						}					
+						}
 					}
 				}
 				ui.slider_config("Damping##B2", 0.0, 4.0)
@@ -268,7 +268,7 @@ impl<D: UserDataType, F: Facade> TestDyn<D, F> for Rope<D> {
 
 				ui.slider_config("Stiffness##B2", 0.0, 1.0)
                                 .display_format("%.1f")
-                                .build(&mut self.m_tuning2.bend_stiffness);				
+                                .build(&mut self.m_tuning2.bend_stiffness);
 
 				ui.checkbox(
 					"Isometric##2",
@@ -287,7 +287,7 @@ impl<D: UserDataType, F: Facade> TestDyn<D, F> for Rope<D> {
 					let stretch_model2 = &mut self.m_tuning2.stretching_model;
 					let mut stretch_model2_selected: usize = *stretch_model2 as usize;
 					if ui.combo_simple_string("Stretch Model##2", &mut stretch_model2_selected, &stretch_models) {
-					
+
 								match stretch_model2_selected {
 									0 => {
 										*stretch_model2 = B2stretchingModel::B2PbdStretchingModel;
@@ -297,7 +297,7 @@ impl<D: UserDataType, F: Facade> TestDyn<D, F> for Rope<D> {
 									}
 									_ => {}
 								}
-							
+
 
 					}
 				}
@@ -330,11 +330,11 @@ impl<D: UserDataType, F: Facade> TestDyn<D, F> for Rope<D> {
 					self.m_rope1.reset(self.m_position1);
 					self.m_rope2.reset(self.m_position2);
 				}
-				
+
 				//TODO_humman fix
 				//width_token.pop(ui);
-			});	
-	
+			});
+
 		}
 	fn keyboard(&mut self, key: &KeyboardInput) {
 		match key.virtual_keycode {

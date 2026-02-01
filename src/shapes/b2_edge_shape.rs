@@ -29,7 +29,7 @@ pub struct B2edgeShape {
 
 impl Default for B2edgeShape {
 	fn default() -> Self {
-		return inline::b2_edge_shape();
+		inline::b2_edge_shape()
 	}
 }
 
@@ -54,27 +54,27 @@ impl B2edgeShape {
 impl B2shapeDynTrait for B2edgeShape {
 	fn get_base(&self) -> &B2Shape
 	{
-		return &self.base;
+		&self.base
 	}
 	fn get_type(&self) -> B2ShapeType {
-		return self.base.get_type();
+		self.base.get_type()
 	}
 	/// Implement b2Shape.
 	fn clone_box(&self) -> Box<dyn B2shapeDynTrait> {
-		return private::b2_shape_dyn_trait_clone(self);
+		private::b2_shape_dyn_trait_clone(self)
 	}
 	fn clone_rc(&self) -> ShapePtr
 	{
-		return Rc::new(self.clone());
+		Rc::new(*self)
 	}
 	/// [see](B2shapeDynTrait::get_child_count)
 	fn get_child_count(&self) -> usize {
-		return private::b2_shape_dyn_trait_get_child_count(self);
+		private::b2_shape_dyn_trait_get_child_count(self)
 	}
 
 	/// [see](B2shapeDynTrait::test_point)
 	fn test_point(&self, transform: B2Transform, p: B2vec2) -> bool {
-		return private::b2_shape_dyn_trait_test_point(self, transform, p);
+		private::b2_shape_dyn_trait_test_point(self, transform, p)
 	}
 
 	/// Implement b2Shape.
@@ -85,9 +85,9 @@ impl B2shapeDynTrait for B2edgeShape {
 		xf: B2Transform,
 		child_index: usize,
 	) -> bool {
-		return private::b2_shape_dyn_trait_ray_cast(
-			&self, output, input, xf, child_index,
-		);
+		private::b2_shape_dyn_trait_ray_cast(
+			self, output, input, xf, child_index,
+		)
 	}
 
 	/// [see](B2shapeDynTrait::compute_aabb)
@@ -105,7 +105,7 @@ mod inline
 {
 	use super::*;
 	pub fn b2_edge_shape() -> B2edgeShape {
-		return B2edgeShape {
+		B2edgeShape {
 			base: B2Shape {
 				m_type: B2ShapeType::EEdge,
 				m_radius: B2_POLYGON_RADIUS,
@@ -115,6 +115,6 @@ mod inline
 			m_vertex0: B2vec2 { x: 0.0, y: 0.0 },
 			m_vertex3: B2vec2 { x: 0.0, y: 0.0 },
 			m_one_sided: false,
-		};
+		}
 	}
 }

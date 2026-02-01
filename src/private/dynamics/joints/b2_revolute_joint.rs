@@ -79,12 +79,12 @@ pub(crate) fn init_velocity_constraints<D: UserDataType>(
 	}
 
 	self_.m_angle = a_b - a_a - self_.m_reference_angle;
-	if self_.m_enable_limit == false || fixed_rotation {
+	if !self_.m_enable_limit || fixed_rotation {
 		self_.m_lower_impulse = 0.0;
 		self_.m_upper_impulse = 0.0;
 	}
 
-	if self_.m_enable_motor == false || fixed_rotation {
+	if !self_.m_enable_motor || fixed_rotation {
 		self_.m_motor_impulse = 0.0;
 	}
 
@@ -142,7 +142,7 @@ pub(crate) fn solve_velocity_constraints<D: UserDataType>(
 	let fixed_rotation: bool = i_a + i_b == 0.0;
 
 	// solve motor constraint.
-	if self_.m_enable_motor && fixed_rotation == false {
+	if self_.m_enable_motor && !fixed_rotation {
 		let cdot: f32 = w_b - w_a - self_.m_motor_speed;
 		let mut impulse: f32 = -self_.m_axial_mass * cdot;
 		let old_impulse: f32 = self_.m_motor_impulse;
@@ -154,7 +154,7 @@ pub(crate) fn solve_velocity_constraints<D: UserDataType>(
 		w_b += i_b * impulse;
 	}
 
-	if self_.m_enable_limit && fixed_rotation == false {
+	if self_.m_enable_limit && !fixed_rotation {
 		// Lower limit
 		{
 			let c: f32 = self_.m_angle - self_.m_lower_angle;
@@ -227,7 +227,7 @@ pub(crate) fn solve_position_constraints<D: UserDataType>(
 	let fixed_rotation: bool = self_.m_inv_ia + self_.m_inv_ib == 0.0;
 
 	// Solve angular limit constraint
-	if self_.m_enable_limit && fixed_rotation == false {
+	if self_.m_enable_limit && !fixed_rotation {
 		let angle: f32 = a_b - a_a - self_.m_reference_angle;
 		let mut c: f32 = 0.0;
 
@@ -292,7 +292,7 @@ pub(crate) fn solve_position_constraints<D: UserDataType>(
 
 	positions[self_.m_index_a as usize] = B2position { c: c_a, a: a_a };
 	positions[self_.m_index_b as usize] = B2position { c: c_b, a: a_b };
-	return position_error <= B2_LINEAR_SLOP && angular_error <= B2_ANGULAR_SLOP;
+	position_error <= B2_LINEAR_SLOP && angular_error <= B2_ANGULAR_SLOP
 }
 
 pub(crate) fn draw<D: UserDataType>(self_: &B2revoluteJoint<D>, draw: &mut dyn B2drawTrait) {

@@ -54,12 +54,12 @@ pub enum B2jointType {
 	EPulleyJoint,
 	ERevoluteJoint,
 	EWeldJoint,
-	EWheelJoint,	
+	EWheelJoint,
 }
 
 impl Default for B2jointType {
 	fn default() -> Self {
-		return B2jointType::EUnknownJoint;
+		B2jointType::EUnknownJoint
 	}
 }
 
@@ -76,19 +76,19 @@ pub type B2jointEdgeWeakPtr<D> = Weak<RefCell<B2jointEdge<D>>>;
 
 impl<D: UserDataType> LinkedListNode<B2jointEdge<D>> for B2jointEdge<D> {
 	fn get_next(&self) -> Option<B2jointEdgePtr<D>> {
-		return self.next.clone();
+		self.next.clone()
 	}
 	fn set_next(&mut self, value: Option<B2jointEdgePtr<D>>) {
 		self.next = value;
 	}
 	fn take_next(&mut self) -> Option<B2jointEdgePtr<D>> {
-		return self.next.take();
+		self.next.take()
 	}
 }
 
 impl<D: UserDataType> DoubleLinkedListNode<B2jointEdge<D>> for B2jointEdge<D> {
 	fn get_prev(&self) -> Option<B2jointEdgeWeakPtr<D>> {
-		return self.prev.clone();
+		self.prev.clone()
 	}
 	fn set_prev(&mut self, value: Option<B2jointEdgeWeakPtr<D>>) {
 		self.prev = value;
@@ -113,31 +113,31 @@ pub struct B2jointEdge<D: UserDataType> {
 
 impl<D: UserDataType> Default for B2jointDef<D> {
 	fn default() -> Self {
-		return Self {
+		Self {
 			jtype: B2jointType::EUnknownJoint,
 			user_data: None,
 			body_a: None,
 			body_b: None,
 			collide_connected: false,
-		};
+		}
 	}
 }
 
 impl<D: UserDataType> LinkedListNode<dyn B2jointTraitDyn<D>> for dyn B2jointTraitDyn<D> {
 	fn get_next(&self) -> Option<B2jointPtr<D>> {
-		return self.get_base().m_next.clone();
+		self.get_base().m_next.clone()
 	}
 	fn set_next(&mut self, value: Option<B2jointPtr<D>>) {
 		self.get_base_mut().m_next = value;
 	}
 	fn take_next(&mut self) -> Option<B2jointPtr<D>> {
-		return self.get_base_mut().m_next.take();
+		self.get_base_mut().m_next.take()
 	}
 }
 
 impl<D: UserDataType> DoubleLinkedListNode<dyn B2jointTraitDyn<D>> for dyn B2jointTraitDyn<D> {
 	fn get_prev(&self) -> Option<B2jointWeakPtr<D>> {
-		return self.get_base().m_prev.clone();
+		self.get_base().m_prev.clone()
 	}
 	fn set_prev(&mut self, value: Option<B2jointWeakPtr<D>>) {
 		self.get_base_mut().m_prev = value.clone();
@@ -189,27 +189,27 @@ pub fn b2_angular_stiffness<D: UserDataType>(stiffness: &mut f32, damping: &mut 
 impl<D: UserDataType> B2joint<D> {
 	/// Get the type of the concrete joint.
 	pub fn get_type(&self) -> B2jointType {
-		return self.m_type;
+		self.m_type
 	}
 
 	/// Get the first body attached to this joint.
 	pub fn get_body_a(&self) -> BodyPtr<D> {
-		return self.m_body_a.clone();
+		self.m_body_a.clone()
 	}
 
 	/// Get the second body attached to this joint.
 	pub fn get_body_b(&self) -> BodyPtr<D> {
-		return self.m_body_b.clone();
+		self.m_body_b.clone()
 	}
 
 	/// Get the next joint the world joint list.
 	pub fn get_next(&self) -> B2jointPtr<D> {
-		return self.m_next.as_ref().unwrap().clone();
+		self.m_next.as_ref().unwrap().clone()
 	}
 
 	/// Get the user data pointer.
 	pub fn get_user_data(&self) -> Option<D::Joint> {
-		return self.m_user_data.clone();
+		self.m_user_data.clone()
 	}
 
 	/// Set the user data pointer.
@@ -219,24 +219,24 @@ impl<D: UserDataType> B2joint<D> {
 
 	/// Short-cut function to determine if either body is enabled.
 	pub fn is_enabled(&self) -> bool {
-		return private::is_enabled(self);
+		private::is_enabled(self)
 	}
 
 	/// Get collide connected.
 	/// Note: modifying the collide connect flag won't work correctly because
 	/// the flag is only checked when fixture AABBs begin to overlap.
 	pub fn get_collide_connected(&self) -> bool {
-		return self.m_collide_connected;
+		self.m_collide_connected
 	}
 
 	// protected:
 
 	// 	static B2joint* create(const B2jointDef* def, b2BlockAllocator* allocator);
 	pub(crate) fn create(def: &B2JointDefEnum<D>) -> B2jointPtr<D> {
-		return private::create(def);
+		private::create(def)
 	}
 	pub(crate) fn new(def: &B2jointDef<D>) -> B2joint<D> {
-		return private::new(def);
+		private::new(def)
 	}
 }
 
@@ -263,7 +263,7 @@ pub trait B2jointTraitDyn<D: UserDataType>: ToDerivedJoint<D> {
 	/// Debug draw this joint
 	fn draw(&self, draw: &mut dyn B2drawTrait) {
 		private::draw(self, draw);
-	} 
+	}
 
 	fn init_velocity_constraints(
 		&mut self,
@@ -286,8 +286,8 @@ pub trait B2jointTraitDyn<D: UserDataType>: ToDerivedJoint<D> {
 }
 
 pub trait ToDerivedJoint<D: UserDataType> {
-	fn as_derived(&self) -> JointAsDerived<D>;
-	fn as_derived_mut(&mut self) -> JointAsDerivedMut<D>;
+	fn as_derived(&self) -> JointAsDerived<'_, D>;
+	fn as_derived_mut(&mut self) -> JointAsDerivedMut<'_, D>;
 }
 
 pub enum JointAsDerived<'a, D: UserDataType> {
@@ -327,7 +327,7 @@ pub struct B2joint<D: UserDataType> {
 	pub(crate) m_body_a: BodyPtr<D>,
 	pub(crate) m_body_b: BodyPtr<D>,
 
-	pub(crate) m_index: i32,
+	//pub(crate) m_index: i32,
 
 	pub(crate) m_island_flag: bool,
 	pub(crate) m_collide_connected: bool,

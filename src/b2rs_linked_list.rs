@@ -19,15 +19,15 @@ pub struct LinkedList<T:LinkedListNode<T> + ?Sized> {
 
 impl<T:LinkedListNode<T> + ?Sized> Default for LinkedList<T> {
     fn default() -> Self {
-        return Self { head: None };
+        Self { head: None }
     }
 }
 
 impl<T:LinkedListNode<T> + ?Sized> Clone for LinkedList<T> {
     fn clone(&self) -> Self {
-        return Self {
+        Self {
             head: self.head.clone(),
-        };
+        }
     }
 }
 
@@ -63,35 +63,32 @@ where
     pub fn remove(&mut self, node_to_remove: Rc<RefCell<T>>) {
         let mut found: bool = false;
 
-        match self.head.clone() {
-            Some(ref head_node) => {
-                if ptr::eq(head_node.as_ref(), node_to_remove.as_ref()) {
-                    self.head = head_node.borrow().get_next();
-                    found = true;
-                } else {
-                    let mut node = head_node.clone();
-                    loop {
-                        let next;
-                        {
-                            next = node.borrow().get_next();
-                        }
+        if let Some(ref head_node) = self.head.clone() {
+            if ptr::eq(head_node.as_ref(), node_to_remove.as_ref()) {
+                self.head = head_node.borrow().get_next();
+                found = true;
+            } else {
+                let mut node = head_node.clone();
+                loop {
+                    let next;
+                    {
+                        next = node.borrow().get_next();
+                    }
 
-                        if let Some(next) = next {
-                            if ptr::eq(next.as_ref(), node_to_remove.as_ref()) {
-                                node.borrow_mut()
-                                    .set_next(node_to_remove.borrow().get_next());
-                                found = true;
-                                break;
-                            }
-
-                            node = next;
-                        } else {
+                    if let Some(next) = next {
+                        if ptr::eq(next.as_ref(), node_to_remove.as_ref()) {
+                            node.borrow_mut()
+                                .set_next(node_to_remove.borrow().get_next());
+                            found = true;
                             break;
                         }
+
+                        node = next;
+                    } else {
+                        break;
                     }
                 }
             }
-            None => {}
         }
 
         assert!(found);
@@ -103,19 +100,19 @@ where
     }
 
     pub fn front(&self) -> Option<&Rc<RefCell<T>>> {
-        return self.head.as_ref();
+        self.head.as_ref()
     }
 
     pub fn front_mut(&mut self) -> &mut Option<Rc<RefCell<T>>> {
-        return &mut self.head;
+        &mut self.head
     }
     pub fn clear(&mut self) {
         self.head = None;
     }
     pub fn iter(&self) -> Iter<T> {
-        return Iter {
+        Iter {
             next: self.head.clone(),
-        };
+        }
     }
 }
 

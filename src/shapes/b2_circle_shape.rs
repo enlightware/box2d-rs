@@ -17,7 +17,7 @@ pub struct B2circleShape {
 
 impl Default for B2circleShape {
 	fn default() -> Self {
-		return inline::b2_circle_shape();
+		inline::b2_circle_shape()
 	}
 }
 
@@ -25,30 +25,30 @@ impl Default for B2circleShape {
 impl B2shapeDynTrait for B2circleShape {
 	fn get_base(&self) -> &B2Shape
 	{
-		return &self.base;
+		&self.base
 	}
 	
 	fn get_type(&self) -> B2ShapeType {
-		return self.base.get_type();
+		self.base.get_type()
 	}
 	/// Implement b2Shape.
 	fn clone_box(&self) -> Box<dyn B2shapeDynTrait> {
-		return private::clone(self);
+		private::clone(self)
 	}
 	
 	fn clone_rc(&self) -> ShapePtr
 	{
-		return Rc::new(self.clone());
+		Rc::new(*self)
 	}
 
 	/// [see](B2shapeDynTrait::get_child_count)
 	fn get_child_count(&self) -> usize {
-		return private::get_child_count(self);
+		private::get_child_count(self)
 	}
 
 	/// Implement b2Shape.
 	fn test_point(&self, transform: B2Transform, p: B2vec2) -> bool {
-		return private::test_point(self, transform, p);
+		private::test_point(self, transform, p)
 	}
 
 	/// Implement b2Shape.
@@ -61,9 +61,9 @@ impl B2shapeDynTrait for B2circleShape {
 		xf: B2Transform,
 		child_index: usize,
 	) -> bool {
-		return private::ray_cast(
+		private::ray_cast(
 			self, output, input, xf, child_index,
-		);
+		)
 	}
 
 	/// [see](B2shapeDynTrait::compute_aabb)
@@ -83,12 +83,12 @@ mod inline
 {
 	use super::*;
 	pub fn b2_circle_shape() -> B2circleShape {
-		return B2circleShape {
+		B2circleShape {
 			base: B2Shape {
 				m_type: B2ShapeType::ECircle,
 				m_radius: 0.0,
 			},
 			m_p: B2vec2::zero(),
-		};
+		}
 	}
 }

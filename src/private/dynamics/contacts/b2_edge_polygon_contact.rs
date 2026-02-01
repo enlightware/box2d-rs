@@ -17,7 +17,7 @@ impl<D: UserDataType> B2edgeAndPolygonContact<D>
 {
 	pub fn create(fixture_a: FixturePtr<D>, index_a: i32, fixture_b: FixturePtr<D>, index_b: i32) -> ContactPtr<D>
 	 {
-		return Rc::new(RefCell::new(B2edgeAndPolygonContact::new(fixture_a,index_a, fixture_b, index_b)));
+		Rc::new(RefCell::new(B2edgeAndPolygonContact::new(fixture_a,index_a, fixture_b, index_b)))
 	}
 
 	pub fn new(fixture_a: FixturePtr<D>, index_a: i32, fixture_b: FixturePtr<D>, index_b: i32) -> Self
@@ -25,21 +25,21 @@ impl<D: UserDataType> B2edgeAndPolygonContact<D>
 		b2_assert(fixture_a.as_ref().borrow().get_type() == B2ShapeType::EEdge);
 		b2_assert(fixture_b.as_ref().borrow().get_type() == B2ShapeType::EPolygon);
 
-		return Self{
+		Self{
 			base: B2contact::new(fixture_a, index_a, fixture_b, index_b)
-		};
+		}
 	}
 }
 
 impl<D: UserDataType> B2contactDynTrait<D> for B2edgeAndPolygonContact<D>
 {
-	fn get_base<'a>(&'a self) -> &'a B2contact<D>
+	fn get_base(&self) -> &B2contact<D>
 	{
-		return &self.base;
+		&self.base
 	}
-	fn get_base_mut<'a>(&'a mut self) -> &'a mut B2contact<D>
+	fn get_base_mut(&mut self) -> &mut B2contact<D>
 	{
-		return &mut self.base;
+		&mut self.base
 	}
 
 	fn evaluate(&self, manifold: &mut B2manifold, xf_a: &B2Transform, xf_b: &B2Transform)
