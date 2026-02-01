@@ -327,7 +327,8 @@ pub struct B2joint<D: UserDataType> {
 	pub(crate) m_body_a: BodyPtr<D>,
 	pub(crate) m_body_b: BodyPtr<D>,
 
-	//pub(crate) m_index: i32,
+
+	pub(crate) m_index: i32,
 
 	pub(crate) m_island_flag: bool,
 	pub(crate) m_collide_connected: bool,
