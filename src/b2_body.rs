@@ -326,6 +326,16 @@ impl<D: UserDataType> B2body<D> {
 		inline::get_angular_velocity(self)
 	}
 
+	/// Get the accumulated world-space force to be integrated by the next step.
+	pub fn get_force(&self) -> B2vec2 {
+		self.m_force
+	}
+
+	/// Get the accumulated torque to be integrated by the next step.
+	pub fn get_torque(&self) -> f32 {
+		self.m_torque
+	}
+
 	/// Apply a force at a world point. If the force is not
 	/// applied at the center of mass, it will generate a torque and
 	/// affect the angular velocity. This wakes up the body.
